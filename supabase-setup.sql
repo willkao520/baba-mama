@@ -127,3 +127,12 @@ create policy an_insert on analytics for insert to anon, authenticated with chec
 create policy an_owner_read on analytics for select to authenticated using (is_owner());
 grant insert on analytics to anon, authenticated;
 grant select on analytics to authenticated;
+
+-- ===== 留言管理權限（第三段：讓管理者在後台隱藏／刪除留言）=====
+grant select, update, delete on comments to authenticated;
+drop policy if exists comments_owner_read   on comments;
+drop policy if exists comments_owner_update on comments;
+drop policy if exists comments_owner_delete on comments;
+create policy comments_owner_read   on comments for select to authenticated using (is_owner());
+create policy comments_owner_update on comments for update to authenticated using (is_owner()) with check (is_owner());
+create policy comments_owner_delete on comments for delete to authenticated using (is_owner());
