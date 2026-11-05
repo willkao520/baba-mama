@@ -1,0 +1,2056 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>爸~媽!!假日要去哪裡玩</title>
+<meta name="theme-color" content="#f1b33b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="假日去哪玩">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fbf5e9; --paper2:#f4ead6; --ink:#3a2e28; --ink2:#7a6a5f; --line:#d9c9ae;
+  --tomato:#e4664a; --sun:#f1b33b; --leaf:#5f9e62; --sky:#4f8fca; --plum:#a46aa8; --pink:#ee8fa6;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--paper);
+  background-image:radial-gradient(#e9dcc2 1px, transparent 1.2px);
+  background-size:18px 18px;
+  color:var(--ink);
+  font-family:"Noto Sans TC",system-ui,sans-serif;
+  font-size:15px; line-height:1.55;
+}
+.hand{font-family:"Huninn","Noto Sans TC",sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:18px 16px 60px}
+
+/* header */
+header{position:relative;padding:20px 4px 8px;text-align:center}
+.title{font-family:"Huninn",sans-serif;font-size:clamp(30px,6.4vw,52px);line-height:1.15;margin:0;letter-spacing:1px}
+.title .a{color:var(--tomato)} .title .b{color:var(--sky)} .title .bang{color:var(--sun);display:inline-block;transform:rotate(8deg)}
+.squiggle{display:block;margin:4px auto 0;width:min(320px,70%)}
+.sub{color:var(--ink2);margin:8px 0 0;font-size:15px}
+.doodle{position:absolute;opacity:.9}
+.d1{left:4px;top:14px;width:54px;transform:rotate(-12deg)}
+.d2{right:6px;top:22px;width:58px;transform:rotate(10deg)}
+@media (max-width:620px){.doodle{display:none}}
+
+/* tabs */
+.tabs{display:flex;gap:10px;justify-content:center;margin:20px 0 14px;flex-wrap:wrap}
+.tab{font-family:"Huninn",sans-serif;font-size:18px;border:2.5px solid var(--ink);background:#fff;color:var(--ink);
+  padding:8px 18px;border-radius:16px 14px 18px 12px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .1s}
+.tab:hover{transform:translate(-1px,-1px)}
+.tab[aria-selected="true"]{background:var(--sun)}
+.tab .cnt{font-size:13px;background:var(--ink);color:#fff;border-radius:10px;padding:1px 7px;margin-left:6px;vertical-align:2px}
+
+/* search + filters */
+.panel{background:#fffdf8;border:2px solid var(--ink);border-radius:18px 20px 16px 22px;padding:14px 14px 6px;box-shadow:4px 4px 0 var(--line)}
+.search{display:flex;align-items:center;gap:8px;border:2px dashed var(--line);border-radius:14px;padding:8px 12px;background:#fff}
+.search input{border:0;outline:0;font:inherit;font-size:16px;width:100%;background:transparent;color:var(--ink)}
+.search svg{flex:none}
+.frow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0}
+.flabel{font-family:"Huninn",sans-serif;font-size:15px;min-width:52px;color:var(--ink)}
+.chip{font:inherit;font-size:14px;border:1.8px solid var(--ink);background:#fff;color:var(--ink);padding:3px 11px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff}
+.chip.age[aria-pressed="true"]{background:var(--tomato);border-color:var(--tomato)}
+.chip.fee[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf)}
+.chip.io[aria-pressed="true"]{background:var(--sky);border-color:var(--sky)}
+.chip.wk[aria-pressed="true"]{background:var(--plum);border-color:var(--plum)}
+select{font:inherit;font-size:14px;border:1.8px solid var(--ink);border-radius:10px;padding:4px 8px;background:#fff;color:var(--ink)}
+.more{font:inherit;font-size:13px;background:none;border:0;color:var(--ink2);text-decoration:underline;cursor:pointer;padding:2px 4px}
+.toggle{display:none;font:inherit;font-family:"Huninn",sans-serif;font-size:15px;border:1.8px dashed var(--ink2);background:none;color:var(--ink);border-radius:10px;padding:4px 12px;margin:2px 0 8px;cursor:pointer}
+@media (max-width:620px){.toggle{display:inline-block}.panel:not(.open) .opt{display:none}}
+.cbtn{font:inherit;font-size:14px;border:1.8px solid var(--ink);border-radius:10px;padding:4px 10px;background:#fff;color:var(--ink);cursor:pointer;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbtn.on{background:#fff3d6}
+.cbtn.ok{background:var(--ink);color:#fff;padding:5px 18px}
+.cpop{margin-top:10px;border:2px dashed var(--ink);border-radius:14px;padding:12px;background:#fffdf7}
+.cpop-h{font-size:13px;color:var(--ink2);margin-bottom:8px}
+.cgrp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}
+.cgrp b{font-size:13px;min-width:38px;cursor:pointer;text-decoration:underline dotted}
+.cpop-f{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
+.chip.cty[aria-pressed="true"]{background:var(--sun);border-color:var(--ink);color:var(--ink)}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.cat{position:relative;font:inherit;text-align:left;border:2px solid var(--ink);border-radius:16px;padding:16px 14px 12px;background:#fff;cursor:pointer;box-shadow:3px 4px 0 var(--ink);transition:transform .12s}
+.cat:hover{transform:translate(-1px,-2px) rotate(-.6deg)}
+.cat{text-align:center;padding:14px 10px 12px}
+.cat .ic{display:block;width:96px;height:72px;margin:0 auto 4px}
+.cat .ic svg{width:100%;height:100%;display:block}
+.cat .cn{font-family:"Noto Sans TC",sans-serif;font-weight:700;font-size:19px;display:block;margin-top:2px;color:var(--ink)}
+.cat .cc{display:block;margin-top:2px}
+.card>.pic{position:absolute !important;z-index:1;right:46px;top:12px;width:56px;height:42px;pointer-events:none}
+.card .pic+h3{margin-right:96px}
+.card .pic svg{width:100%;height:100%}
+.cat .cc{font-size:13px;color:var(--ink2)}
+.cat .blob{position:absolute;right:10px;top:-10px;width:34px;height:20px;border-radius:4px;transform:rotate(6deg);opacity:.85}
+.back{font:inherit;font-size:15px;border:none;background:none;color:var(--tomato);cursor:pointer;padding:0;text-decoration:underline}
+.more{display:block;margin:22px auto 0;font:inherit;font-size:16px;border:2px solid var(--ink);border-radius:999px;background:#fff;padding:8px 26px;cursor:pointer;box-shadow:2px 3px 0 var(--ink)}
+.gstar{display:inline-flex;align-items:center;gap:4px;font-size:13px;margin-top:6px;color:var(--ink);text-decoration:none;position:relative;z-index:2}
+.gstar b{color:#e8a10c;letter-spacing:-1px}
+.gstar .g{font-size:11px;color:var(--ink2)}
+.cinfo{font-size:13px;margin:8px 0 2px;display:flex;flex-direction:column;gap:2px}
+.cinfo b{display:inline-block;min-width:38px;color:var(--ink2);font-weight:500}
+.cinfo .live{color:var(--ink2);font-size:12px;margin-left:4px}
+.regbtn{background:var(--sun);border:1.6px solid var(--ink);border-radius:999px;padding:1px 10px;text-decoration:none!important;color:var(--ink)!important;margin-left:6px}
+.react{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.rb{font:inherit;font-size:13px;display:inline-flex;align-items:center;gap:4px;border:1.6px solid var(--ink);border-radius:999px;background:#fff;color:var(--ink);padding:2px 10px 2px 7px;cursor:pointer}
+.rb svg{width:16px;height:16px}
+.rb[aria-pressed="true"].up{background:#e3f1df;border-color:var(--leaf)}
+.rb[aria-pressed="true"].dn{background:#fbe3dc;border-color:var(--tomato)}
+.rb.cm{margin-left:auto}
+.rb[disabled]{opacity:.5;cursor:default}
+.cmlist{margin:10px 0;display:flex;flex-direction:column;gap:8px;max-height:42vh;overflow:auto}
+.cmi{background:#fff;border:1.6px solid var(--ink);border-radius:12px;padding:8px 10px;font-size:14px}
+.cmi .who{font-weight:700;margin-right:6px}.cmi .t{color:var(--ink2);font-size:12px}
+.fld{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:15px;border:1.8px solid var(--ink);border-radius:10px;padding:7px 10px;margin:6px 0;background:#fff}
+textarea.fld{min-height:80px;resize:vertical}
+.btnp{font:inherit;font-size:15px;border:2px solid var(--ink);border-radius:999px;background:var(--sun);padding:6px 20px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+.msg{font-size:13px;color:var(--ink2);margin:6px 0}
+.lnkbtn{font:inherit;font-size:14px;border:none;background:none;color:var(--sky);text-decoration:underline;cursor:pointer;padding:0}
+.resultbar{display:flex;justify-content:space-between;align-items:center;margin:16px 4px 8px;gap:10px;flex-wrap:wrap}
+.resultbar .hand{font-size:19px}
+.clear{font:inherit;font-size:14px;border:0;background:none;color:var(--tomato);cursor:pointer;text-decoration:underline}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.card{position:relative;background:#fff;border:2px solid var(--ink);border-radius:14px 18px 12px 16px;padding:16px 15px 12px;
+  box-shadow:3px 4px 0 rgba(58,46,40,.18);display:flex;flex-direction:column;gap:6px}
+.card:nth-child(3n+1){transform:rotate(-.5deg)} .card:nth-child(3n+2){transform:rotate(.4deg)}
+.tape{position:absolute;top:-10px;left:50%;width:64px;height:18px;transform:translateX(-50%) rotate(-3deg);opacity:.75;border-radius:2px}
+.card h3{font-family:"Huninn",sans-serif;font-size:19px;line-height:1.3;margin:2px 34px 0 0;font-weight:400}
+.meta{font-size:14px;color:var(--ink2)}
+.meta b{color:var(--ink);font-weight:500}
+.when{display:inline-block;font-size:13px;font-weight:700;padding:1px 8px;border-radius:6px;margin-right:4px}
+.st-on{background:#e3f1df;color:#2f6b33}
+.st-soon{background:#fdeccd;color:#8a5a06}
+.st-last{background:#fde0d9;color:#a33a22}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+.tag{font-size:12.5px;border-radius:6px;padding:1px 7px;border:1.5px solid currentColor}
+.t-age{color:var(--tomato)} .t-type{color:var(--plum)} .t-free{color:var(--leaf)} .t-paid{color:#8a6d55} .t-deal{color:#c1781a} .t-chk{color:#8a8a8a} .t-io{color:var(--sky)}
+.note{font-size:14px;margin:2px 0 0}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px;border-top:1.5px dashed var(--line);font-size:13px}
+.foot a{color:var(--sky)}
+.stretch{position:absolute;inset:0;z-index:0;border-radius:inherit}
+.card>*:not(.stretch):not(.tape){position:relative;z-index:1}
+.card .note,.card h3,.card .tags{pointer-events:none}
+.card:hover{box-shadow:4px 6px 0 rgba(58,46,40,.28);cursor:pointer}
+a.where{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:14px;color:var(--ink);text-decoration:none;background:#f2f7fc;border:1.5px dashed var(--sky);border-radius:10px;padding:4px 8px;width:fit-content}
+a.where .go{color:var(--sky);font-weight:700;margin-left:6px} .lnk{display:flex;gap:12px;flex-wrap:wrap} .foot a.srch{color:var(--ink2)}
+.fav{position:absolute!important;top:10px;right:10px;z-index:2!important;border:0;background:none;cursor:pointer;padding:4px}
+.fav svg{width:24px;height:24px}
+.empty{text-align:center;padding:40px 10px;color:var(--ink2)}
+.empty .hand{font-size:22px;color:var(--ink)}
+
+
+/* install */
+.install{position:absolute;right:4px;top:-6px;font-family:"Huninn",sans-serif;font-size:15px;border:2px solid var(--ink);background:#fff;color:var(--ink);
+  padding:6px 12px;border-radius:12px 14px 10px 14px;cursor:pointer;box-shadow:2px 3px 0 var(--ink);z-index:2}
+.install:hover{background:var(--sun)}
+@media (max-width:620px){.install{position:static;margin:0 auto 6px;display:block}}
+.dlg-bg{position:fixed;inset:0;background:rgba(58,46,40,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.dlg-bg.show{display:flex}
+.dlg{background:var(--paper);border:2.5px solid var(--ink);border-radius:18px 22px 16px 20px;max-width:420px;width:100%;padding:18px 18px 14px;box-shadow:5px 6px 0 var(--ink);max-height:90vh;overflow:auto}
+.dlg h2{font-family:"Huninn",sans-serif;font-weight:400;font-size:22px;margin:0 0 8px}
+.dlg h3{font-family:"Huninn",sans-serif;font-weight:400;font-size:17px;margin:14px 0 4px;color:var(--tomato)}
+.dlg ol{margin:0;padding-left:22px} .dlg li{margin:3px 0}
+.dlg .warn{background:#fdeccd;border-radius:10px;padding:8px 10px;font-size:14px;margin:8px 0 0}
+.dlg .close{margin-top:14px;font:inherit;font-family:"Huninn",sans-serif;font-size:16px;border:2px solid var(--ink);background:var(--sun);border-radius:12px;padding:6px 16px;cursor:pointer}
+.key{display:inline-block;border:1.5px solid var(--ink2);border-radius:6px;padding:0 6px;font-size:13px;background:#fff}
+.notice{margin:26px 0 0;font-size:13.5px;color:var(--ink2);background:var(--paper2);border-radius:12px;padding:12px 14px;border:1.5px dashed var(--line)}
+.notice a{color:var(--sky)}
+details summary{cursor:pointer;color:var(--ink)}
+.srcs{columns:2 260px;margin:8px 0 0;padding-left:18px}
+.srcs li{break-inside:avoid;margin-bottom:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <button class="install" id="install" type="button">＋ 加到桌面</button>
+  <svg class="doodle d1" viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="12" fill="#f1b33b" stroke="#3a2e28" stroke-width="2"/><g stroke="#3a2e28" stroke-width="2.4" stroke-linecap="round"><path d="M30 6v8M30 46v8M6 30h8M46 30h8M13 13l6 6M41 41l6 6M47 13l-6 6M19 41l-6 6"/></g></svg>
+  <svg class="doodle d2" viewBox="0 0 64 60" aria-hidden="true"><path d="M8 52 C10 30 20 18 32 10 C44 18 54 30 56 52 Z" fill="#ee8fa6" stroke="#3a2e28" stroke-width="2.2" stroke-linejoin="round"/><path d="M32 10 L32 4" stroke="#3a2e28" stroke-width="2.2" stroke-linecap="round"/><path d="M20 52v-10h8v10M36 40h8v6h-8z" fill="#fff" stroke="#3a2e28" stroke-width="2"/></svg>
+  <h1 class="title">爸<span class="a">~</span>媽<span class="bang">!!</span><br><span class="b">假日要去哪裡玩</span></h1>
+  <svg class="squiggle" viewBox="0 0 320 16" aria-hidden="true"><path d="M4 9 C 30 2, 50 15, 76 8 S 124 2, 150 9 S 200 15, 226 8 S 280 2, 316 9" fill="none" stroke="#e4664a" stroke-width="3.2" stroke-linecap="round"/></svg>
+  <p class="sub">全台給 0 歲到國小六年級孩子的活動、共融公園和景點，點一下就開地圖導航</p>
+</header>
+
+<div class="tabs" role="tablist">
+  <button class="tab" role="tab" id="tab-ev" aria-selected="true">最近有辦的活動<span class="cnt" id="cnt-ev"></span></button>
+  <button class="tab" role="tab" id="tab-pk" aria-selected="false">共融公園<span class="cnt" id="cnt-pk"></span></button>
+  <button class="tab" role="tab" id="tab-pl" aria-selected="false">隨時可去的景點<span class="cnt" id="cnt-pl"></span></button>
+  <button class="tab" role="tab" id="tab-co" aria-selected="false" title="圖書館・親子館・科學館・運動中心辦的活動">公辦親子活動<span class="cnt" id="cnt-co"></span></button>
+  <button class="tab" role="tab" id="tab-fv" aria-selected="false">我的收藏<span class="cnt" id="cnt-fv"></span></button>
+</div>
+
+<section class="panel" aria-label="搜尋與篩選">
+  <label class="search">
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#3a2e28" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="#3a2e28" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <input id="q" type="search" placeholder="搜尋：恐龍、耶誕、板橋、動物園⋯" autocomplete="off">
+  </label>
+  <div class="frow" id="row-when"><span class="flabel">時間</span></div>
+  <div class="frow" id="row-ck"><span class="flabel">顯示</span></div>
+  <div class="frow" id="row-age"><span class="flabel">年齡</span></div>
+  <div class="frow opt" id="row-type"><span class="flabel">類型</span></div>
+  <div class="frow opt" id="row-fee"><span class="flabel">費用</span></div>
+  <div class="frow opt" id="row-io"><span class="flabel">場地</span></div>
+  <div class="frow"><span class="flabel">地區</span>
+    <select id="sel-region" aria-label="區域"><option value="">全台</option><option>北部</option><option>中部</option><option>南部</option><option>東部</option><option>離島</option></select>
+    <button type="button" class="cbtn" id="btn-county" aria-expanded="false">所有縣市 ▾</button>
+    <select id="sel-dist" aria-label="鄉鎮市區"><option value="">所有鄉鎮區</option></select>
+  </div>
+  <div class="cpop" id="cpop" hidden>
+    <div class="cpop-h">縣市可以多選，例如住臺北的可以勾 臺北＋新北＋桃園（會記在這台裝置，下次打開不用再選）</div>
+    <div id="cpop-body"></div>
+    <div class="cpop-f"><button type="button" class="clear" id="cpop-clear">全部取消</button><button type="button" class="cbtn ok" id="cpop-ok">完成</button></div>
+  </div>
+  <button class="toggle" id="toggle" type="button" aria-expanded="false">＋ 更多篩選（類型、費用、室內外）</button>
+</section>
+
+<div class="resultbar">
+  <span class="hand" id="rcount"></span>
+  <span><button class="lnkbtn" id="open-suggest" type="button">推薦漏掉的地方</button>　<button class="lnkbtn" id="open-report" type="button">回報問題</button>　<button class="clear" id="clear">清除所有篩選</button></span>
+</div>
+<div class="grid" id="grid"></div>
+
+<div class="notice">
+  <b>小提醒：</b>活動與公園資料整理於 2026 年 11 月 5 日，來源是各縣市政府、場館與主辦單位的公開資訊。活動可能因天氣或主辦單位異動，<b>出發前請點卡片上的連結，再到官方粉專或官網確認</b>。「待確認」代表公開資訊沒寫清楚費用。為了改善內容，我們會匿名記錄搜尋關鍵字與點擊（不含個人資料）。已經結束的活動會自動隱藏。<br><b>共融公園收錄範圍：</b>臺北市依市府開放資料「共融式遊戲場」（含校園）、新北市依「來新北玩公園」網站、臺中市依《臺中美樂地指引手冊》逐區全收；其他縣市收錄市府公告與媒體報導過的特色、共融公園，持續補充中。少了你家附近的？歡迎用「回報問題」告訴我們。
+  <details style="margin-top:8px"><summary>連結說明</summary><p style="margin:6px 0 0">點卡片任何地方（或藍色的「地圖・導航」）都會打開 Google 地圖。「官網」「官方粉專」「官方IG」「售票頁」都是主辦單位自己的網站；少數活動主辦單位沒有專屬網頁，會標「主辦單位新聞稿」或「新聞報導」。找不到官方頁面的，會顯示灰色的「搜尋官網」，點了會直接幫你搜尋。每張卡片也都有「地圖」可以直接導航。</p></details>
+</div>
+</div>
+
+
+<div class="dlg-bg" id="cm" role="dialog" aria-modal="true" aria-labelledby="cm-t">
+  <div class="dlg">
+    <h2 id="cm-t" class="hand">留言</h2>
+    <div class="msg" id="cm-sub"></div>
+    <div class="cmlist" id="cm-list"></div>
+    <form id="cm-form">
+      <input class="fld" id="cm-nick" maxlength="20" placeholder="你的暱稱（例如：小芽媽）" required>
+      <textarea class="fld" id="cm-body" maxlength="300" placeholder="好不好玩？適合幾歲？停車、廁所、推車方便嗎？（300字內）" required></textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <button type="button" class="lnkbtn" id="cm-report">這筆資料有錯？回報</button>
+        <span><button type="button" class="clear" id="cm-close">關閉</button>　<button class="btnp" type="submit">送出留言</button></span>
+      </div>
+      <div class="msg" id="cm-msg"></div>
+    </form>
+  </div>
+</div>
+<div class="dlg-bg" id="sg" role="dialog" aria-modal="true" aria-labelledby="sg-t">
+  <div class="dlg">
+    <h2 id="sg-t" class="hand">推薦漏掉的地方</h2>
+    <div class="msg">知道哪裡好玩但這裡沒有？告訴我們！審核通過後會加進來。</div>
+    <form id="sg-form">
+      <select class="fld" id="sg-kind"><option>活動</option><option>公辦親子活動</option><option>共融公園</option><option>景點</option></select>
+      <input class="fld" id="sg-name" maxlength="100" placeholder="名稱（例如：XX公園、XX親子展）" required>
+      <div style="display:flex;gap:8px"><select class="fld" id="sg-county" required><option value="">縣市</option></select><input class="fld" id="sg-dist" maxlength="20" placeholder="鄉鎮區（選填）"></div>
+      <input class="fld" id="sg-dates" maxlength="60" placeholder="活動日期（活動才需要，例如 12/1–12/31）">
+      <input class="fld" id="sg-link" maxlength="300" placeholder="官網或官方粉專連結（選填）">
+      <textarea class="fld" id="sg-note" maxlength="500" placeholder="為什麼推薦？適合幾歲？有什麼好玩的？"></textarea>
+      <input class="fld" id="sg-contact" maxlength="100" placeholder="聯絡方式（選填）">
+      <div style="display:flex;justify-content:flex-end;gap:8px"><button type="button" class="clear" id="sg-close">關閉</button><button class="btnp" type="submit">送出推薦</button></div>
+      <div class="msg" id="sg-msg"></div>
+    </form>
+  </div>
+</div>
+<div class="dlg-bg" id="rp" role="dialog" aria-modal="true" aria-labelledby="rp-t">
+  <div class="dlg">
+    <h2 id="rp-t" class="hand">回報問題</h2>
+    <div class="msg">謝謝你幫忙讓資料更正確！回報只有管理者看得到。</div>
+    <form id="rp-form">
+      <input class="fld" id="rp-item" maxlength="200" placeholder="哪一個活動／公園／景點？（選填）">
+      <select class="fld" id="rp-kind">
+        <option>資料有錯（日期、地點、費用）</option><option>活動已經結束或取消</option><option>地圖位置不對</option><option>官網連結失效</option><option>建議新增景點或活動</option><option>App 操作有問題</option><option>其他</option>
+      </select>
+      <textarea class="fld" id="rp-body" maxlength="1000" placeholder="請描述一下狀況" required></textarea>
+      <input class="fld" id="rp-contact" maxlength="100" placeholder="聯絡方式（選填，需要回覆時用）">
+      <div style="display:flex;justify-content:flex-end;gap:8px"><button type="button" class="clear" id="rp-close">關閉</button><button class="btnp" type="submit">送出回報</button></div>
+      <div class="msg" id="rp-msg"></div>
+    </form>
+  </div>
+</div>
+<div class="dlg-bg" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-t">
+  <div class="dlg">
+    <h2 id="dlg-t">把「假日去哪玩」放到手機桌面</h2>
+    <div id="dlg-frame" class="warn" hidden>你現在是在預覽視窗裡看這個頁面。請先用手機瀏覽器（iPhone 用 Safari、Android 用 Chrome）打開網站，再照下面做。</div>
+    <div id="dlg-ios">
+      <h3>iPhone / iPad（Safari）</h3>
+      <ol><li>點畫面下方的 <span class="key">分享</span>（方框加向上箭頭）</li><li>往下滑，點 <span class="key">加入主畫面</span></li><li>點右上角 <span class="key">新增</span>，桌面就會出現圖示</li></ol>
+    </div>
+    <div id="dlg-and">
+      <h3>Android（Chrome）</h3>
+      <ol><li>點右上角 <span class="key">⋮</span></li><li>點 <span class="key">加到主畫面</span> 或 <span class="key">安裝應用程式</span></li><li>按 <span class="key">安裝</span></li></ol>
+    </div>
+    <div id="dlg-pc">
+      <h3>電腦（Chrome / Edge）</h3>
+      <ol><li>網址列右邊會出現 <span class="key">安裝</span> 小圖示，點它</li><li>或從選單選「安裝這個網站為應用程式」</li></ol>
+    </div>
+    <button class="close" id="dlg-close" type="button">知道了</button>
+  </div>
+</div>
+<script>
+/* ---------- 基本設定 ---------- */
+const AGES = [
+  {k:"baby", label:"0–3歲"},
+  {k:"pre",  label:"4–6歲（幼兒園）"},
+  {k:"low",  label:"小一～小三"},
+  {k:"high", label:"小四～小六"}
+];
+const AGE_SHORT = {baby:"0–3歲",pre:"4–6歲",low:"小一～小三",high:"小四～小六"};
+const ALL = ["baby","pre","low","high"];
+const FEES = {free:"免費", paid:"付費", deal:"門票優惠", check:"待確認"};
+const REGION = {
+  "基隆市":"北部","臺北市":"北部","新北市":"北部","桃園市":"北部","新竹市":"北部","新竹縣":"北部","宜蘭縣":"東部",
+  "苗栗縣":"中部","臺中市":"中部","彰化縣":"中部","南投縣":"中部","雲林縣":"中部",
+  "嘉義市":"南部","嘉義縣":"南部","臺南市":"南部","高雄市":"南部","屏東縣":"南部",
+  "花蓮縣":"東部","臺東縣":"東部","澎湖縣":"離島","金門縣":"離島","連江縣":"離島"
+};
+const COUNTY_ORDER = Object.keys(REGION);
+
+const LK = {site:"官網", fb:"官方粉專", ig:"官方IG", ticket:"售票頁", press:"主辦單位新聞稿", news:"新聞報導"};
+const TSF = ["site","https://tsf.moe.edu.tw/"];
+
+/* ---------- 活動（有日期） ---------- */
+/* t: 節慶燈飾｜展覽｜兒童劇・音樂會｜科學體驗｜市集・嘉年華｜戶外・自然｜樂園優惠
+   l: [連結種類, 網址]；沒有的會自動變成「搜尋官網」 */
+const EVENTS = [
+ {n:"2026新北歡樂耶誕城｜卡娜赫拉的小動物",c:"新北市",d:"板橋區",s:"2026-11-13",e:"2026-12-27",t:"節慶燈飾",f:"free",a:ALL,io:"out",note:"市民廣場、板橋車站站前廣場、萬坪公園、府中廣場4大燈區，每天17:30–23:00亮燈；市集與遊樂設施11:00起。12/12–12/13有耶誕演唱會。",l:["site","https://christmasland.ntpc.gov.tw/"]},
+ {n:"2026屏東聖誕節「樂園聖誕派對」",c:"屏東縣",d:"屏東市",s:"2026-11-06",e:"2027-01-03",t:"節慶燈飾",f:"free",a:ALL,io:"out",note:"屏東公園10公尺巨型聖誕樹、12組燈飾，每天17:30–22:00；假日有泡泡飄雪秀和聖誕遊行。",l:["site","https://amazing-pingtung.com/ptcm"]},
+ {n:"寶可夢主題耶誕樂園（新光三越台南）",c:"臺南市",d:"中西區",s:"2026-11-05",e:"2027-01-03",t:"節慶燈飾",f:"check",a:ALL,io:"both",note:"新光三越台南新天地西門店（西門廣場、廣三公園）佈置到新年；11/8有寶可夢見面會。結束日以官方為準。",l:["site","https://www.skm.com.tw/"]},
+ {n:"臺中耶誕嘉年華｜夢幻童話",c:"臺中市",d:"中區",s:"2026-12-14",e:"2027-01-03",t:"節慶燈飾",f:"free",a:ALL,io:"out",note:"舊台中火車站、綠川、柳川水岸的燈飾與耶誕市集。日期以台中市政府公告為準。",l:["site","https://travel.taichung.gov.tw/"]},
+ {n:"高雄夢時代「愛‧Sharing」聖誕",c:"高雄市",d:"前鎮區",s:"2026-11-20",e:"2027-01-04",t:"節慶燈飾",f:"free",a:ALL,io:"both",note:"夢時代1F時代廣場聖誕樹，11/20 18:00點燈，展到1月初（結束日以官方為準）。",l:["site","https://www.dream-mall.com.tw/"]},
+ {n:"海科館 聖誕節2人同行1人免費",c:"基隆市",d:"中正區",s:"2026-12-25",e:"2026-12-27",t:"樂園優惠",f:"deal",a:ALL,io:"in",note:"國立海洋科技博物館主題館＋特展套票，兩人同行一人免費。",l:["site","https://www.nmmst.gov.tw/"]},
+
+ {n:"臺灣科學節｜科學嘉年華（科教館）",c:"臺北市",d:"士林區",s:"2026-11-13",e:"2026-11-15",t:"科學體驗",f:"free",a:["pre","low","high"],io:"both",note:"臺北科學藝術園區＋科教館1F，約180個科學攤位、集章抽獎，09:30–16:30。",l:TSF},
+ {n:"臺灣科學節｜海科館科學市集＋實境解謎",c:"基隆市",d:"中正區",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"deal",a:["pre","low","high"],io:"both",note:"11/7、8、14、15有科普市集；學生憑證主題館、特展、智慧海洋館全票半價。",l:TSF},
+ {n:"臺灣科學節｜科博館「曬科學」與XR劇場",c:"臺中市",d:"北區",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"free",a:["pre","low","high"],io:"both",note:"11/7–8戶外科學展演；XR奇幻探索劇場11/8、14、15（活動免費，進館需購票）。",l:TSF},
+ {n:"臺灣科學節｜科工館免費活動",c:"高雄市",d:"三民區",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"free",a:["pre","low","high"],io:"in",note:"北館大廳，11/7、8、14、15舉辦。",l:TSF},
+ {n:"臺灣科學節｜海生館科學活動",c:"屏東縣",d:"車城鄉",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"paid",a:ALL,io:"in",note:"館內科學節活動免費參加，但要買入館門票。",l:TSF},
+ {n:"科博館 每週五下午免費參觀",c:"臺中市",d:"北區",s:"2026-01-01",e:"2026-12-31",t:"科學體驗",f:"free",a:ALL,io:"in",note:"每週五14:00–17:00展示廳免費，下雨天的好選擇。",l:["site","https://www.nmns.edu.tw/"]},
+
+ {n:"2026士林官邸菊展",c:"臺北市",d:"士林區",s:"2026-11-27",e:"2026-12-13",t:"戶外・自然",f:"free",a:ALL,io:"out",note:"士林官邸公園，推車好走，可以順便跑草地。",l:["fb","https://www.facebook.com/2016chshow"]},
+ {n:"2026草嶺古道芒花季（25週年）",c:"新北市",d:"貢寮區",s:"2026-10-31",e:"2026-11-29",t:"戶外・自然",f:"free",a:["pre","low","high"],io:"out",note:"週末有免費古裝體驗、集章換徽章、市集與福隆遊客中心—遠望坑口接駁車。全程約8.5公里，建議走一小段就好。",l:["site","https://www.necoast-nsa.gov.tw/"]},
+ {n:"2026臺中國際花毯節（新社）",c:"臺中市",d:"新社區",s:"2026-10-31",e:"2026-11-22",t:"戶外・自然",f:"free",a:ALL,io:"out",note:"三麗鷗「甜點王國」主題、19公尺主花毯，每天08:30–16:30，免費入場；建議搭豐原或松竹站免費接駁車。",l:["site","https://www.flowercarpet.tw/"]},
+ {n:"2026桃園花彩節（大溪）",c:"桃園市",d:"大溪區",s:"2026-11-14",e:"2026-11-22",t:"戶外・自然",f:"free",a:ALL,io:"out",note:"大溪月眉休閒農業區花海。今年日期為親子網站整理，出發前請再確認。"},
+ {n:"日月潭 NTSO 花火音樂會",c:"南投縣",d:"魚池鄉",s:"2026-11-14",e:"2026-11-14",t:"節慶燈飾",f:"free",a:ALL,io:"out",note:"日月潭花火音樂嘉年華最後一場煙火，在向山遊客中心，人多建議搭接駁車。",l:["site","https://www.sunmoonlake.gov.tw/"]},
+ {n:"新竹青草湖 水舞光影與裝置藝術",c:"新竹市",d:"東區",s:"2026-11-01",e:"2026-12-31",t:"節慶燈飾",f:"free",a:ALL,io:"out",note:"市府預告11月有水舞及光影藝術、12月有新裝置與互動體驗，詳細日期看官方粉專。",l:["fb","https://www.facebook.com/seeinghsinchu"]},
+ {n:"奧萬大部落楓采・草地野餐音樂會",c:"南投縣",d:"仁愛鄉",s:"2026-11-14",e:"2026-11-15",t:"戶外・自然",f:"paid",a:ALL,io:"out",note:"奧萬大國家森林遊樂區，需森林遊樂區門票。",l:["site","https://recreation.forest.gov.tw/"]},
+
+ {n:"小黃帽交通安全童樂會",c:"臺北市",d:"中正區",s:"2026-11-07",e:"2026-11-07",t:"市集・嘉年華",f:"check",a:["pre","low"],io:"out",note:"華山1914，靖娟基金會的親子交通安全闖關活動。",l:["site","https://www.safe.org.tw/"]},
+ {n:"2026空總晴空季",c:"臺北市",d:"大安區",s:"2026-08-01",e:"2026-11-15",t:"市集・嘉年華",f:"check",a:ALL,io:"out",note:"空總臺灣當代文化實驗場的裝置藝術與市集。",l:["site","https://clab.org.tw/"]},
+ {n:"15公尺黃阿瑪水上氣球（基隆400童樂會）",c:"基隆市",d:"中正區",s:"2026-09-24",e:"2026-11-27",t:"市集・嘉年華",f:"free",a:ALL,io:"out",note:"基隆港海洋廣場前水域，在港邊就能看到。",l:["news","https://news.ltn.com.tw/news/Keelung/breakingnews/5582614"]},
+ {n:"親子路跑 After Party 之秋日派對",c:"新北市",d:"三重區",s:"2026-11-22",e:"2026-11-22",t:"市集・嘉年華",f:"check",a:["pre","low","high"],io:"out",note:"新北大都會公園，親子天下主辦，可能需報名。",l:["site","https://www.parenting.com.tw/"]},
+ {n:"2026森里同學會",c:"南投縣",d:"集集鎮",s:"2026-11-21",e:"2026-11-21",t:"科學體驗",f:"check",a:["pre","low","high"],io:"out",note:"農業部生物多樣性研究所的生態活動。",l:["site","https://www.tbri.gov.tw/"]},
+ {n:"中研院南部院區開放日",c:"臺南市",d:"歸仁區",s:"2026-11-14",e:"2026-11-14",t:"科學體驗",f:"free",a:["low","high"],io:"both",note:"一年一次開放參觀，有科普體驗。"},
+ {n:"2026新竹市玻璃藝術節《玻璃大時代》",c:"新竹市",d:"東區",s:"2026-10-17",e:"2026-11-15",t:"展覽",f:"paid",a:["pre","low","high"],io:"in",note:"新竹市玻璃工藝博物館＋風livehouse，全票50元；6歲以下、新竹市民免費。週一休。",l:["site","https://culture.hccg.gov.tw/"]},
+ {n:"2026花蓮國際石雕藝術季",c:"花蓮縣",d:"花蓮市",s:"2026-10-31",e:"2026-11-29",t:"展覽",f:"check",a:["pre","low","high"],io:"out",note:"花蓮文化局園區的戶外石雕創作展。",l:["site","https://stone.hccc.gov.tw/"]},
+ {n:"臺南藝術節",c:"臺南市",d:"",s:"2026-10-02",e:"2026-11-22",t:"兒童劇・音樂會",f:"check",a:["pre","low","high"],io:"both",note:"全市多處演出，有些是戶外免費場，購票場請看節目表。"},
+
+ {n:"從前從前－繪說童話郵票特展",c:"臺北市",d:"中正區",s:"2026-07-11",e:"2027-01-03",t:"展覽",f:"free",a:["pre","low","high"],io:"in",note:"郵政博物館，週一休。",l:["site","https://museum.post.gov.tw/"]},
+ {n:"動力夢工廠（新美館B1探索基地）",c:"新北市",d:"鶯歌區",s:"2026-10-03",e:"2026-12-31",t:"展覽",f:"check",a:["pre","low","high"],io:"in",note:"新北市美術館B1，跟著齒輪、光影一起玩的互動展區。",l:["press","https://www.cna.com.tw/postwrite/chi/445980"]},
+ {n:"名偵探柯南TV動畫30週年紀念展",c:"高雄市",d:"前鎮區",s:"2026-11-01",e:"2026-12-19",t:"展覽",f:"paid",a:["low","high"],io:"in",note:"高雄夢時代8F，需購票。",l:["site","https://www.dream-mall.com.tw/"]},
+ {n:"虎姑婆和他的朋友 勇氣島大冒險",c:"高雄市",d:"鹽埕區",s:"2026-09-17",e:"2026-12-20",t:"展覽",f:"paid",a:["baby","pre","low"],io:"in",note:"駁二B10蓬萊倉庫，5大沉浸互動展區。平日10:00–17:00、假日10:00–18:00。",l:["ig","https://www.instagram.com/whoogupo/"]},
+ {n:"Mundo Pixar 皮克斯世界巡迴展",c:"高雄市",d:"前鎮區",s:"2026-12-18",e:"2027-04-18",t:"展覽",f:"paid",a:ALL,io:"in",note:"高雄輕軌C8高雄展覽館站旁，13個1:1電影場景；週二休館。"},
+ {n:"郵玩數世界",c:"高雄市",d:"三民區",s:"2026-06-27",e:"2027-01-10",t:"展覽",f:"free",a:["pre","low","high"],io:"in",note:"郵政博物館高雄館（高雄車站旁），週一休。",l:["site","https://museum.post.gov.tw/"]},
+ {n:"Hello Kitty × 蜜柑站長 高雄捷運聯名",c:"高雄市",d:"左營區",s:"2026-10-31",e:"2027-09-30",t:"展覽",f:"free",a:ALL,io:"in",note:"捷運左營站主題車站、全彩繪列車與集章，搭捷運就能玩。",l:["site","https://www.krtc.com.tw/"]},
+
+ {n:"《生氣王子》親子繪本音樂會",c:"臺北市",d:"信義區",s:"2026-11-22",e:"2026-11-22",t:"兒童劇・音樂會",f:"paid",a:["pre","low"],io:"in",note:"臺北市政大樓親子劇場。"},
+ {n:"巧虎英語舞臺劇《尋找彩虹島》",c:"臺北市",d:"士林區",s:"2026-11-07",e:null,t:"兒童劇・音樂會",f:"paid",a:["baby","pre"],io:"in",note:"兒童新樂園兒童劇場，NT$850，共16場，場次日期請看售票頁。"},
+ {n:"果陀劇場《三個傻瓜》音樂劇",c:"新竹縣",d:"竹北市",s:"2026-11-07",e:"2026-11-08",t:"兒童劇・音樂會",f:"paid",a:["low","high"],io:"in",note:"新竹縣政府文化局演藝廳。"},
+ {n:"中友兒童劇場《超人力霸王 狄奧&奧米加》",c:"臺中市",d:"北區",s:"2026-11-07",e:null,t:"兒童劇・音樂會",f:"paid",a:["pre","low"],io:"in",note:"中友百貨C棟13F，NT$450，場次日期請看售票頁。"},
+ {n:"風神寶寶兒童劇團《王船精靈大冒險》",c:"雲林縣",d:"斗六市",s:"2026-11-06",e:"2026-11-07",t:"兒童劇・音樂會",f:"paid",a:["pre","low","high"],io:"in",note:"雲林表演廳，NT$200–1,000。"},
+ {n:"《神隱少女》舞台劇（世界巡演台灣首站）",c:"臺北市",d:"中正區",s:"2026-12-17",e:"2027-01-31",t:"兒童劇・音樂會",f:"paid",a:["low","high"],io:"in",note:"國家戲劇院連演50場，票價1,800元起，較適合國小以上。",l:["site","https://npac-ntch.org/"]},
+
+ {n:"小人國 11月身分證字母299元",c:"桃園市",d:"龍潭區",s:"2026-11-07",e:"2026-11-29",t:"樂園優惠",f:"deal",a:ALL,io:"out",note:"11/7、8、14、15限A/C/F開頭；11/21、22、28、29限H/J/O開頭，現場購票299元。",l:["site","https://www.woc.com.tw/"]},
+ {n:"六福村 SNOOPY萬聖祭（日間）",c:"新竹縣",d:"關西鎮",s:"2026-09-12",e:"2026-11-22",t:"樂園優惠",f:"paid",a:["pre","low","high"],io:"out",note:"白天有SNOOPY南瓜園和14:00遊行；晚上的墓碑鎮比較恐怖，不建議帶小小孩。週五六日16:00後星光票499元。",l:["site","https://www.leofoo.com.tw/"]},
+ {n:"西湖渡假村 12歲以下免費",c:"苗栗縣",d:"三義鄉",s:"2026-11-01",e:"2026-11-30",t:"樂園優惠",f:"deal",a:ALL,io:"out",note:"大人399元，12歲以下兒童由付費大人陪同免費。"},
+ {n:"劍湖山世界 車牌字母優惠",c:"雲林縣",d:"古坑鄉",s:"2026-11-08",e:"2026-12-30",t:"樂園優惠",f:"deal",a:["pre","low","high"],io:"out",note:"車牌含A–E其中一個字母每人399元，兩個以上299元。",l:["site","https://www.janfusun.com.tw/"]},
+ {n:"義大遊樂世界 全票880元",c:"高雄市",d:"大樹區",s:"2026-10-07",e:"2026-11-15",t:"樂園優惠",f:"deal",a:["pre","low","high"],io:"out",note:"不限身分一律880元。",l:["site","https://www.edathemepark.com.tw/"]},
+ {n:"遠雄海洋公園 買大送小",c:"花蓮縣",d:"壽豐鄉",s:"2026-11-01",e:"2026-12-31",t:"樂園優惠",f:"deal",a:ALL,io:"both",note:"買一張大人票送一位12歲以下兒童；國定連假是否適用請看官網。",l:["site","https://www.farglory-oceanpark.com.tw/"]}
+];
+
+const OPX = id => ["ticket","https://www.opentix.life/program/"+id];
+const OPE = id => ["ticket","https://www.opentix.life/event/"+id];
+const SHOWS = [
+ {n:"米特動物樂園《表演廳的秘密》",c:"新北市",d:"",s:"2026-11-07",e:"2026-11-07",a:["baby","pre","low"],p:"NT$600–1,200",v:"功學社音樂廳",l:OPX("2087379295709708289")},
+ {n:"米特動物樂園《薩克歷險記：森林動物派對》",c:"新北市",d:"",s:"2026-11-13",e:"2026-11-14",a:["baby","pre","low"],p:"NT$600–1,200，1歲以上",v:"功學社音樂廳",l:OPX("2067172160579305473")},
+ {n:"小王子歷險記（桃園場）",c:"桃園市",d:"桃園區",s:"2026-11-07",e:"2026-11-07",a:["pre","low","high"],p:"NT$300–1,000",v:"桃園展演中心展演廳",l:OPX("2082732279325532161")},
+ {n:"小王子歷險記（中壢場）",c:"桃園市",d:"中壢區",s:"2026-12-19",e:"2026-12-19",a:["pre","low","high"],p:"NT$300–1,000",v:"中壢藝術館音樂廳",l:OPX("2082732279325532161")},
+ {n:"《屁屁偵探》南方島嶼的神秘遺跡（新北場）",c:"新北市",d:"板橋區",s:"2026-11-07",e:"2026-11-08",a:["pre","low","high"],p:"NT$500–1,800",v:"新北市藝文中心演藝廳",l:OPX("2086734015886159873")},
+ {n:"《屁屁偵探》南方島嶼的神秘遺跡（桃園場）",c:"桃園市",d:"桃園區",s:"2026-11-14",e:"2026-11-14",a:["pre","low","high"],p:"NT$500–1,800",v:"桃園展演中心展演廳",l:OPX("2086734015886159873")},
+ {n:"《屁屁偵探》南方島嶼的神秘遺跡（基隆場）",c:"基隆市",d:"",s:"2026-11-15",e:"2026-11-15",a:["pre","low","high"],p:"NT$500–1,800",v:"基隆表演藝術中心演藝廳",l:OPX("2086734015886159873")},
+ {n:"《屁屁偵探》南方島嶼的神秘遺跡（台中中山堂）",c:"臺中市",d:"北區",s:"2026-11-29",e:"2026-11-29",a:["pre","low","high"],p:"NT$500–1,800",v:"臺中市中山堂",l:OPX("2086734015886159873")},
+ {n:"《屁屁偵探》南方島嶼的神秘遺跡（嘉義場）",c:"嘉義市",d:"東區",s:"2026-12-12",e:"2026-12-12",a:["pre","low","high"],p:"NT$500–1,800",v:"嘉義市政府文化局音樂廳",l:OPX("2086734015886159873")},
+ {n:"《屁屁偵探》南方島嶼的神秘遺跡（高雄場）",c:"高雄市",d:"苓雅區",s:"2026-12-13",e:"2026-12-13",a:["pre","low","high"],p:"NT$500–1,800",v:"高雄市文化中心至德堂",l:OPX("2086734015886159873")},
+ {n:"《屁屁偵探》南方島嶼的神秘遺跡（彰化員林場）",c:"彰化縣",d:"員林市",s:"2026-12-25",e:"2026-12-25",a:["pre","low","high"],p:"NT$500–1,800",v:"員林演藝廳",l:OPX("2086734015886159873")},
+ {n:"《屁屁偵探》南方島嶼的神秘遺跡（台中豐原場）",c:"臺中市",d:"豐原區",s:"2026-12-26",e:"2026-12-26",a:["pre","low","high"],p:"NT$500–1,800",v:"葫蘆墩文化中心演奏廳",l:OPX("2086734015886159873")},
+ {n:"《小小音樂大師課》秋季交響樂・臺北",c:"臺北市",d:"中正區",s:"2026-11-07",e:"2026-11-22",a:["baby","pre"],p:"NT$375–875，建議1–6歲",v:"1980室內樂集",l:OPX("2079825690656772097")},
+ {n:"《小小音樂大師課》秋季交響樂・臺中",c:"臺中市",d:"西屯區",s:"2026-11-07",e:"2026-11-22",a:["baby","pre"],p:"NT$325–825，建議1–6歲",v:"臺中國家歌劇院排練室",l:OPX("2079838758878900225")},
+ {n:"《小小音樂大師課》秋季交響樂・高雄",c:"高雄市",d:"鳳山區",s:"2026-11-14",e:"2026-11-21",a:["baby","pre"],p:"NT$325–825，建議1–6歲",v:"衛武營排練室",l:OPX("2079846062269460481")},
+ {n:"《小小音樂大師課》冬季交響樂・臺北",c:"臺北市",d:"中正區",s:"2026-12-05",e:"2027-02-21",a:["baby","pre"],p:"NT$375–875，建議1–6歲",v:"1980室內樂集",l:OPE("2115611996166938625")},
+ {n:"《小小音樂大師課》冬季交響樂・高雄",c:"高雄市",d:"鳳山區",s:"2026-12-12",e:"2027-02-13",a:["baby","pre"],p:"NT$325–825，建議1–6歲",v:"衛武營排練室",l:OPE("2116064054735835137")},
+ {n:"《小小音樂大師課》冬季交響樂・臺中",c:"臺中市",d:"西屯區",s:"2026-12-19",e:"2027-02-21",a:["baby","pre"],p:"NT$325–825，建議1–6歲",v:"臺中國家歌劇院排練室",l:OPE("2115710740029333504")},
+ {n:"九歌兒童劇團《大樹、小鳥與牽牛花》",c:"臺中市",d:"豐原區",s:"2026-11-14",e:"2026-11-14",a:["pre","low"],p:"NT$100–200，3歲以上",v:"葫蘆墩文化中心演講廳",l:OPX("2082004320853954561")},
+ {n:"小青蛙劇團《綠野仙蹤》（苗栗場）",c:"苗栗縣",d:"苗栗市",s:"2026-11-14",e:"2026-11-14",a:["pre","low"],p:"NT$300–600",v:"苗栗縣政府文化觀光局中正堂",l:OPX("2070323539426664449")},
+ {n:"小青蛙劇團《綠野仙蹤》（台中豐原場）",c:"臺中市",d:"豐原區",s:"2026-12-12",e:"2026-12-12",a:["pre","low"],p:"NT$300–600",v:"葫蘆墩文化中心演奏廳",l:OPX("2070323539426664449")},
+ {n:"《海象莫雷的漂流日誌》親子音樂劇（新北場）",c:"新北市",d:"板橋區",s:"2026-11-14",e:"2026-11-15",a:["pre","low","high"],p:"NT$600–2,000",v:"新北市藝文中心演藝廳",l:OPX("2087017782302437377")},
+ {n:"《海象莫雷的漂流日誌》親子音樂劇（高雄場）",c:"高雄市",d:"鳳山區",s:"2026-12-12",e:"2026-12-13",a:["pre","low","high"],p:"NT$600–2,000",v:"衛武營戲劇院",l:OPX("2087017782302437377")},
+ {n:"《海象莫雷的漂流日誌》親子音樂劇（台中場）",c:"臺中市",d:"北區",s:"2027-01-16",e:"2027-01-17",a:["pre","low","high"],p:"NT$600–2,000",v:"臺中市中山堂",l:OPX("2087017782302437377")},
+ {n:"《海王子》",c:"苗栗縣",d:"苗栗市",s:"2026-11-15",e:"2026-11-15",a:["pre","low"],p:"NT$600",v:"苗栗縣政府文化觀光局中正堂",l:OPE("2102294538542166017")},
+ {n:"輕鬆自在場《我們的歌》",c:"臺北市",d:"中正區",s:"2026-11-20",e:"2026-11-20",a:["baby","pre","low"],p:"NT$250，可自由進出場，適合小小孩",v:"國家音樂廳",l:OPX("2076992709305442305")},
+ {n:"身聲劇場《海浪高高 我怕怕》",c:"新北市",d:"淡水區",s:"2026-11-21",e:"2026-11-22",a:["baby","pre"],p:"NT$600",v:"身聲淡水小劇場",l:OPE("2107662022920929280")},
+ {n:"長短腳電影院：法國兒童動畫短片精選",c:"高雄市",d:"鼓山區",s:"2026-11-21",e:"2026-11-21",a:["pre","low"],p:"NT$200，普遍級3歲以上",v:"內惟藝術中心",l:["ticket","https://ticket.com.tw/Application/UTK02/UTK0201_.aspx?PRODUCT_ID=P1GX6I3T"]},
+ {n:"誠品親子音樂劇《阿卡的兒歌大冒險》環遊世界篇",c:"臺北市",d:"信義區",s:"2026-11-21",e:"2026-11-21",a:["baby","pre","low"],p:"NT$600–1,200",v:"誠品表演廳",l:OPX("2064992985067073537")},
+ {n:"誠品親子音樂劇《阿卡的兒歌大冒險》時光旅行篇",c:"臺北市",d:"信義區",s:"2026-12-19",e:"2026-12-20",a:["baby","pre","low"],p:"NT$600–1,200",v:"誠品表演廳",l:OPX("2064993947364380673")},
+ {n:"兒童魔術劇《怪盜神偷-阿呆警察的復仇》（桃園場）",c:"桃園市",d:"桃園區",s:"2026-11-22",e:"2026-11-22",a:["pre","low","high"],p:"NT$400–1,200",v:"桃園展演中心展演廳",l:OPX("1990673782438719489")},
+ {n:"兒童魔術劇《怪盜神偷-阿呆警察的復仇》（苗栗場）",c:"苗栗縣",d:"苗栗市",s:"2026-11-28",e:"2026-11-28",a:["pre","low","high"],p:"NT$400–1,200",v:"苗栗縣政府文化觀光局中正堂",l:OPX("1990673782438719489")},
+ {n:"兒童魔術劇《怪盜神偷-阿呆警察的復仇》（雲林場）",c:"雲林縣",d:"斗六市",s:"2026-12-05",e:"2026-12-05",a:["pre","low","high"],p:"NT$400–1,200",v:"雲林表演廳",l:OPX("1990673782438719489")},
+ {n:"魔幻樂章－銅管村嘉年華",c:"桃園市",d:"桃園區",s:"2026-11-28",e:"2026-11-28",a:["pre","low","high"],p:"NT$300–1,200",v:"桃園展演中心展演廳",l:OPX("2028634382323146752")},
+ {n:"動物狂歡節美食大擂台",c:"新竹市",d:"東區",s:"2026-11-29",e:"2026-11-29",a:["pre","low"],p:"NT$300",v:"清華大學合勤演藝廳",l:OPE("2099762516779573249")},
+ {n:"偶偶偶劇團《小狐狸買手套》",c:"臺北市",d:"文山區",s:"2026-12-04",e:"2026-12-06",a:["pre","low"],p:"NT$350",v:"文山劇場",l:OPX("2088104133013299200")},
+ {n:"米特動物樂園《Do Re Mi 喜咧兜？》（高雄場）",c:"高雄市",d:"鳳山區",s:"2026-12-05",e:"2026-12-06",a:["baby","pre","low"],p:"NT$600–2,000",v:"衛武營戲劇院",l:OPX("2083124898860347393")},
+ {n:"米特動物樂園《Do Re Mi 喜咧兜？》（台中場）",c:"臺中市",d:"西屯區",s:"2026-12-17",e:"2026-12-18",a:["baby","pre","low"],p:"NT$600–2,000",v:"臺中國家歌劇院中劇院",l:OPX("2083124898860347393")},
+ {n:"米特動物樂園《Do Re Mi 喜咧兜？》（宜蘭場）",c:"宜蘭縣",d:"宜蘭市",s:"2026-12-27",e:"2026-12-27",a:["baby","pre","low"],p:"NT$600–2,000",v:"宜蘭演藝廳",l:OPX("2083124898860347393")},
+ {n:"米特動物樂園《Do Re Mi 喜咧兜？》（台北場）",c:"臺北市",d:"士林區",s:"2027-01-09",e:"2027-01-10",a:["baby","pre","low"],p:"NT$600–2,000",v:"臺北表演藝術中心球劇場",l:OPX("2083124898860347393")},
+ {n:"米特動物樂園×達克比《樂園怪蛋事件》",c:"臺北市",d:"信義區",s:"2027-01-16",e:"2027-01-17",a:["pre","low","high"],p:"NT$900–2,000",v:"臺北市政大樓親子劇場",l:OPE("2092172422094131201")},
+ {n:"餅乾劇團 美語音樂劇嘉年華",c:"新北市",d:"淡水區",s:"2026-12-05",e:"2026-12-06",a:["pre","low"],p:"NT$900",v:"臺北基督學院",l:OPE("2110988649820495873")},
+ {n:"藝姿舞集 童顏舞記《鹽來有你》",c:"臺南市",d:"歸仁區",s:"2026-12-12",e:"2026-12-12",a:["pre","low","high"],p:"NT$600–1,000",v:"臺南歸仁文化中心",l:OPE("2105134533009416192")},
+ {n:"風動室內樂團《公主百分百2》生日驚喜",c:"臺中市",d:"北區",s:"2026-12-19",e:"2026-12-19",a:["pre","low","high"],p:"NT$800–2,200",v:"臺中市中山堂",l:OPX("1956171631240474625")},
+ {n:"《陽光魔毯歷險記～一千零一個聖誕夜》",c:"臺北市",d:"信義區",s:"2026-12-25",e:"2026-12-25",a:["pre","low"],p:"NT$400–2,000",v:"誠品表演廳",l:OPE("2099745935440596992")},
+ {n:"《白雪的奇幻邀請函》",c:"臺北市",d:"中正區",s:"2026-12-25",e:"2026-12-27",a:["pre","low","high"],p:"NT$900–2,200",v:"水源劇場",l:OPX("2042154718167330817")},
+ {n:"音樂的繪本動物樂團【聖誕音狐響叮噹】（台南場）",c:"臺南市",d:"",s:"2026-12-25",e:"2026-12-25",a:["baby","pre","low"],p:"NT$650–1,850",v:"臺南虹韻文創中心",l:OPX("2094994026796392449")},
+ {n:"音樂的繪本動物樂團【聖誕音狐響叮噹】（雲林場）",c:"雲林縣",d:"斗六市",s:"2026-12-26",e:"2026-12-26",a:["baby","pre","low"],p:"NT$650–1,850",v:"雲林表演廳",l:OPX("2094994026796392449")},
+ {n:"音樂的繪本動物樂團【聖誕音狐響叮噹】（新北場）",c:"新北市",d:"板橋區",s:"2026-12-27",e:"2026-12-27",a:["baby","pre","low"],p:"NT$650–1,850",v:"新北市藝文中心演藝廳",l:OPX("2094994026796392449")},
+ {n:"《看不見》親子繪本說故事",c:"臺北市",d:"中正區",s:"2026-11-07",e:"2026-11-21",a:["pre","low"],p:"NT$350，建議5–8歲",v:"國家兩廳院表演藝術圖書館",l:OPE("2084178428940558336")},
+ {n:"文山劇場《親子玩藝》系列",c:"臺北市",d:"文山區",s:"2026-11-07",e:"2026-12-12",a:["baby","pre","low"],p:"NT$200（11/7、11/21、12/5、12/12）",v:"文山劇場",l:OPX("1986704187991719937")},
+ {n:"張正傑親子音樂會－搭熱氣球環遊世界",c:"臺北市",d:"中正區",s:"2026-11-14",e:"2026-11-14",a:["pre","low","high"],p:"NT$400",v:"臺北市中山堂中正廳",l:OPX("2035928395948498945")},
+ {n:"親子音樂劇《阿甯咕的爸鼻不見了？》",c:"新北市",d:"板橋區",s:"2026-11-20",e:"2026-11-22",a:["pre","low","high"],p:"NT$600–2,000，建議4歲以上",v:"新北市藝文中心演藝廳",l:OPX("2029816885442543616")},
+ {n:"愛樂劇工廠 兒童歌舞劇《新龜兔賽跑》PLUS",c:"臺北市",d:"信義區",s:"2026-11-28",e:"2026-11-29",a:["pre","low"],p:"NT$500–1,000",v:"臺北市政大樓親子劇場",l:OPE("2091776562129170433")},
+ {n:"玉米雞劇團《神探小紅帽──消失的△》",c:"新竹縣",d:"竹北市",s:"2026-11-14",e:"2026-11-15",a:["pre","low","high"],p:"NT$800",v:"新竹縣政府文化局實驗劇場",l:OPE("2098218392126803968")}
+].map(x=>({n:x.n,c:x.c,d:x.d,s:x.s,e:x.e,t:"兒童劇・音樂會",f:"paid",a:x.a,io:"in",note:`${x.v}，${x.p}。`,l:x.l}));
+
+EVENTS.push(...SHOWS);
+
+/* ---------- 常設景點（沒有期限） ---------- */
+/* t: 主題樂園｜動物・農場｜博物館・科學館｜室內遊戲｜自然・森林｜文化園區 */
+const PLACES = [
+ {n:"臺北市立動物園",c:"臺北市",d:"文山區",t:"動物・農場",f:"paid",a:ALL,io:"both",note:"門票便宜，園區很大，建議帶推車；6歲以下免費。"},
+ {n:"臺北市立兒童新樂園",c:"臺北市",d:"士林區",t:"主題樂園",f:"paid",a:ALL,io:"out",note:"入園便宜、設施分開計費，適合第一次玩樂園的小小孩。"},
+ {n:"國立臺灣科學教育館",c:"臺北市",d:"士林區",t:"博物館・科學館",f:"paid",a:["pre","low","high"],io:"in",note:"3–6樓常設展一票到底，常有大型特展。"},
+ {n:"臺北市立天文科學教育館",c:"臺北市",d:"士林區",t:"博物館・科學館",f:"paid",a:["pre","low","high"],io:"in",note:"宇宙劇場和展示場，就在科教館旁邊。"},
+ {n:"國家鐵道博物館",c:"臺北市",d:"信義區",t:"博物館・科學館",f:"paid",a:["pre","low","high"],io:"both",note:"原台北機廠改建，假日可搭藍皮火車；週一休館。"},
+ {n:"臺北自來水園區",c:"臺北市",d:"中正區",t:"文化園區",f:"paid",a:ALL,io:"out",note:"夏天戲水區超熱門，平時也能散步。"},
+ {n:"國立臺灣博物館 古生物館（土銀展示館）",c:"臺北市",d:"中正區",t:"博物館・科學館",f:"paid",a:["pre","low","high"],io:"in",note:"大型恐龍骨架，喜歡恐龍的孩子必去。"},
+ {n:"KidZania 奇薩尼亞台北（即將開幕）",c:"臺北市",d:"南港區",t:"室內遊戲",f:"paid",a:["pre","low","high"],io:"in",note:"兒童職業體驗城市，南港LaLaport 5樓，預計2026年底開幕，日期與票價以官方公告為準。"},
+
+ {n:"新北市立十三行博物館",c:"新北市",d:"八里區",t:"博物館・科學館",f:"paid",a:["pre","low","high"],io:"both",note:"考古體驗，戶外有遊戲區。"},
+ {n:"新北市立鶯歌陶瓷博物館",c:"新北市",d:"鶯歌區",t:"博物館・科學館",f:"paid",a:["pre","low","high"],io:"both",note:"戶外陶藝公園夏天可以玩水，有捏陶DIY。"},
+ {n:"新北市立黃金博物館",c:"新北市",d:"瑞芳區",t:"博物館・科學館",f:"paid",a:["low","high"],io:"both",note:"可以摸大金磚、走本山五坑。"},
+ {n:"E7PLAY 一票玩到底（三重館）",c:"新北市",d:"三重區",t:"室內遊戲",f:"paid",a:["low","high"],io:"in",note:"室內運動娛樂場，下雨天放電。"},
+
+ {n:"國立海洋科技博物館",c:"基隆市",d:"中正區",t:"博物館・科學館",f:"paid",a:ALL,io:"in",note:"主題館和兒童廳都適合小小孩。"},
+ {n:"潮境智能海洋館",c:"基隆市",d:"中正區",t:"博物館・科學館",f:"paid",a:ALL,io:"in",note:"就在潮境公園旁，看完可以去草地跑。"},
+
+ {n:"Xpark 水族館",c:"桃園市",d:"中壢區",t:"動物・農場",f:"paid",a:ALL,io:"in",note:"青埔都會型水族館，推車友善。"},
+ {n:"小人國主題樂園",c:"桃園市",d:"龍潭區",t:"主題樂園",f:"paid",a:ALL,io:"out",note:"迷你建築和小小孩設施多。"},
+ {n:"桃園市立兒童美術館",c:"桃園市",d:"中壢區",t:"博物館・科學館",f:"free",a:["baby","pre","low"],io:"in",note:"青埔，互動展和親子圖書區。"},
+ {n:"野趣森林（原台灣地景花園）",c:"桃園市",d:"中壢區",t:"主題樂園",f:"paid",a:["pre","low","high"],io:"out",note:"400多項戶外遊具和空中軌道車，週六日開放。"},
+ {n:"花開了休閒農園",c:"桃園市",d:"大溪區",t:"動物・農場",f:"free",a:ALL,io:"out",note:"賞花、餵動物，夏天有戲水。"},
+
+ {n:"六福村主題遊樂園",c:"新竹縣",d:"關西鎮",t:"主題樂園",f:"paid",a:["pre","low","high"],io:"out",note:"大型遊樂設施加野生動物園。"},
+ {n:"綠世界生態農場",c:"新竹縣",d:"北埔鄉",t:"動物・農場",f:"paid",a:ALL,io:"out",note:"水豚、羊駝、鳥園。"},
+ {n:"新竹市立動物園",c:"新竹市",d:"東區",t:"動物・農場",f:"paid",a:ALL,io:"out",note:"票價便宜，園區小，好逛不累。"},
+
+ {n:"飛牛牧場",c:"苗栗縣",d:"通霄鎮",t:"動物・農場",f:"paid",a:ALL,io:"out",note:"餵小牛喝奶、看鴨子遊行。"},
+ {n:"尚順育樂世界",c:"苗栗縣",d:"頭份市",t:"室內遊戲",f:"paid",a:ALL,io:"in",note:"室內兒童樂園和溜冰場。"},
+
+ {n:"國立自然科學博物館",c:"臺中市",d:"北區",t:"博物館・科學館",f:"paid",a:ALL,io:"in",note:"恐龍、生命科學廳，週五下午免費。"},
+ {n:"麗寶樂園",c:"臺中市",d:"后里區",t:"主題樂園",f:"paid",a:["pre","low","high"],io:"out",note:"探索樂園加夏天水樂園。"},
+ {n:"東勢林場遊樂區",c:"臺中市",d:"東勢區",t:"自然・森林",f:"paid",a:ALL,io:"out",note:"森林步道和遊戲場。"},
+ {n:"新社百菇莊",c:"臺中市",d:"新社區",t:"動物・農場",f:"paid",a:["pre","low","high"],io:"both",note:"採香菇、做菇菇茶碗蒸。"},
+
+ {n:"百果山探索樂園",c:"彰化縣",d:"員林市",t:"主題樂園",f:"paid",a:["pre","low","high"],io:"out",note:"2026年改版重新開放，有彩虹滑梯。"},
+ {n:"台灣玻璃館",c:"彰化縣",d:"鹿港鎮",t:"博物館・科學館",f:"free",a:ALL,io:"in",note:"免門票觀光工廠，有DIY。"},
+
+ {n:"九族文化村",c:"南投縣",d:"魚池鄉",t:"主題樂園",f:"paid",a:["pre","low","high"],io:"out",note:"樂園加纜車到日月潭。"},
+ {n:"溪頭自然教育園區",c:"南投縣",d:"鹿谷鄉",t:"自然・森林",f:"paid",a:ALL,io:"out",note:"大學池、森林步道，推車可走部分路段。"},
+ {n:"薰衣草森林 九九峰氦氣球樂園",c:"南投縣",d:"",t:"主題樂園",f:"paid",a:["pre","low","high"],io:"out",note:"2026年新開幕，全台唯一的高空氦氣球。"},
+
+ {n:"劍湖山世界",c:"雲林縣",d:"古坑鄉",t:"主題樂園",f:"paid",a:["pre","low","high"],io:"out",note:"大型樂園，有兒童區。"},
+
+ {n:"故宮南院",c:"嘉義縣",d:"太保市",t:"博物館・科學館",f:"paid",a:["pre","low","high"],io:"both",note:"園區很大可以散步，館內有兒童創意中心。"},
+ {n:"芯浪國際滑板衝浪公園",c:"嘉義縣",d:"太保市",t:"室內遊戲",f:"paid",a:["low","high"],io:"out",note:"2026年新開幕，城市衝浪和滑板，鄰近故宮南院。"},
+ {n:"檜意森活村",c:"嘉義市",d:"東區",t:"文化園區",f:"free",a:ALL,io:"out",note:"日式木屋群，旁邊就是北門車站。"},
+
+ {n:"南瀛親子館",c:"臺南市",d:"",t:"室內遊戲",f:"free",a:["baby","pre"],io:"in",note:"免費室內遊戲空間，CP值很高。"},
+ {n:"臺南市立圖書館新總館",c:"臺南市",d:"永康區",t:"室內遊戲",f:"free",a:ALL,io:"in",note:"兒童區很大，有親子遊戲空間。"},
+ {n:"奇美博物館",c:"臺南市",d:"仁德區",t:"博物館・科學館",f:"paid",a:["low","high"],io:"both",note:"動物標本廳孩子最愛，外面的草地可以跑。"},
+ {n:"頑皮世界野生動物園",c:"臺南市",d:"學甲區",t:"動物・農場",f:"paid",a:ALL,io:"out",note:"可以餵動物。"},
+ {n:"國立臺灣歷史博物館",c:"臺南市",d:"安南區",t:"博物館・科學館",f:"paid",a:["pre","low","high"],io:"both",note:"票價便宜，戶外有大草地。"},
+
+ {n:"壽山動物園",c:"高雄市",d:"鼓山區",t:"動物・農場",f:"paid",a:ALL,io:"out",note:"票價便宜，重新整修後很好逛。"},
+ {n:"國立科學工藝博物館",c:"高雄市",d:"三民區",t:"博物館・科學館",f:"paid",a:ALL,io:"in",note:"館內有熱雪天堂兒童滑雪樂園（另外收費）。"},
+ {n:"義大遊樂世界",c:"高雄市",d:"大樹區",t:"主題樂園",f:"paid",a:["pre","low","high"],io:"out",note:"大型樂園。"},
+ {n:"野森動物學校",c:"高雄市",d:"內門區",t:"動物・農場",f:"check",a:ALL,io:"out",note:"原內門觀光休閒園區，2026年1月開幕，可以和20多種小動物互動。"},
+ {n:"鈴鹿賽道樂園",c:"高雄市",d:"前鎮區",t:"主題樂園",f:"paid",a:["pre","low","high"],io:"out",note:"親子駕駛小車、考兒童駕照。"},
+
+ {n:"國立海洋生物博物館",c:"屏東縣",d:"車城鄉",t:"動物・農場",f:"paid",a:ALL,io:"in",note:"海底隧道和企鵝，可以夜宿水族館。"},
+ {n:"潮州鐵道園區",c:"屏東縣",d:"潮州鎮",t:"文化園區",f:"free",a:ALL,io:"out",note:"火車造景加玻璃天空步道。"},
+ {n:"墾丁鹿境梅花鹿生態園區",c:"屏東縣",d:"恆春鎮",t:"動物・農場",f:"paid",a:ALL,io:"out",note:"餵梅花鹿。"},
+
+ {n:"蘭陽博物館",c:"宜蘭縣",d:"頭城鎮",t:"博物館・科學館",f:"paid",a:["pre","low","high"],io:"in",note:"單面山建築，下雨天的好選擇。"},
+ {n:"羅東林業文化園區",c:"宜蘭縣",d:"羅東鎮",t:"文化園區",f:"free",a:ALL,io:"out",note:"貯木池、蒸汽火車頭。"},
+ {n:"遛遛三星",c:"宜蘭縣",d:"三星鄉",t:"動物・農場",f:"paid",a:ALL,io:"both",note:"新開幕，大多是室內空間，有水豚、狐獴、白狐狸（白狐互動需預約）。"},
+ {n:"宜蘭免睡殿",c:"宜蘭縣",d:"蘇澳鎮",t:"室內遊戲",f:"paid",a:["pre","low","high"],io:"in",note:"床墊彈跳、枕頭大戰。"},
+
+ {n:"遠雄海洋公園",c:"花蓮縣",d:"壽豐鄉",t:"主題樂園",f:"paid",a:["pre","low","high"],io:"both",note:"海洋劇場加遊樂設施。"},
+ {n:"花蓮防災教育館",c:"花蓮縣",d:"",t:"博物館・科學館",f:"free",a:["pre","low","high"],io:"in",note:"五大防災體驗，免費。"},
+ {n:"七星潭",c:"花蓮縣",d:"新城鄉",t:"自然・森林",f:"free",a:ALL,io:"out",note:"礫石海灘，看海、撿石頭（不能下水）。"},
+
+ {n:"初鹿牧場",c:"臺東縣",d:"卑南鄉",t:"動物・農場",f:"paid",a:ALL,io:"out",note:"大草原、餵小牛。"},
+ {n:"鹿野高台",c:"臺東縣",d:"鹿野鄉",t:"自然・森林",f:"free",a:ALL,io:"out",note:"夏天熱氣球嘉年華會場，平常可以野餐。"},
+ {n:"國立臺灣史前文化博物館",c:"臺東縣",d:"臺東市",t:"博物館・科學館",f:"paid",a:["pre","low","high"],io:"in",note:"有兒童考古體驗區。"},
+
+ {n:"澎湖水族館",c:"澎湖縣",d:"白沙鄉",t:"動物・農場",f:"paid",a:ALL,io:"in",note:"海底隧道，下雨天的備案。"}
+];
+
+/* ---------- 景點擴充與分類 ---------- */
+const SM=["baby","pre","low"], BIG=["pre","low","high"];
+const CAT={M:"博物館・美術館",S:"科學・教育館",T:"主題樂園",Z:"動物園・水族館",F:"農場・牧場",K:"觀光工廠",C:"文化・鐵道園區",I:"室內遊戲・親子館",N:"森林・自然"};
+const PL=(n,c,d,t,f,io,note,a)=>({n,c,d,t:CAT[t],f:{p:"paid",f:"free",c:"check"}[f],io:{i:"in",o:"out",b:"both"}[io],note,a:a||ALL});
+const TODDLER=["baby","pre"];
+const PLACES_MORE=[
+ PL("國立故宮博物院","臺北市","士林區","M","p","i","兒童學藝中心可以動手玩，主展館適合大一點的孩子。",BIG),
+ PL("國立歷史博物館","臺北市","中正區","M","p","i","整修後重新開放，旁邊就是植物園。",BIG),
+ PL("臺北市立美術館","臺北市","中山區","M","p","i","常有適合親子的展覽和兒童藝術教育中心。",BIG),
+ PL("國立臺灣博物館","臺北市","中正區","M","p","i","台灣動植物標本，二二八公園內。",BIG),
+ PL("袖珍博物館","臺北市","中山區","M","p","i","迷你屋和小模型，小朋友看得很入迷。",BIG),
+ PL("北投溫泉博物館","臺北市","北投區","M","f","i","日式老建築，免費參觀。"),
+ PL("樹火紀念紙博物館","臺北市","中山區","M","p","i","可以體驗手抄紙。",BIG),
+ PL("美麗華百樂園摩天輪","臺北市","中山區","T","p","b","大直摩天輪，晚上看夜景。"),
+ PL("貓空纜車","臺北市","文山區","T","p","o","坐纜車上山喝茶看風景，動物園站出發。"),
+ PL("臺北植物園","臺北市","中正區","N","f","o","荷花池和大樹，散步觀察植物。"),
+ PL("關渡自然公園","臺北市","北投區","N","p","b","賞鳥、看招潮蟹，有自然中心。"),
+ PL("陽明山擎天崗","臺北市","士林區","N","f","o","大草原看水牛，記得帶外套。"),
+ PL("士林官邸","臺北市","士林區","N","f","o","玫瑰園和大花園，免費散步。"),
+ PL("白石湖吊橋","臺北市","內湖區","N","f","o","同心池和吊橋，冬天有草莓園。"),
+ ...["中正","大同","中山","松山","大安","萬華","信義","士林","北投","內湖","南港","文山"].map(d=>PL(`臺北市${d}親子館`,"臺北市",d+"區","I","f","i","市府親子館，免費、多數需預約，給0–6歲。",TODDLER)),
+ ...["板橋","三重","新莊","中和","永和","新店","土城","蘆洲","汐止","林口","淡水","樹林"].map(d=>PL(`新北市${d}親子館`,"新北市",d+"區","I","f","i","市府親子館，免費、可能需預約，給0–6歲。",TODDLER)),
+ PL("國家圖書館 / 國立臺灣圖書館 兒童區","新北市","中和區","I","f","i","國立臺灣圖書館有大型兒童資料區，旁邊是四號公園。"),
+ PL("新北市立淡水古蹟博物館（紅毛城）","新北市","淡水區","M","p","b","紅毛城老建築，看完去河邊吹風。"),
+ PL("林本源園邸（林家花園）","新北市","板橋區","C","f","o","古典園林，免費參觀。"),
+ PL("朱銘美術館","新北市","金山區","M","p","b","戶外大型雕塑園區，有兒童藝術中心。"),
+ PL("野柳地質公園","新北市","萬里區","N","p","o","女王頭和奇岩，注意小朋友不要跑太遠。"),
+ PL("野柳海洋世界","新北市","萬里區","Z","p","b","海豚和海獅表演。"),
+ PL("坪林茶業博物館","新北市","坪林區","M","p","b","認識茶葉，旁邊可以玩水看魚。"),
+ PL("猴硐貓村","新北市","瑞芳區","C","f","o","老礦村和很多貓咪。"),
+ PL("雲仙樂園","新北市","烏來區","T","p","o","坐空中纜車進園區，有瀑布、步道。"),
+ PL("內洞國家森林遊樂區","新北市","烏來區","N","p","o","瀑布和森林步道，夏天很涼。"),
+ PL("滿月圓國家森林遊樂區","新北市","三峽區","N","p","o","步道加瀑布，秋天賞楓。"),
+ PL("淡水漁人碼頭","新北市","淡水區","N","f","o","情人橋看夕陽。"),
+ PL("碧潭風景區","新北市","新店區","N","f","o","划船、吊橋、河濱步道。"),
+ PL("千巧谷牛樂園牧場","新北市","三峽區","F","p","b","餵小牛、擠牛奶、玩沙。"),
+ PL("新旺集瓷","新北市","鶯歌區","K","f","b","陶瓷觀光工廠，可以彩繪。"),
+ PL("和平島地質公園","基隆市","中正區","N","p","o","海蝕地形和海水游泳池（夏季）。"),
+ PL("八斗子望幽谷","基隆市","中正區","N","f","o","海邊草坡步道，看海。"),
+ PL("情人湖公園","基隆市","安樂區","N","f","o","湖邊步道和吊橋。"),
+ PL("大溪木藝生態博物館","桃園市","大溪區","M","f","b","日式宿舍群，常有親子木工活動。"),
+ PL("味全埔心牧場","桃園市","楊梅區","F","p","o","餵動物、大草皮、烤肉。"),
+ PL("富田花園農場","桃園市","大溪區","F","p","o","大草坪和花園，可以野餐。"),
+ PL("大溪老茶廠","桃園市","大溪區","K","c","i","日式老茶廠，可以喝茶參觀。",BIG),
+ PL("宏亞食品巧克力共和國","桃園市","八德區","K","p","i","巧克力觀光工廠，可以DIY。"),
+ PL("郭元益糕餅博物館 楊梅觀光工廠","桃園市","楊梅區","K","p","i","做糕餅DIY。"),
+ PL("金蘭醬油博物館","桃園市","大溪區","K","f","i","看醬油怎麼做，免費參觀。"),
+ PL("石門水庫","桃園市","龍潭區","N","p","o","大壩、步道、活魚料理。"),
+ PL("東眼山國家森林遊樂區","桃園市","復興區","N","p","o","柳杉林步道，有森林小學堂。"),
+ PL("小烏來天空步道","桃園市","復興區","N","p","o","透明步道看瀑布。"),
+ PL("桃園市立美術館 橫山書法藝術公園","桃園市","大園區","N","f","o","大草坪和水景，附近就是兒童美術館。"),
+ PL("許厝港國家重要濕地","桃園市","大園區","N","f","o","賞鳥、看海岸生態。"),
+ PL("桃園市客家文化館","桃園市","龍潭區","M","f","b","客家文化展示，戶外空間大。"),
+ PL("新竹市立玻璃工藝博物館","新竹市","東區","M","p","i","玻璃藝術，旁邊是新竹公園。",BIG),
+ PL("南寮漁港","新竹市","北區","N","f","o","放風箏、大草地、魚鱗天梯。"),
+ PL("香山濕地","新竹市","香山區","N","f","o","看招潮蟹、賞蟹步道。"),
+ PL("小叮噹科學主題樂園","新竹縣","新埔鎮","T","p","b","科學遊戲館加滑雪場、戶外設施。"),
+ PL("觀霧國家森林遊樂區","新竹縣","五峰鄉","N","p","o","高山森林步道，山路要注意。",BIG),
+ PL("新瓦屋客家文化保存區","新竹縣","竹北市","C","f","o","大草地和客家老屋，常有市集。"),
+ PL("臺灣客家文化館","苗栗縣","銅鑼鄉","M","f","b","大型客家文化展覽館，戶外草地大。"),
+ PL("三義木雕博物館","苗栗縣","三義鄉","M","p","i","木雕作品和體驗活動。",BIG),
+ PL("勝興車站","苗栗縣","三義鄉","C","f","o","舊山線老車站，附近可騎鐵道自行車。"),
+ PL("龍騰斷橋","苗栗縣","三義鄉","C","f","o","紅磚斷橋遺跡，春天油桐花。"),
+ PL("大湖草莓文化館","苗栗縣","大湖鄉","M","f","i","草莓產季時附近可以採草莓。"),
+ PL("台鹽通霄精鹽廠","苗栗縣","通霄鎮","K","f","b","看鹽怎麼做，有鹽來運轉館。"),
+ PL("臺灣菸酒竹南啤酒廠","苗栗縣","竹南鎮","K","f","b","戶外大草坪和觀光工廠。"),
+ PL("金良興觀光磚廠","苗栗縣","竹南鎮","K","c","b","磚窯和磚塊DIY。"),
+ PL("西湖渡假村","苗栗縣","三義鄉","T","p","o","花園加遊樂設施、動物區。"),
+ PL("香格里拉樂園","苗栗縣","造橋鄉","T","p","o","老牌樂園，有遊樂設施。"),
+ PL("國立臺灣美術館","臺中市","西區","M","f","b","免費參觀，戶外雕塑公園很大。"),
+ PL("921地震教育園區","臺中市","霧峰區","M","p","b","真實校舍遺址和地震體驗。",BIG),
+ PL("臺中市港區藝術中心","臺中市","清水區","M","f","b","閩式建築，戶外空間大。"),
+ PL("高美濕地","臺中市","清水區","N","f","o","看夕陽和風車，注意潮水時間。"),
+ PL("大雪山國家森林遊樂區","臺中市","和平區","N","p","o","賞鳥、森林步道，山上較冷。"),
+ PL("八仙山國家森林遊樂區","臺中市","和平區","N","p","o","溪邊步道和森林。"),
+ PL("武陵農場","臺中市","和平區","F","p","o","高山農場，春天櫻花季。"),
+ PL("福壽山農場","臺中市","和平區","F","p","o","高山果園和蘋果。"),
+ PL("中社觀光花市","臺中市","后里區","F","p","o","花海季節最美。"),
+ PL("薰衣草森林 新社店","臺中市","新社區","F","p","o","森林小徑、紫色花園。"),
+ PL("心之芳庭","臺中市","新社區","T","p","o","歐風庭園、迷宮花園。"),
+ PL("寶熊漁樂碼頭","臺中市","大里區","K","p","b","釣魚、魚池和釣具觀光工廠。"),
+ PL("台灣滷味博物館","臺中市","","K","p","i","滷味觀光工廠，可以DIY。"),
+ PL("台灣優格餅乾學院","彰化縣","","K","p","i","魔法學院風的餅乾觀光工廠。"),
+ PL("白蘭氏健康博物館","彰化縣","鹿港鎮","K","p","i","雞精工廠參觀，有互動展。"),
+ PL("鹿港老街","彰化縣","鹿港鎮","C","f","o","老街、古廟和小吃。"),
+ PL("彰化扇形車庫","彰化縣","彰化市","C","p","o","全台唯一仍使用的扇形車庫，看火車轉盤。"),
+ PL("田尾公路花園","彰化縣","田尾鄉","F","f","o","騎腳踏車逛花圃。"),
+ PL("成美文化園","彰化縣","彰化市","C","p","o","大庭園和小動物。"),
+ PL("王功漁港","彰化縣","芳苑鄉","N","f","o","燈塔、蚵田、看夕陽。"),
+ PL("日月潭纜車","南投縣","魚池鄉","T","p","o","搭纜車從日月潭到九族。"),
+ PL("清境農場","南投縣","仁愛鄉","F","p","o","綿羊秀和青青草原。"),
+ PL("埔里紙教堂","南投縣","埔里鎮","C","p","o","紙做的教堂和生態園區。"),
+ PL("廣興紙寮","南投縣","埔里鎮","K","p","b","手工造紙DIY。"),
+ PL("埔里酒廠","南投縣","埔里鎮","K","f","i","免費參觀，冰棒很有名。"),
+ PL("特有生物研究保育中心","南投縣","集集鎮","S","f","b","台灣特有動植物，展示館免費。"),
+ PL("車埕車站","南投縣","水里鄉","C","f","o","集集線終點，木業展示館。"),
+ PL("奧萬大國家森林遊樂區","南投縣","仁愛鄉","N","p","o","吊橋和楓葉。"),
+ PL("杉林溪森林生態渡假園區","南投縣","竹山鎮","N","p","o","森林步道、花季。"),
+ PL("竹山天梯","南投縣","竹山鎮","N","p","o","大吊橋。",BIG),
+ PL("雲林布袋戲館","雲林縣","虎尾鎮","M","f","i","看布袋戲偶，常有表演。"),
+ PL("興隆毛巾觀光工廠","雲林縣","虎尾鎮","K","f","i","毛巾蛋糕，免費參觀。"),
+ PL("源順芝麻觀光工廠","雲林縣","","K","f","i","芝麻、油品製作參觀。"),
+ PL("古坑綠色隧道","雲林縣","古坑鄉","N","f","o","芒果樹林蔭步道。"),
+ PL("成龍濕地","雲林縣","口湖鄉","N","f","o","濕地裝置藝術和賞鳥。"),
+ PL("阿里山國家森林遊樂區","嘉義縣","阿里山鄉","N","p","o","神木、小火車、日出。"),
+ PL("嘉義市立美術館","嘉義市","西區","M","f","i","老菸酒公賣局改建。",BIG),
+ PL("蒜頭糖廠蔗埕文化園區","嘉義縣","六腳鄉","C","f","o","五分車和糖廠冰棒。"),
+ PL("臺灣花磚博物館","嘉義市","西區","M","p","i","老花磚，可以DIY杯墊。",BIG),
+ PL("東石漁人碼頭","嘉義縣","東石鄉","N","f","o","海邊、沙灘和遊戲區。"),
+ PL("獨角仙休閒農場","嘉義縣","竹崎鄉","F","p","o","昆蟲生態和溪邊。"),
+ PL("老楊方塊酥 觀光工廠","嘉義縣","大林鎮","K","f","i","方塊酥製程參觀。"),
+ PL("觸口自然教育中心","嘉義縣","番路鄉","N","f","b","步道和自然教育活動。"),
+ PL("臺南市美術館","臺南市","中西區","M","p","i","兒童藝術空間和展覽。",BIG),
+ PL("國立臺灣文學館","臺南市","中西區","M","f","i","有兒童文學書房。",BIG),
+ PL("十鼓文創園區","臺南市","仁德區","C","p","b","鼓樂表演、滑草、溜滑梯。"),
+ PL("安平古堡","臺南市","安平區","C","p","o","古城牆和瞭望台。"),
+ PL("安平樹屋","臺南市","安平區","C","p","o","大榕樹包住老倉庫。"),
+ PL("四草綠色隧道","臺南市","安南區","N","p","o","搭竹筏穿過紅樹林。"),
+ PL("台江國家公園遊客中心","臺南市","安南區","N","f","b","濕地生態和展示館。"),
+ PL("走馬瀨農場","臺南市","大內區","F","p","o","大草原、滑草、熱氣球季。"),
+ PL("尖山埤江南渡假村","臺南市","柳營區","N","p","o","湖景、步道、玩水。"),
+ PL("南元休閒農場","臺南市","柳營區","F","p","o","餵動物、划船、大草地。"),
+ PL("大坑休閒農場","臺南市","新化區","F","p","o","森林步道和農場活動。"),
+ PL("烏山頭水庫風景區","臺南市","官田區","N","p","o","水庫、八田與一紀念園區。"),
+ PL("七股鹽山","臺南市","七股區","N","p","o","爬鹽山、鹽雕。"),
+ PL("台灣鹽博物館","臺南市","七股區","M","p","i","認識鹽的故事。"),
+ PL("黑橋牌香腸博物館","臺南市","安南區","K","f","i","香腸觀光工廠，免費參觀。"),
+ PL("左鎮化石園區","臺南市","左鎮區","M","p","i","古生物化石，恐龍迷必去。"),
+ PL("樹谷生活科學館","臺南市","新市區","S","p","i","考古化石和科學展示。",BIG),
+ PL("南科考古館","臺南市","新市區","M","p","i","史前遺址文物，有兒童區。",BIG),
+ PL("億載金城","臺南市","安平區","C","p","o","大砲和護城河。"),
+ PL("漁光島","臺南市","安平區","N","f","o","沙灘、防風林，看夕陽。"),
+ PL("高雄市立美術館","高雄市","鼓山區","M","c","i","有兒童美術館，園區大。"),
+ PL("駁二藝術特區","高雄市","鹽埕區","C","f","o","大型裝置藝術、草地、小火車。"),
+ PL("衛武營國家藝術文化中心","高雄市","鳳山區","C","f","b","建築可以穿梭，旁邊就是都會公園。"),
+ PL("旗津海岸公園","高雄市","旗津區","N","f","o","沙灘、貝殼館、騎腳踏車。"),
+ PL("哈瑪星台灣鐵道館","高雄市","鼓山區","C","p","i","大型鐵道模型，火車迷必去。"),
+ PL("打狗英國領事館文化園區","高雄市","鼓山區","C","p","o","看港口和夕陽。"),
+ PL("蓮池潭風景區","高雄市","左營區","N","f","o","龍虎塔，環湖騎車。"),
+ PL("澄清湖風景區","高雄市","鳥松區","N","p","o","九曲橋、湖景步道。"),
+ PL("高雄市立圖書館總館","高雄市","前鎮區","I","f","i","兒童區很大，下雨天好去處。"),
+ PL("空軍航空教育展示館","高雄市","岡山區","M","f","b","看真的飛機，免費參觀。"),
+ PL("田寮月世界","高雄市","田寮區","N","f","o","泥岩惡地地形步道。"),
+ PL("美濃客家文物館","高雄市","美濃區","M","p","i","美濃客家文化。"),
+ PL("大樹舊鐵橋濕地公園","高雄市","大樹區","N","f","o","舊鐵橋和濕地。"),
+ PL("橋頭糖廠","高雄市","橋頭區","C","f","o","五分車、糖廠冰品。"),
+ PL("墾丁國家森林遊樂區","屏東縣","恆春鎮","N","p","o","珊瑚礁岩森林和觀海樓。"),
+ PL("六堆客家文化園區","屏東縣","內埔鄉","C","f","o","大草地、戲水區、客家文化。"),
+ PL("台灣原住民族文化園區","屏東縣","瑪家鄉","C","p","o","原住民族文化和表演。"),
+ PL("雙流國家森林遊樂區","屏東縣","獅子鄉","N","p","o","瀑布步道和溪邊。"),
+ PL("屏東縣立圖書館總館","屏東縣","屏東市","I","f","i","森林裡的圖書館，兒童區很棒。"),
+ PL("勝利星村創意生活園區","屏東縣","屏東市","C","f","o","眷村老屋散步。"),
+ PL("大鵬灣國家風景區","屏東縣","東港鎮","N","f","o","環灣騎車、水上活動。"),
+ PL("國立傳統藝術中心","宜蘭縣","五結鄉","C","p","b","老街、表演、手作。"),
+ PL("幾米廣場","宜蘭縣","宜蘭市","C","f","o","宜蘭火車站旁的繪本場景。"),
+ PL("太平山國家森林遊樂區","宜蘭縣","大同鄉","N","p","o","蹦蹦車、見晴步道。"),
+ PL("明池國家森林遊樂區","宜蘭縣","大同鄉","N","p","o","高山湖泊和步道。"),
+ PL("梅花湖風景區","宜蘭縣","冬山鄉","N","f","o","環湖騎腳踏車。"),
+ PL("張美阿嬤農場","宜蘭縣","員山鄉","F","p","o","餵水豚、羊駝等動物。"),
+ PL("頭城農場","宜蘭縣","頭城鎮","F","p","o","農村體驗、焢窯、DIY。"),
+ PL("香格里拉休閒農場","宜蘭縣","冬山鄉","F","p","o","山上農場，有親子活動。"),
+ PL("菌寶貝博物館","宜蘭縣","五結鄉","K","p","i","益生菌觀光工廠，互動展。"),
+ PL("蜡藝蠟筆城堡","宜蘭縣","五結鄉","K","p","i","蠟筆城堡，可以畫畫DIY。"),
+ PL("亞典蛋糕密碼館","宜蘭縣","","K","f","i","蛋糕觀光工廠。"),
+ PL("橘之鄉蜜餞形象館","宜蘭縣","宜蘭市","K","f","i","金棗蜜餞觀光工廠。"),
+ PL("虎牌米粉產業文化館","宜蘭縣","","K","f","i","米粉製程，可以DIY。"),
+ PL("宜蘭餅發明館","宜蘭縣","","K","f","i","牛舌餅DIY。"),
+ PL("蘇澳冷泉","宜蘭縣","蘇澳鎮","N","p","o","夏天泡冷泉。"),
+ PL("新光兆豐休閒農場","花蓮縣","鳳林鎮","F","p","o","大農場、動物區、騎腳踏車。"),
+ PL("瑞穗牧場","花蓮縣","瑞穗鄉","F","p","o","看乳牛、鮮奶。"),
+ PL("池南國家森林遊樂區","花蓮縣","壽豐鄉","N","p","o","林業展示館，鯉魚潭附近。"),
+ PL("富源國家森林遊樂區","花蓮縣","瑞穗鄉","N","p","o","蝴蝶谷、溪流步道。"),
+ PL("花蓮觀光糖廠","花蓮縣","光復鄉","C","f","o","日式宿舍和冰品。"),
+ PL("林田山林業文化園區","花蓮縣","鳳林鎮","C","f","o","老林場聚落。"),
+ PL("鯉魚潭","花蓮縣","壽豐鄉","N","f","o","划船、環潭步道。"),
+ PL("知本國家森林遊樂區","臺東縣","卑南鄉","N","p","o","森林步道和吊橋。"),
+ PL("伯朗大道","臺東縣","池上鄉","N","f","o","騎腳踏車看稻田。"),
+ PL("三仙台","臺東縣","成功鎮","N","f","o","八拱跨海步橋。"),
+ PL("臺東美術館","臺東縣","臺東市","M","f","i","免費參觀，戶外有水池。"),
+ PL("加路蘭遊憩區","臺東縣","臺東市","N","f","o","海邊草地和漂流木藝術。"),
+ PL("原生應用植物園","臺東縣","卑南鄉","F","p","o","藥草植物和生態。"),
+ PL("澎湖生活博物館","澎湖縣","馬公市","M","p","i","澎湖的生活和海洋文化。"),
+ PL("翟山坑道","金門縣","金城鎮","C","f","b","坑道水道，很有探險感。"),
+ PL("金合利鋼刀","金門縣","金城鎮","K","f","i","看砲彈做菜刀。")
+];
+const TYPEMAP={"臺北市立動物園":"Z","臺北市立兒童新樂園":"T","國立臺灣科學教育館":"S","臺北市立天文科學教育館":"S","國家鐵道博物館":"C","臺北自來水園區":"C","國立臺灣博物館 古生物館（土銀展示館）":"M","KidZania 奇薩尼亞台北（即將開幕）":"I","新北市立十三行博物館":"M","新北市立鶯歌陶瓷博物館":"M","新北市立黃金博物館":"M","E7PLAY 一票玩到底（三重館）":"I","國立海洋科技博物館":"S","潮境智能海洋館":"Z","Xpark 水族館":"Z","小人國主題樂園":"T","桃園市立兒童美術館":"M","野趣森林（原台灣地景花園）":"F","花開了休閒農園":"F","六福村主題遊樂園":"T","綠世界生態農場":"F","新竹市立動物園":"Z","飛牛牧場":"F","尚順育樂世界":"T","國立自然科學博物館":"S","麗寶樂園":"T","東勢林場遊樂區":"N","新社百菇莊":"F","百果山探索樂園":"T","台灣玻璃館":"K","九族文化村":"T","溪頭自然教育園區":"N","薰衣草森林 九九峰氦氣球樂園":"T","劍湖山世界":"T","故宮南院":"M","芯浪國際滑板衝浪公園":"T","檜意森活村":"C","南瀛親子館":"I","臺南市立圖書館新總館":"I","奇美博物館":"M","頑皮世界野生動物園":"Z","國立臺灣歷史博物館":"M","壽山動物園":"Z","國立科學工藝博物館":"S","義大遊樂世界":"T","野森動物學校":"Z","鈴鹿賽道樂園":"T","國立海洋生物博物館":"Z","潮州鐵道園區":"C","墾丁鹿境梅花鹿生態園區":"Z","蘭陽博物館":"M","羅東林業文化園區":"C","遛遛三星":"N","宜蘭免睡殿":"C","遠雄海洋公園":"T","花蓮防災教育館":"S","七星潭":"N","初鹿牧場":"F","鹿野高台":"N","國立臺灣史前文化博物館":"M","澎湖水族館":"Z"};
+PLACES.forEach(p=>{ if(TYPEMAP[p.n]) p.t=CAT[TYPEMAP[p.n]]; });
+PLACES.push(...PLACES_MORE);
+PLACES.push(...[
+ PL("臺北市立圖書館總館","臺北市","大安區","I","f","i","兒童室和繪本區，下雨天好去處。"),
+ PL("松山文創園區","臺北市","信義區","C","f","b","老菸廠，常有親子展覽和市集。"),
+ PL("華山1914文化創意產業園區","臺北市","中正區","C","f","b","展覽、市集，旁邊有大草原。"),
+ PL("剝皮寮歷史街區","臺北市","萬華區","C","f","b","老街屋，有鄉土教育中心。"),
+ PL("臺北當代藝術館","臺北市","大同區","M","p","i","當代藝術展，常有親子導覽。",BIG),
+ PL("國立國父紀念館","臺北市","信義區","C","f","b","看衛兵交接，外面廣場可以跑。"),
+ PL("中正紀念堂","臺北市","中正區","C","f","b","衛兵交接、大廣場餵鴿子。"),
+ PL("臺北偶戲館","臺北市","松山區","M","f","i","看戲偶、偶戲表演。"),
+ PL("林安泰古厝民俗文物館","臺北市","中山區","C","f","o","老房子和花博公園相鄰。"),
+ PL("郵政博物館","臺北市","中正區","M","p","i","郵票和郵差的故事。",BIG),
+ PL("臺北市客家文化主題公園","臺北市","中正區","C","f","b","客家文化、戶外農園。"),
+ PL("臺北探索館","臺北市","信義區","M","f","i","市府裡的臺北故事館，免費。"),
+ PL("竹子湖","臺北市","北投區","F","c","o","海芋季可以採海芋。"),
+ PL("大稻埕碼頭","臺北市","大同區","N","f","o","看夕陽、河濱騎車。"),
+ PL("北投圖書館","臺北市","北投區","I","f","i","北投公園裡的綠建築圖書館。"),
+ PL("新北市立圖書館總館","新北市","板橋區","I","f","i","24小時開放區，兒童區大。"),
+ PL("新北市美術館","新北市","鶯歌區","M","c","b","新開的大型美術館，戶外空間大。"),
+ PL("435藝文特區","新北市","板橋區","C","f","b","兒童藝術活動和大草地。"),
+ PL("滬尾砲台","新北市","淡水區","C","p","o","古砲台和大草坪。"),
+ PL("三峽老街","新北市","三峽區","C","f","o","紅磚老街和金牛角。"),
+ PL("鶯歌老街","新北市","鶯歌區","C","f","o","陶瓷老街，可以拉坏DIY。"),
+ PL("九份老街","新北市","瑞芳區","C","f","o","山城老街，人多注意小孩。"),
+ PL("十分瀑布","新北市","平溪區","N","f","o","台灣尼加拉瀑布。"),
+ PL("福隆海水浴場","新北市","貢寮區","N","p","o","夏天玩沙、騎腳踏車去舊草嶺隧道。"),
+ PL("白沙灣","新北市","石門區","N","f","o","沙灘玩沙、看海。"),
+ PL("老梅綠石槽","新北市","石門區","N","f","o","春天綠藻石槽，注意濕滑。"),
+ PL("淺水灣","新北市","三芝區","N","f","o","沙灘和海邊咖啡。"),
+ PL("烏來台車","新北市","烏來區","T","p","o","坐台車去烏來瀑布。"),
+ PL("八里左岸自行車道","新北市","八里區","N","f","o","租腳踏車沿河騎到十三行。"),
+ PL("深澳象鼻岩","新北市","瑞芳區","N","f","o","大象鼻子造型的岩石。",BIG),
+ PL("新北市客家文化園區","新北市","三峽區","C","f","b","免費，有兒童遊戲空間和草地。"),
+ PL("外木山海岸","基隆市","中山區","N","f","o","海邊步道、看海。"),
+ PL("潮境公園","基隆市","中正區","N","f","o","海邊大草坡，放風箏。"),
+ PL("基隆中正公園","基隆市","中正區","N","f","o","大佛和看港口。"),
+ PL("正濱漁港彩色屋","基隆市","中正區","C","f","o","彩色房子拍照。"),
+ PL("大溪老街","桃園市","大溪區","C","f","o","老街、豆干。"),
+ PL("慈湖","桃園市","大溪區","C","f","o","銅像公園、湖邊步道。"),
+ PL("角板山","桃園市","復興區","N","f","o","山上公園、看溪谷。"),
+ PL("拉拉山","桃園市","復興區","N","p","o","神木步道，水蜜桃季。"),
+ PL("虎頭山公園","桃園市","桃園區","N","f","o","步道、環保公園。"),
+ PL("永安漁港","桃園市","新屋區","N","f","o","彩虹橋、看海。"),
+ PL("竹圍漁港","桃園市","大園區","N","f","o","看飛機和海鮮。"),
+ PL("新屋綠色走廊","桃園市","新屋區","N","f","o","騎腳踏車看海岸。"),
+ PL("觀音蓮花園","桃園市","觀音區","F","c","o","夏天賞蓮花。"),
+ PL("青林農場","桃園市","觀音區","F","p","o","向日葵花海。"),
+ PL("九斗村休閒農場","桃園市","大溪區","F","p","o","戲水、DIY、動物。"),
+ PL("內灣老街","新竹縣","橫山鄉","C","f","o","內灣線火車和老街。"),
+ PL("北埔老街","新竹縣","北埔鄉","C","f","o","客家老街、擂茶。"),
+ PL("合興車站","新竹縣","橫山鄉","C","f","o","愛情車站，可以看火車。"),
+ PL("薰衣草森林 尖石店","新竹縣","尖石鄉","F","p","o","山上的森林花園。"),
+ PL("新竹市影像博物館","新竹市","東區","M","p","i","老戲院改建。",BIG),
+ PL("新月沙灣","新竹縣","竹北市","N","f","o","沙灘和看夕陽。"),
+ PL("十八尖山","新竹市","東區","N","f","o","好走的森林步道。"),
+ PL("雪霸國家公園汶水遊客中心","苗栗縣","大湖鄉","N","f","b","免費展示和戶外步道。"),
+ PL("南庄老街","苗栗縣","南庄鄉","C","f","o","桂花巷、客家老街。"),
+ PL("向天湖","苗栗縣","南庄鄉","N","f","o","高山湖泊。"),
+ PL("苗栗鐵道文物展示館","苗栗縣","苗栗市","C","f","b","看老火車頭，火車迷必去。"),
+ PL("功維敘隧道","苗栗縣","苗栗市","C","f","o","老鐵道隧道步道。"),
+ PL("崎頂子母隧道","苗栗縣","竹南鎮","C","f","o","雙孔老隧道和海邊。"),
+ PL("通霄海水浴場","苗栗縣","通霄鎮","N","p","o","夏天玩水。"),
+ PL("卓也小屋","苗栗縣","三義鄉","F","p","o","藍染DIY、田園。"),
+ PL("審計新村","臺中市","西區","C","f","o","文青小店和市集。"),
+ PL("臺中文化創意產業園區","臺中市","南區","C","f","b","老酒廠園區，常有展覽。"),
+ PL("大坑風景區","臺中市","北屯區","N","f","o","登山步道、溫泉。"),
+ PL("東豐自行車綠廊","臺中市","豐原區","N","f","o","舊鐵道改建的腳踏車道。"),
+ PL("后豐鐵馬道","臺中市","后里區","N","f","o","騎腳踏車穿過老隧道和花樑鋼橋。"),
+ PL("月眉觀光糖廠","臺中市","后里區","C","f","o","冰品和糖廠老建築。"),
+ PL("亞洲現代美術館","臺中市","霧峰區","M","p","i","安藤忠雄設計的美術館。",BIG),
+ PL("臺中國家歌劇院","臺中市","西屯區","C","f","i","曲牆建築，空中花園。"),
+ PL("國立公共資訊圖書館","臺中市","南區","I","f","i","大型兒童圖書區和互動區。"),
+ PL("梧棲漁港","臺中市","梧棲區","N","f","o","海鮮和看漁船。"),
+ PL("望高寮夜景公園","臺中市","南屯區","N","f","o","看台中夜景。"),
+ PL("新社花海","臺中市","新社區","F","f","o","秋冬花海季節限定。"),
+ PL("彩虹眷村","臺中市","南屯區","C","f","o","彩繪眷村拍照。"),
+ PL("八卦山天空步道","彰化縣","彰化市","N","f","o","樹梢上的步道。"),
+ PL("彰化縣立美術館","彰化縣","彰化市","M","f","i","免費參觀。"),
+ PL("溪州公園","彰化縣","溪州鄉","N","f","o","大型森林公園，花博場地。"),
+ PL("台灣獼猴生態教育館","彰化縣","二水鄉","S","f","b","認識台灣獼猴。"),
+ PL("芳苑海空步道","彰化縣","芳苑鄉","N","f","o","看海牛和蚵田。"),
+ PL("日月潭向山遊客中心","南投縣","魚池鄉","N","f","b","清水模建築，湖邊步道。"),
+ PL("臺灣地理中心碑","南投縣","埔里鎮","N","f","o","台灣正中心。"),
+ PL("桃米生態村","南投縣","埔里鎮","N","f","o","青蛙生態。"),
+ PL("集集綠色隧道","南投縣","集集鎮","N","f","o","樟樹林蔭道。"),
+ PL("鳳凰谷鳥園生態園區","南投縣","鹿谷鄉","Z","p","b","看鳥、溪谷步道。"),
+ PL("合歡山","南投縣","仁愛鄉","N","f","o","高山風景，注意保暖和高山症。",BIG),
+ PL("惠蓀林場","南投縣","仁愛鄉","N","p","o","森林步道和咖啡。"),
+ PL("猴探井天空之橋","南投縣","南投市","N","p","o","大吊橋。",BIG),
+ PL("北港朝天宮","雲林縣","北港鎮","C","f","b","老廟和北港老街。"),
+ PL("西螺大橋","雲林縣","西螺鎮","C","f","o","紅色鐵橋。"),
+ PL("虎尾糖廠","雲林縣","虎尾鎮","C","f","o","糖廠冰品和小火車。"),
+ PL("雲林故事館","雲林縣","斗六市","C","f","b","日式老宿舍，有說故事活動。"),
+ PL("草嶺","雲林縣","古坑鄉","N","f","o","峭壁雄風、瀑布步道。"),
+ PL("北門車站","嘉義市","東區","C","f","o","阿里山林業鐵路起點。"),
+ PL("嘉義市立博物館","嘉義市","東區","M","p","i","化石和交趾陶。"),
+ PL("蘭潭風景區","嘉義市","東區","N","f","o","環潭步道和騎車。"),
+ PL("嘉義樹木園","嘉義市","東區","N","f","o","大樹林蔭。"),
+ PL("鰲鼓濕地森林園區","嘉義縣","東石鄉","N","f","o","賞鳥和騎腳踏車。"),
+ PL("奮起湖","嘉義縣","竹崎鄉","C","f","o","老街和火車便當。"),
+ PL("赤崁樓","臺南市","中西區","C","p","o","古蹟和石龜碑。"),
+ PL("臺南孔廟","臺南市","中西區","C","p","o","全臺首學。"),
+ PL("臺南水道博物館","臺南市","山上區","C","p","o","古老淨水廠和大草地。"),
+ PL("井仔腳瓦盤鹽田","臺南市","北門區","N","f","o","曬鹽體驗、夕陽。"),
+ PL("總爺藝文中心","臺南市","麻豆區","C","f","b","老糖廠藝文園區。"),
+ PL("南瀛天文館","臺南市","大內區","S","p","i","看星星和天象儀。"),
+ PL("觀夕平台","臺南市","安平區","N","f","o","看夕陽。"),
+ PL("德陽艦園區","臺南市","安平區","C","p","b","上軍艦參觀。"),
+ PL("臺南都會公園","臺南市","仁德區","N","f","o","大草地，奇美博物館附近。"),
+ PL("高雄市立歷史博物館","高雄市","鹽埕區","M","f","i","免費參觀。"),
+ PL("棧貳庫","高雄市","鼓山區","C","f","b","港邊老倉庫。"),
+ PL("高雄流行音樂中心","高雄市","鹽埕區","C","f","o","港邊特色建築和步道。"),
+ PL("西子灣","高雄市","鼓山區","N","f","o","看夕陽。"),
+ PL("柴山","高雄市","鼓山區","N","f","o","登山看獼猴，注意食物。"),
+ PL("鳳儀書院","高雄市","鳳山區","C","p","b","古書院，有互動展覽。"),
+ PL("高雄市皮影戲館","高雄市","岡山區","M","f","i","皮影戲表演和DIY。"),
+ PL("旗山老街","高雄市","旗山區","C","f","o","香蕉老街。"),
+ PL("金獅湖風景區","高雄市","三民區","N","f","o","環湖步道。"),
+ PL("捷運美麗島站 光之穹頂","高雄市","新興區","C","f","i","捷運站裡的彩色玻璃藝術。"),
+ PL("恆春古城","屏東縣","恆春鎮","C","f","o","古城門。"),
+ PL("鵝鑾鼻燈塔","屏東縣","恆春鎮","N","p","o","台灣最南端燈塔公園。"),
+ PL("龍磐公園","屏東縣","恆春鎮","N","f","o","大草原和海崖。"),
+ PL("社頂自然公園","屏東縣","恆春鎮","N","f","o","看梅花鹿和步道。"),
+ PL("竹田驛園","屏東縣","竹田鄉","C","f","o","日式老車站。"),
+ PL("枋寮藝術村F3","屏東縣","枋寮鄉","C","f","o","老宿舍藝術村。"),
+ PL("小琉球","屏東縣","琉球鄉","N","c","o","看海龜、潮間帶。"),
+ PL("宜蘭設治紀念館","宜蘭縣","宜蘭市","M","p","b","日式老宅和庭院。"),
+ PL("烏石港","宜蘭縣","頭城鎮","N","f","o","看衝浪和賞鯨船出發地。"),
+ PL("湯圍溝溫泉公園","宜蘭縣","礁溪鄉","N","c","o","溫泉泡腳。"),
+ PL("林美石磐步道","宜蘭縣","礁溪鄉","N","p","o","森林溪谷步道。"),
+ PL("五峰旗瀑布","宜蘭縣","礁溪鄉","N","f","o","瀑布步道。"),
+ PL("武荖坑風景區","宜蘭縣","蘇澳鎮","N","f","o","溪邊玩水和露營。"),
+ PL("南方澳漁港","宜蘭縣","蘇澳鎮","N","f","o","看漁港和海鮮。"),
+ PL("臺灣戲劇館","宜蘭縣","宜蘭市","M","p","i","歌仔戲文物。"),
+ PL("白米木屐村","宜蘭縣","蘇澳鎮","K","p","b","木屐彩繪DIY。"),
+ PL("可達羊場","宜蘭縣","冬山鄉","F","p","o","餵羊、喝羊奶。"),
+ PL("星寶蔥體驗農場","宜蘭縣","三星鄉","F","p","o","拔蔥、做蔥油餅。"),
+ PL("花蓮文化創意產業園區","花蓮縣","花蓮市","C","f","b","老酒廠園區。"),
+ PL("雲山水","花蓮縣","壽豐鄉","N","f","o","湖畔夢幻湖。"),
+ PL("牛山呼庭","花蓮縣","壽豐鄉","N","p","o","海邊草原。"),
+ PL("石梯坪","花蓮縣","豐濱鄉","N","f","o","海蝕地形和潮間帶。"),
+ PL("六十石山","花蓮縣","富里鄉","N","f","o","金針花季。"),
+ PL("馬太鞍濕地","花蓮縣","光復鄉","N","f","o","濕地生態。"),
+ PL("吉安慶修院","花蓮縣","吉安鄉","C","p","o","日式寺院。"),
+ PL("花蓮將軍府","花蓮縣","花蓮市","C","f","o","日式老宅群。"),
+ PL("立川漁場","花蓮縣","壽豐鄉","F","p","o","摸蜆仔體驗。"),
+ PL("臺東鐵道藝術村","臺東縣","臺東市","C","f","o","老車站和市集。"),
+ PL("小野柳","臺東縣","臺東市","N","f","o","奇岩海岸。"),
+ PL("水往上流","臺東縣","東河鄉","N","f","o","水好像往上流的奇景。"),
+ PL("都蘭糖廠","臺東縣","東河鄉","C","f","o","老糖廠藝術空間。"),
+ PL("多良車站","臺東縣","太麻里鄉","C","f","o","最美車站看海。"),
+ PL("大坡池","臺東縣","池上鄉","N","f","o","池上湖邊步道。"),
+ PL("綠島","臺東縣","綠島鄉","N","c","o","浮潛、看梅花鹿。",BIG),
+ PL("卑南遺址公園","臺東縣","臺東市","M","p","o","史前遺址和大草地。"),
+ PL("雙心石滬","澎湖縣","七美鄉","N","f","o","愛心形狀的石滬。"),
+ PL("澎湖跨海大橋","澎湖縣","白沙鄉","N","f","o","看海、吃仙人掌冰。"),
+ PL("山水沙灘","澎湖縣","馬公市","N","f","o","沙灘玩水。"),
+ PL("風櫃洞","澎湖縣","馬公市","N","f","o","海浪噴水奇景。"),
+ PL("澎湖開拓館","澎湖縣","馬公市","M","p","i","日式老建築。"),
+ PL("莒光樓","金門縣","金城鎮","C","f","b","金門地標。"),
+ PL("雙鯉濕地自然中心","金門縣","金寧鄉","N","f","b","賞鳥和水獺。"),
+ PL("獅山砲陣地","金門縣","金沙鎮","C","p","b","看砲操表演。"),
+ PL("水頭聚落","金門縣","金城鎮","C","f","o","閩南古厝和洋樓。"),
+ PL("北海坑道","連江縣","南竿鄉","C","p","b","坑道划船、藍眼淚季。"),
+ PL("芹壁聚落","連江縣","北竿鄉","C","f","o","石頭屋聚落。"),
+ PL("大坵島","連江縣","北竿鄉","N","p","o","看梅花鹿的小島。")
+]);
+
+
+/* ---------- 共融公園（全部免費、戶外） ---------- */
+const PK = (n,c,d,note,a,t)=>({n,c,d,note,a:a||ALL,t:t||"共融遊戲場",f:"free",io:"out"});
+const PARKS = [
+ PK("大安森林公園 共融遊戲場","臺北市","大安區","捷運大安森林公園站旁，沙坑、攀爬、草地都有。"),
+ PK("青年公園 飛行探索遊戲場","臺北市","萬華區","5公尺塔台溜滑梯、飛機主題遊具，還有老台北人的太空堡壘磨石滑梯。"),
+ PK("榮星花園 遊戲場","臺北市","中山區","台北第一座特色遊戲場，磨石子山丘滑梯和戲沙池。"),
+ PK("前港公園 天空樹遊戲場","臺北市","士林區","大樹下的天空樹高塔滑梯，連輪椅都能上去溜。"),
+ PK("象山公園 樹蛙遊戲場","臺北市","信義區","樹蛙主題地景小丘，攀岩、爬繩、滑梯、鑽洞。"),
+ PK("樹德公園","臺北市","大同區","台灣杉與繩網手作攀爬架，樹蔭多、夏天也好玩。"),
+ PK("東陽公園 魔王之塔","臺北市","南港區","8公尺高的魔王之塔，5關挑戰加6公尺大滑梯。",BIG,"特色溜滑梯"),
+ PK("新生公園 地球旅行遊戲場","臺北市","中山區","機場、飛機主題，塔台攀爬區比較有挑戰性。"),
+ PK("北投福星公園（恐龍公園）","臺北市","北投區","恐龍造型遊具，小小孩的最愛。",SM),
+ PK("道南河濱公園 共融遊戲場","臺北市","文山區","台北最大河濱共融遊戲場，有淘沙桌、輪椅可進的休憩礦車。"),
+ PK("景美運動公園","臺北市","文山區","利用山丘地形的攀爬牆與溜滑梯。",BIG),
+ PK("士林四號公園 共融遊戲場","臺北市","士林區","全國第一座輪椅可推上去玩的遊具。",SM),
+ PK("建成公園 打鐵舖遊戲場","臺北市","大同區","3.8公尺打鐵舖高塔滑梯、齒輪翹翹板。"),
+ PK("大佳河濱公園 共融遊戲場","臺北市","中山區","800坪遊戲場，夏天有戲水區。"),
+ PK("新北大都會公園 熊猴森樂園","新北市","三重區","全台最大堤坡共融遊樂園，31座溜滑梯，夏天有水樂園。",ALL,"特色溜滑梯"),
+ PK("中和員山公園","新北市","中和區","20公尺彩繪溜滑梯、親子滑草坡。",BIG,"特色溜滑梯"),
+ PK("汐止白雲公園","新北市","汐止區","全台少見的環形鞦韆和500平方公尺大沙坑。"),
+ PK("鶯歌永吉公園","新北市","鶯歌區","三層樓高迴旋溜滑梯、夏天水階玩水。",ALL,"特色溜滑梯"),
+ PK("鶯歌古鐘樓公園","新北市","鶯歌區","6公尺消防鐘樓溜滑梯、消防車造型遊具。"),
+ PK("鶯歌鳳鳴公園（機器人公園）","新北市","鶯歌區","機器人城市主題遊戲場。"),
+ PK("林口小熊公園","新北市","林口區","新北特色共融公園之一。",SM),
+ PK("樹林鹿角溪公園","新北市","樹林區","共融遊戲場加全齡體健設施，適合三代同行。"),
+ PK("新店親情河濱公園","新北市","新店區","河濱大草地加共融遊戲場。"),
+ PK("板橋華江123木頭園","新北市","板橋區","木頭主題特色遊戲場。"),
+ PK("三重花漾水樂園","新北市","三重區","重陽橋下免費戲水區（夏季開放），旁邊有溜滑梯遊戲場。",ALL,"戲水"),
+ PK("風禾公園","桃園市","桃園區","50公尺超長滾輪溜滑梯、7座溜滑梯和生態池。",ALL,"特色溜滑梯"),
+ PK("大有梯田生態公園","桃園市","桃園區","梯田地形加森林挑戰區，三代都能玩。"),
+ PK("中壢公七公園 地景遊戲場","桃園市","中壢區","3道磨石子溜滑梯、攀岩牆、金屬旋轉溜滑梯。",BIG,"特色溜滑梯"),
+ PK("大湳森林公園","桃園市","八德區","大型遊戲場加生態池，夏天有戲水。"),
+ PK("大溪河濱公園","桃園市","大溪區","少見的共遊式遊具。"),
+ PK("港南運河公園","新竹市","香山區","迷你交通道路可騎滑步車，還有階梯攀爬區。"),
+ PK("樹林頭公園","新竹市","北區","風主題，拉繩滑草和竹林迷宮。"),
+ PK("南寮運動公園","新竹市","北區","超大山丘磨石溜滑梯，可以20人一起溜。",ALL,"特色溜滑梯"),
+ PK("新竹青青草原","新竹市","香山區","超長磨石子溜滑梯，記得帶紙箱。",BIG,"特色溜滑梯"),
+ PK("獅山親子公園","苗栗縣","竹南鎮","火山造型溜滑梯有9條不同滑道，還有戲水池。",ALL,"特色溜滑梯"),
+ PK("貓裏喵親子公園","苗栗縣","苗栗市","八爪章魚溜滑梯和有遮陽的沙坑。"),
+ PK("頭份音樂公園","苗栗縣","頭份市","薩克斯風造型溜滑梯。",BIG),
+ PK("灣麗親子公園","苗栗縣","苑裡鎮","多種玩法的戶外遊戲場。",SM),
+ PK("臺中中央公園","臺中市","西屯區","約67公頃，12感官互動裝置和超大草坪。",ALL,"大草地"),
+ PK("鰲峰山運動公園","臺中市","清水區","排笛音樂滑梯、大沙坑和180度海景。",ALL,"特色溜滑梯"),
+ PK("頂魚寮公園","臺中市","梧棲區","藍鯨溜滑梯、花園迷宮、3D地繪。"),
+ PK("北屯兒童公園 林間探索遊戲場","臺中市","北屯區","攀爬網、高空橋、旋轉溜滑梯，還有遮陽沙坑。"),
+ PK("后里環保公園 孩籽世界","臺中市","后里區","自然元素共融遊戲場。"),
+ PK("文心森林公園","臺中市","南屯區","大草地和遊戲場，常有活動。",ALL,"大草地"),
+ PK("彰化市兒童公園","彰化縣","彰化市","六合一攀爬溜滑梯和鳥巢鞦韆。"),
+ PK("八卦山天空遊戲場","彰化縣","彰化市","2026年啟用，雲朵溜滑梯、飄浮繩網、無障礙沙坑。"),
+ PK("埤頭繪本公園","雲林縣","西螺鎮","把繪本場景搬進田野的公園。",SM),
+ PK("斗六藝術水岸親子公園","雲林縣","斗六市","馬賽克海龜、攀爬網、彩色山丘。"),
+ PK("斗六膨鼠森林公園","雲林縣","斗六市","膨鼠主題遊戲場（原斗六環保公園）。",SM),
+ PK("虎尾632高地公園","雲林縣","虎尾鎮","虎爺主題遊戲塔、滑步車場、夏天戲水。",ALL,"戲水"),
+ PK("嘉義公園 KANO園區","嘉義市","東區","棒球主題大溜滑梯和4噸KANO地景球。"),
+ PK("嘉義文化公園 樹蛙遊戲場","嘉義市","東區","雲嘉南第一座共融遊戲場，諸羅樹蛙主題。"),
+ PK("河樂廣場","臺南市","中西區","夏天是免費親水廣場，還能看古蹟遺構。",ALL,"戲水"),
+ PK("立德公園","臺南市","北區","織品藝術家做的超大編織攀爬網。"),
+ PK("健康綠洲公園 大船遊戲場","臺南市","南區","3層樓高大船，有滑索、攀岩和迷宮。",BIG),
+ PK("仁德恐龍公園","臺南市","仁德區","免門票恐龍主題公園。",SM),
+ PK("巴克禮紀念公園","臺南市","東區","都市中的生態公園，可以看小動物、跑草地。",ALL,"大草地"),
+ PK("虎頭埤全齡地景遊憩場","臺南市","新化區","湖畔山丘溜滑梯（位於虎頭埤風景區內，風景區需門票）。",BIG,"特色溜滑梯"),
+ PK("小港森林公園","高雄市","小港區","生態池、可看飛機的觀景台和共融遊戲區。"),
+ PK("凹子底森林公園","高雄市","鼓山區","大型綜合溜滑梯、圓柱攀爬網。"),
+ PK("蓮池潭 彩色山丘遊戲場","高雄市","左營區","彩虹烏龜山丘，可攀岩、跳樁。"),
+ PK("衛武營都會公園 共融遊戲場","高雄市","鳳山區","大草原加共融遊戲場，常辦親子活動。"),
+ PK("福山公園 遊戲場","高雄市","左營區","左營熱門共融遊戲場。"),
+ PK("岡山河堤公園 竹林遊戲場","高雄市","岡山區","穿梭竹林主題，5米觀星丘和磨石滑梯。"),
+ PK("保安兒童貨櫃主題公園","高雄市","鳳山區","巨大機器人複合遊戲場，24小時開放。"),
+ PK("後勁公園 森林熊的家","高雄市","楠梓區","熊熊城堡溜滑梯，2026年初開放。",SM),
+ PK("藍田公園","高雄市","楠梓區","高雄特色公園之一。"),
+ PK("屏東縣民公園","屏東縣","屏東市","台糖紙漿廠改建，大型特色共融遊戲場。"),
+ PK("蘭州街特色公園","屏東縣","屏東市","10座動物造型溜滑梯，依年齡分區。",SM,"特色溜滑梯"),
+ PK("屏東和平公園","屏東縣","屏東市","南部特色遊具最多的共融遊戲場之一。"),
+ PK("林邊共榮公園","屏東縣","林邊鄉","飛天小火車和蓮霧主題冒險區。"),
+ PK("洋蔥大福遊樂園","屏東縣","車城鄉","9米高洋蔥溜滑梯、籤詩橋。",BIG,"特色溜滑梯"),
+ PK("新園共融式公園","屏東縣","新園鄉","香瓜溜滑梯、鴨蛋滑步車道。"),
+ PK("大鮪魚航海樂園（東港兒童公園）","屏東縣","東港鎮","航海主題高塔溜滑梯，夏天有戲水區。"),
+ PK("南州環保共融公園","屏東縣","南州鄉","資源回收桶外星寶寶主題。",SM),
+ PK("萬丹乳牛共融公園","屏東縣","萬丹鄉","乳牛主題遊戲場。",SM),
+ PK("潮好玩幸福村","屏東縣","潮州鎮","溜滑梯、盪鞦韆加森林跑道。"),
+ PK("頭城運動公園","宜蘭縣","頭城鎮","宜蘭第一座共融公園，蜂巢遊具、手拉車。"),
+ PK("冬山河親水公園","宜蘭縣","五結鄉","童玩節場地，平常可以騎車、玩水。",ALL,"大草地"),
+ PK("太平洋共融公園","花蓮縣","花蓮市","全台最大海洋風遊樂場，有滑索軌道。"),
+ PK("長頸鹿親子公園","花蓮縣","花蓮市","6米高長頸鹿遊具和大沙池。",SM),
+ PK("臺東兒童公園","臺東縣","臺東市","巨型蛋糕雕塑，2–5歲和6–12歲分區。"),
+ PK("臺東森林公園","臺東縣","臺東市","騎腳踏車繞活水湖、琵琶湖。",ALL,"大草地"),
+ PK("花博公園 舞蝶館共融遊戲場","臺北市","中山區","全台第一座輪椅鞦韆，無障礙沙坑和沙桌。"),
+ PK("南港公園","臺北市","南港區","湖邊大公園，遊戲場和草地都大。"),
+ PK("二二八和平紀念公園","臺北市","中正區","市中心，有遊戲場和池塘可以看魚。"),
+ PK("美堤河濱公園","臺北市","中山區","河濱大草地加遊戲場，可以騎腳踏車。",ALL,"大草地"),
+ PK("天母運動公園","臺北市","士林區","大草地、遊戲場、可以跑跳一整天。",ALL,"大草地"),
+ PK("玉成公園","臺北市","南港區","社區型特色遊戲場。"),
+ PK("華山大草原","臺北市","中正區","都市中的大草皮，野餐放風箏。",ALL,"大草地"),
+ PK("迎風河濱公園","臺北市","松山區","河濱草地，假日適合騎車野餐。",ALL,"大草地"),
+ PK("碧湖公園","臺北市","內湖區","湖邊步道加遊戲場。"),
+ PK("大湖公園","臺北市","內湖區","錦帶橋和湖景，有遊戲場。"),
+ PK("興隆公園","臺北市","文山區","特色遊戲場，鄰近捷運。"),
+ PK("景華公園","臺北市","文山區","特色遊戲場，有攀爬和滑梯。"),
+ PK("蘭雅公園","臺北市","士林區","社區特色遊戲場，天母一帶人氣高。"),
+ PK("古亭河濱公園","臺北市","中正區","河濱遊戲場和大草地。"),
+ PK("華中河濱公園","臺北市","萬華區","河濱運動公園，空間寬。",ALL,"大草地"),
+ PK("山水綠生態公園","臺北市","南港區","生態池、步道，可觀察小動物。",ALL,"大草地"),
+ PK("雙溪公園","臺北市","士林區","中式庭園加遊戲區。"),
+ PK("北投復興公園","臺北市","北投區","免費泡腳池和遊戲場。"),
+ PK("錦和運動公園","新北市","中和區","28公尺滾輪溜滑梯、雙塔攀爬網、噴泉。",BIG),
+ PK("中和四號公園","新北市","中和區","書本造型磨石子滑梯、6米樹屋旋轉滑梯。"),
+ PK("新店馬公公園","新北市","新店區","新北特色共融公園。"),
+ PK("新莊頭前運動公園","新北市","新莊區","新北特色共融公園。"),
+ PK("斬龍山遺址文化公園","新北市","土城區","考古沙坑，大型共融溜滑梯。"),
+ PK("鶯歌逗逗龍公園","新北市","鶯歌區","恐龍水紀元主題，有玩水設施。",ALL,"戲水"),
+ PK("林口立言公園","新北市","林口區","新北特色共融公園。"),
+ PK("三重三民公園","新北市","三重區","全齡公園，兒童遊戲場加體健。"),
+ PK("八里水興公公園","新北市","八里區","道路交通主題，有兒童車道，看淡水河口。",SM),
+ PK("桃園陽明公園","桃園市","桃園區","森林遊戲場、鳥巢鞦韆、滑軌溜索。"),
+ PK("中壢光明公園","桃園市","中壢區","樹屋探險區、水樹遊戲島、蹦床。"),
+ PK("平鎮運動公園","桃園市","平鎮區","橋下遊戲場，分齡分區、植物和水域遊戲場。"),
+ PK("平鎮廣達公園","桃園市","平鎮區","奇幻冒險主題探索型遊戲場。"),
+ PK("1895乙未保台紀念公園","桃園市","平鎮區","萬坪清水模牆和親子共融遊戲場。"),
+ PK("漢民公園","高雄市","小港區","航空主題，7米飛翔塔台。"),
+ PK("坪鳳公園","高雄市","小港區","高雄特色共融遊戲場。"),
+ PK("大東濕地公園","高雄市","鳳山區","濕地生態、大草地。",ALL,"大草地"),
+ PK("內惟埤美術館兒童遊戲場","高雄市","鼓山區","美術館園區裡的特色遊戲場。"),
+ PK("大恩公園","臺南市","南區","臺南第一座特色公園，飛機主題。"),
+ PK("明和公園","臺南市","","臺南第一座地景式特色遊戲場。"),
+ PK("港濱歷史公園 特色遊戲場","臺南市","安平區","深海歷險趣主題，臺南最大遊戲場之一。"),
+ PK("水萍塭公園","臺南市","南區","9公頃綠地加遊戲場。"),
+ PK("榮富公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("和平青草園公園","臺北市","萬華區","臺北市政府公告的共融式遊戲場。"),
+ PK("潭美國小 共融遊戲場","臺北市","內湖區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("古亭國小 共融遊戲場","臺北市","大安區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("文林國小 共融遊戲場","臺北市","北投區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("榮華公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("石潭公園","臺北市","內湖區","臺北市政府公告的共融式遊戲場。"),
+ PK("萬芳4號公園","臺北市","文山區","臺北市政府公告的共融式遊戲場。"),
+ PK("樂活公園","臺北市","內湖區","臺北市政府公告的共融式遊戲場。"),
+ PK("大港墘公園","臺北市","內湖區","臺北市政府公告的共融式遊戲場。"),
+ PK("眷村文化公園","臺北市","信義區","臺北市政府公告的共融式遊戲場。"),
+ PK("明水公園","臺北市","中山區","臺北市政府公告的共融式遊戲場。"),
+ PK("三民公園","臺北市","松山區","臺北市政府公告的共融式遊戲場。"),
+ PK("聯成公園","臺北市","南港區","臺北市政府公告的共融式遊戲場。"),
+ PK("福中公園","臺北市","士林區","臺北市政府公告的共融式遊戲場。"),
+ PK("石牌公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("立農公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("四分綠地","臺北市","南港區","臺北市政府公告的共融式遊戲場。"),
+ PK("磺港公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("中安公園","臺北市","中山區","臺北市政府公告的共融式遊戲場。"),
+ PK("景化公園","臺北市","大同區","臺北市政府公告的共融式遊戲場。"),
+ PK("和平實驗小學 共融遊戲場","臺北市","大安區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("建安國小 共融遊戲場","臺北市","大安區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("中研公園","臺北市","南港區","臺北市政府公告的共融式遊戲場。"),
+ PK("瑠公圳公園","臺北市","大安區","臺北市政府公告的共融式遊戲場。"),
+ PK("松德公園","臺北市","信義區","臺北市政府公告的共融式遊戲場。"),
+ PK("三重世貿公園","臺北市","南港區","臺北市政府公告的共融式遊戲場。"),
+ PK("日新國小 共融遊戲場","臺北市","大同區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("天母夢想樂園","臺北市","士林區","臺北市政府公告的共融式遊戲場。"),
+ PK("景美公園","臺北市","文山區","臺北市政府公告的共融式遊戲場。"),
+ PK("新新公園","臺北市","南港區","臺北市政府公告的共融式遊戲場。"),
+ PK("興隆國小 共融遊戲場","臺北市","文山區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("中央藝文公園","臺北市","中正區","臺北市政府公告的共融式遊戲場。"),
+ PK("芝山國小 共融遊戲場","臺北市","士林區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("齊東公園","臺北市","中正區","臺北市政府公告的共融式遊戲場。"),
+ PK("連雲公園","臺北市","中正區","臺北市政府公告的共融式遊戲場。"),
+ PK("辛亥生態公園","臺北市","文山區","臺北市政府公告的共融式遊戲場。"),
+ PK("老松國小 共融遊戲場","臺北市","萬華區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("湖山6號公園","臺北市","內湖區","臺北市政府公告的共融式遊戲場。"),
+ PK("知行公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("民生公園","臺北市","松山區","臺北市政府公告的共融式遊戲場。"),
+ PK("天母公園","臺北市","士林區","臺北市政府公告的共融式遊戲場。"),
+ PK("美崙公園","臺北市","士林區","臺北市政府公告的共融式遊戲場。"),
+ PK("七虎公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("福林公園","臺北市","士林區","臺北市政府公告的共融式遊戲場。"),
+ PK("洲美公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("敦化公園","臺北市","松山區","臺北市政府公告的共融式遊戲場。"),
+ PK("慶城公園","臺北市","松山區","臺北市政府公告的共融式遊戲場。"),
+ PK("景美國小 共融遊戲場","臺北市","文山區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("三興國小 共融遊戲場","臺北市","信義區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("長安公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("錦德公園","臺北市","萬華區","臺北市政府公告的共融式遊戲場。"),
+ PK("奇岩1號公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("玉泉公園","臺北市","大同區","臺北市政府公告的共融式遊戲場。"),
+ PK("錦安公園","臺北市","大安區","臺北市政府公告的共融式遊戲場。"),
+ PK("和安公園","臺北市","大安區","臺北市政府公告的共融式遊戲場。"),
+ PK("北投25號線形公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("五分埔公園","臺北市","信義區","臺北市政府公告的共融式遊戲場。"),
+ PK("天母國小 共融遊戲場","臺北市","士林區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("市大附小 共融遊戲場","臺北市","中正區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("辛亥國小 共融遊戲場","臺北市","文山區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("松山國小 共融遊戲場","臺北市","松山區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("武功國小 共融遊戲場","臺北市","文山區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("長安國小 共融遊戲場","臺北市","中山區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("修德國小 共融遊戲場","臺北市","南港區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("廣慈博愛園區南區景觀遊戲場","臺北市","信義區","臺北市政府公告的共融式遊戲場。"),
+ PK("行善社會住宅共融式遊戲場","臺北市","內湖區","臺北市政府公告的共融式遊戲場。"),
+ PK("南港國小 共融遊戲場","臺北市","南港區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("內湖國小 共融遊戲場","臺北市","內湖區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("大橋國小 共融遊戲場","臺北市","大同區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("桃源國小 共融遊戲場","臺北市","北投區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("民權公園","臺北市","松山區","臺北市政府公告的共融式遊戲場。"),
+ PK("孝德公園","臺北市","萬華區","臺北市政府公告的共融式遊戲場。"),
+ PK("柳鄉公園","臺北市","萬華區","臺北市政府公告的共融式遊戲場。"),
+ PK("忠誠公園","臺北市","士林區","臺北市政府公告的共融式遊戲場。"),
+ PK("前山公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("北投22號線形公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("北投19號線形公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("永吉公園","臺北市","信義區","臺北市政府公告的共融式遊戲場。"),
+ PK("迪化休閒運動公園 共融式遊戲場","臺北市","大同區","臺北市政府公告的共融式遊戲場。"),
+ PK("銘傳國小 共融遊戲場","臺北市","大安區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("永建國小 共融遊戲場","臺北市","文山區","臺北市政府公告的校園共融遊戲場；校園開放時間依學校規定，假日多可進入。",ALL,"校園遊戲場"),
+ PK("軟橋公園","臺北市","北投區","臺北市政府公告的共融式遊戲場。"),
+ PK("雙心公園","新北市","石門區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("櫻花公園","新北市","三芝區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("兒一公園","新北市","三芝區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("兒三公園","新北市","三芝區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("新庄自行車公園","新北市","三芝區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("流蘇公園","新北市","金山區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("櫻花公園","新北市","金山區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("杜鵑公園","新北市","金山區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("兒童公園","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("觀潮廣場","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("文中八公園","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("公8公園","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("公23公園","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("民生公園","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("溪畔公園(公7公園)","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("新民公園","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("福德公園","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("新濱公園","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("賢孝公園","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("公司田溪水岸公園","新北市","淡水區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("瑪鋉運動公園","新北市","萬里區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("頂寮公園","新北市","萬里區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("商港公園","新北市","八里區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("左岸公園","新北市","八里區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("渡船頭公園","新北市","八里區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("龍源公園","新北市","八里區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("十三行文化公園","新北市","八里區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("片仔溝公園","新北市","八里區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("文昌公園","新北市","八里區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("北河公園滑步車場地","新北市","八里區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("南山公園","新北市","八里區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("樂活公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("東湖公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("翰林公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("井泉公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("樹林口公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("興林口公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("竹林寺公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("市17跳跳糖兒童遊戲場","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("立功公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("宗北公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("吉祥公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("東明公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("隆林公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("一品公園","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("婦幼公園(第一期)","新北市","林口區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("成功運動公園","新北市","五股區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("芳洲公園","新北市","五股區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("天乙公園","新北市","五股區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("山水匯集廣場","新北市","五股區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("體健公園","新北市","五股區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("蘆洲公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("環河公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("尼加拉瓜公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("九三親子公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("柳堤公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("永康公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("三民公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("兒五樓厝公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("中原公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("永平公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("正義公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("彩虹公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("大地公園","新北市","蘆洲區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("貴子兒童公園","新北市","泰山區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("辭修公園","新北市","泰山區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("和平公園","新北市","泰山區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("憲訓公園","新北市","泰山區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("幸福水漾公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("六合公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("聯邦公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("集智綠地","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("新北大都會公園瀑布滑草場","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("同安35公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("鴨鴨公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("同仁公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("二重公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("開元公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("大智公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("三德公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("慈化公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("永盛公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("洛陽公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("228和平公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("龍濱公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("六張公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("菜寮公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("後竹圍公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("大永德公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("同安36公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("新北大都會公園 海世界水樂園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("新北大都會公園 大黃蜂沙坑","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("重陽公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("慈祐公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("厚德公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("慈愛公園","新北市","三重區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("福基公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("中港公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("建福公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("雙鳳公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("瓊泰河濱公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("65橋下遊戲場","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("龍鳳公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("黃城公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("後港新公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("福壽公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("新莊體育園區 遊戲場","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("福營新公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("青年公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("興化公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("中環公園","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("快樂公園(公5公園)","新北市","新莊區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("石雕公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("四維公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("溪北公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("富貴綠地公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("重慶公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("介壽公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("音樂公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("環河公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("浮洲遊戲場","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("莊敬公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("板橋第一運動場 海山路遊戲場","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("望月公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("五權公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("大漢橋下遊戲場","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("玫瑰公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("溪頭公園","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("國光公園遊戲場","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("柏壽公園遊戲場","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("仁愛公園遊戲場","新北市","板橋區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("鳳祥公園","新北市","鶯歌區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("鳳福公園","新北市","鶯歌區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("永昌公園","新北市","鶯歌區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("尖福公園","新北市","鶯歌區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("尖山公園","新北市","鶯歌區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("國華公園(公8公園)","新北市","鶯歌區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("鶯歌公3公園","新北市","鶯歌區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("東昇公園","新北市","樹林區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("育德公園","新北市","樹林區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("彭厝親子公園(公15)","新北市","樹林區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("景觀萬坪公園","新北市","樹林區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("山仔腳公園","新北市","樹林區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("長壽公園","新北市","樹林區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("樹林體育園區遊戲場","新北市","樹林區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("樹林兒三公園","新北市","樹林區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("彭興親子公園","新北市","樹林區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("鎮前親子公園","新北市","樹林區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("松鶴會館旁遊戲場","新北市","樹林區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("青山公園","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("頂新公園","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("海山捷運站廣場","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("立雲廣場","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("裕民廣場","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("大清水運動公園","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("綜合體育場遊戲場","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("祖田兒童遊戲公園","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("延和社區公園","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("永豐社區公園遊戲場","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("頂福活動中心旁遊戲場","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("青雲廣場","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("員和公園","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("永寧廣場","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("學成公園","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("清水社區公園","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("土城公十七公園","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("土城線形公園","新北市","土城區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("秀朗橋兒童超跑公園","新北市","中和區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("光之公園","新北市","中和區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("壽德公園","新北市","中和區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("佳和公園","新北市","中和區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("自強公園","新北市","中和區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("民樂人行廣場","新北市","中和區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("華福公園","新北市","中和區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("嘉穗公園","新北市","中和區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("秀山公園","新北市","中和區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("永福橋兒童遊戲場","新北市","永和區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("仁愛公園","新北市","永和區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("三民公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("瑠公公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("僑仁公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("灣潭兒童遊戲場","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("中興公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("安光公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("十四張歷史公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("新店陽光遊戲場","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("新店永平公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("綠湖公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("安和景觀公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("青潭公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("福民公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("廣興河濱公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("吉安公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("寶徠公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("交通公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("原民公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("新店公14公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("新店安成公園","新北市","新店區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("星座公園","新北市","汐止區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("康福公園","新北市","汐止區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("建成公園","新北市","汐止區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("星際遊戲場","新北市","汐止區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("水返腳公園","新北市","汐止區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("康誥坑公園","新北市","汐止區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("復興公園","新北市","汐止區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("林森橋下兒童遊戲場","新北市","汐止區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("東勢公園","新北市","汐止區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("汐止站前廣場","新北市","汐止區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("蝙蝠洞公園","新北市","瑞芳區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("瑞芳運動公園","新北市","瑞芳區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("建成公園","新北市","瑞芳區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("四腳亭兒童遊戲場","新北市","瑞芳區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("深坑兒童遊戲公園","新北市","深坑區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("萬福生態公園","新北市","深坑區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("雙溪兒童公園","新北市","雙溪區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("澳底公園","新北市","貢寮區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("龍學公園","新北市","三峽區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("鳶山運動公園","新北市","三峽區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("三鶯棒壘球場運動公園","新北市","三峽區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("中山公園","新北市","三峽區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("國光段社會住宅區內公園","新北市","三峽區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("海洋公園","新北市","三峽區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("介壽公園","新北市","三峽區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("中正公園(兒四公園)","新北市","三峽區","新北市政府「來新北玩公園」公告的共融／特色公園。"),
+ PK("中正公園","臺中市","東勢區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("東勢客家文化園區","臺中市","東勢區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("和盛公園","臺中市","石岡區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("復盛環保公園","臺中市","新社區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("細公兒3公園","臺中市","潭子區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大豐公園","臺中市","潭子區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("栗林公園","臺中市","潭子區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("石牌公園","臺中市","潭子區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("潭陽公園","臺中市","潭子區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("弘福公園","臺中市","潭子區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("祥和新莊景觀綠地","臺中市","潭子區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大雅公園","臺中市","大雅區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("汝鎏公園","臺中市","大雅區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大榮公園","臺中市","大雅區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("二和公園","臺中市","大雅區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("十四張圳水岸公園","臺中市","大雅區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("后里運動公園","臺中市","后里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("第四號公園","臺中市","后里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("后里森林公園","臺中市","后里區","全國最多搖籃鞦韆（31組），林蔭下很涼。"),
+ PK("忠勤新村綠地","臺中市","豐原區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("怡然園","臺中市","豐原區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("中正公園","臺中市","豐原區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("豐圳公園","臺中市","豐原區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("慈濟公園","臺中市","豐原區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("中陽公園","臺中市","豐原區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("雙聯公園","臺中市","豐原區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("豐洲公園","臺中市","神岡區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("社興公園","臺中市","神岡區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("新興公園","臺中市","神岡區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("神岡福德兒童公園","臺中市","神岡區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("圳前仁愛公園","臺中市","神岡區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("新庄休閒運動公園","臺中市","神岡區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("六福公園","臺中市","沙鹿區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("南勢溪公園","臺中市","沙鹿區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("三鹿公園","臺中市","沙鹿區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("晉宜公園","臺中市","沙鹿區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("鎮立公園","臺中市","沙鹿區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("石瀨頭公園","臺中市","清水區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("李仔山公園","臺中市","清水區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("公71公園","臺中市","梧棲區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("兒二公園","臺中市","梧棲區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("情人公園","臺中市","梧棲區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("磁磘公園","臺中市","外埔區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("六分公園","臺中市","外埔區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("鐵山公園","臺中市","外埔區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("龍鳳公園","臺中市","外埔區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大甲溪畔生態公園","臺中市","外埔區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("水美公園","臺中市","外埔區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大東公園","臺中市","外埔區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("孟春慈德公園","臺中市","大甲區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("孟春里兒童公園","臺中市","大甲區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("幼獅工業區兒童遊戲場","臺中市","大甲區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("幼獅公園","臺中市","大甲區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("中山公園","臺中市","大甲區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("防沙堤北邊社區公園","臺中市","大安區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("龜壳生態公園","臺中市","大安區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("五甲公園","臺中市","大安區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("東安休閒公園","臺中市","大安區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("頂庄公園","臺中市","大安區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("豐年公園","臺中市","太平區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("甲堤公園","臺中市","太平區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("九二一震災紀念公園","臺中市","太平區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("宜欣公園","臺中市","太平區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("坪林森林公園","臺中市","太平區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("馬卡龍公園","臺中市","太平區","11公尺高的「全台戶外最高溜滑梯」，刺激又好玩。"),
+ PK("立德社區公園","臺中市","太平區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("麗園公園","臺中市","太平區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("建國公園","臺中市","太平區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("八德公園","臺中市","太平區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大愛綠地","臺中市","霧峰區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("賢達公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("明道公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("興祥公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("自治公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("新興公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("自強公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("榮和公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("前竹環保公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("長春公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("仁德公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("兒一公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("朝天公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("溪邊公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("東園稻田森林公園","臺中市","烏日區","稻田意象的地景遊戲場。"),
+ PK("細鄰公8公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("三和公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("櫻花公園","臺中市","烏日區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("環保公園","臺中市","大肚區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("下番社公園","臺中市","大肚區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("拍瀑拉公園","臺中市","龍井區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("舞衫公園","臺中市","龍井區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("中興橋下綠地","臺中市","龍井區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("鯉魚山公園","臺中市","龍井區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("塗城公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("成功公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("新忠公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大里公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("環保公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("仁慈公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("青年公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("仁化公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("金城社區公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("鳥竹圍公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("日新社區公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大明兒童公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("仁堤公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("九二一紀念公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("東湖公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("光榮公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大元公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("瑞成公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大新兒童公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("仁化工業區公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("日新河濱公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("十九甲健康公園","臺中市","大里區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("公益公園","臺中市","西區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("萬壽公園","臺中市","西區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("中美公園","臺中市","西區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("樂群公園","臺中市","西區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大益公園","臺中市","西區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("經國園道","臺中市","西區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("東興公園","臺中市","西區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("舊梅川園道","臺中市","西區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("上公館公園","臺中市","西區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("茄苳公園","臺中市","西區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("和平公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("樹仁公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("樹義公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("忠明園道","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("樹德公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("民興公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("健康公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("南平公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("樹義園道","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("文林公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("樹仔腳公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("永和公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("永興公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("福順公園","臺中市","南區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("豬事圓滿公園","臺中市","北區","小豬主題遊戲場，造型很可愛。"),
+ PK("錦祥公園","臺中市","北區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("梅川園道","臺中市","北區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("英士公園","臺中市","北區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("山西公園","臺中市","北區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("梅川公園","臺中市","北區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("曉明公園","臺中市","北區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("中清公園","臺中市","北區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("長青公園","臺中市","北區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("尚德公園","臺中市","北區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("太原公園","臺中市","北區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("英才公園","臺中市","北區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("青海公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("朝貴公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("上德公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("甘肅公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大仁公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大弘公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("三信公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("福林公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("福瑞公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("福聯公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("洛陽公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("世貿公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大鵬公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大墩公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("宏恩公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("河南公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("惠中公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("世斌公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("國安公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大有公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("惠誠公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("惠泰公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("惠安公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("廣昌公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("福星公園","臺中市","西屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("兒147公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("田心公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("惠智公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("文昌公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("豐富公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("春社公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("保安公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("鎮平公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("楓香公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("正心公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("福德公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("黎新公園","臺中市","南屯區","水環境教育主題公園，有戲水和生態設施。"),
+ PK("望高寮公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("向心兒童公園","臺中市","南屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("旅順公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("松勇公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("景賢公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("三分埔公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("豐田公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("敦化公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("琤瑽草原公園","臺中市","北屯區","大草原加遊戲場，適合野餐放風箏。"),
+ PK("水景玫瑰公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("921地震公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("823公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("民俗公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("三光公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("永和巷公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("平安公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("松榮公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("東新公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("廍興公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("軍福公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("和順公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("建功公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("廍子公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("平昌公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("荔枝老樹公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("兒45公園","臺中市","北屯區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("泉源公園","臺中市","東區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("干城公園","臺中市","東區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("十全公園","臺中市","東區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("祖聖公園","臺中市","東區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("忠孝公園","臺中市","東區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("樂明公園","臺中市","東區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("東福公園","臺中市","東區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("東峰公園","臺中市","東區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("大智公園","臺中市","東區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。"),
+ PK("育英公園","臺中市","東區","臺中市「美樂地計畫」共融公園，社區型遊戲場，就近放電。")
+];
+
+/* ---------- 狀態 ---------- */
+const today = (()=>{const d=new Date();d.setHours(0,0,0,0);return d})();
+const P = s => {const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+EVENTS.forEach(e=>{e.kind="ev";e.S=P(e.s);e.E=e.e?P(e.e):null});
+const PLACE_LINKS = {
+ "臺北市立動物園":"https://www.zoo.gov.taipei/","臺北市立兒童新樂園":"https://www.tcap.taipei/","國立臺灣科學教育館":"https://www.ntsec.gov.tw/",
+ "臺北市立天文科學教育館":"https://www.tam.gov.taipei/","國立臺灣博物館 古生物館（土銀展示館）":"https://www.ntm.gov.tw/",
+ "新北市立十三行博物館":"https://www.sshm.ntpc.gov.tw/","新北市立鶯歌陶瓷博物館":"https://www.ceramics.ntpc.gov.tw/","新北市立黃金博物館":"https://www.gep.ntpc.gov.tw/",
+ "國立海洋科技博物館":"https://www.nmmst.gov.tw/","Xpark 水族館":"https://www.xpark.com.tw/","小人國主題樂園":"https://www.woc.com.tw/",
+ "六福村主題遊樂園":"https://www.leofoo.com.tw/","飛牛牧場":"https://www.flyingcow.com.tw/","國立自然科學博物館":"https://www.nmns.edu.tw/",
+ "麗寶樂園":"https://www.lihpaoland.com.tw/","九族文化村":"https://www.nine.com.tw/","劍湖山世界":"https://www.janfusun.com.tw/",
+ "故宮南院":"https://south.npm.gov.tw/","奇美博物館":"https://www.chimeimuseum.org/","國立臺灣歷史博物館":"https://www.nmth.gov.tw/",
+ "國立科學工藝博物館":"https://www.nstm.gov.tw/","義大遊樂世界":"https://www.edathemepark.com.tw/","國立海洋生物博物館":"https://www.nmmba.gov.tw/",
+ "蘭陽博物館":"https://www.lym.gov.tw/","遠雄海洋公園":"https://www.farglory-oceanpark.com.tw/","國立臺灣史前文化博物館":"https://www.nmp.gov.tw/",
+ "溪頭自然教育園區":"https://www.exfo.ntu.edu.tw/"
+};
+PARKS.forEach(p=>{p.kind="pk"});
+PLACES.forEach(p=>{p.kind="pl"; if(PLACE_LINKS[p.n]) p.l=["site",PLACE_LINKS[p.n]];});
+const liveEvents = EVENTS.filter(e=> !e.E || e.E>=today);
+liveEvents.sort((a,b)=>{
+  const ao=a.S<=today, bo=b.S<=today;
+  if(ao!==bo) return ao?-1:1;
+  if(ao){ return (a.E||P("2099-01-01")) - (b.E||P("2099-01-01")); }
+  return a.S-b.S;
+});
+const key = x => x.kind+"|"+x.n+(x.kind==="pk"?"|"+x.c+(x.d||""):x.kind==="co"?"|"+x.v:"");
+/* ---------- 公辦親子活動（圖書館・親子館・科學館・運動中心） ---------- */
+// CO(名稱, 場館類型, 縣市, 區, 場館(地圖用), 開始, 結束, 小分類, 年齡, 場次, 名額, 報名方式, 官網, 報名連結, 說明, 費用)
+const CO=(n,t,c,d,v,s,e,sub,a,ses,cap,reg,l,r,note,f)=>({n,t,c,d,v,s,e,sub,a:a||ALL,ses,cap,reg,l,r,note,f:f||"free",io:"in",kind:"co"});
+const BABY=["baby"], PRE=["baby","pre"], KID=["pre","low","high"], ELEM=["low","high"];
+const COURSES=[
+ // 圖書館
+ CO("嬰幼兒說故事","圖書館","臺北市","大安區","臺北市立圖書館總館","2026-11-01",null,"說故事",BABY,"每月第2、4個週六 10:00、11:00（兩場內容相同，各30分鐘）","自由入場，額滿為止","免報名，開始前5分鐘入場","https://tpml.gov.taipei/News_Content.aspx?n=CD95C4D3959B2B22&s=E66E2F93FCCED3B9",null,"總館B2小小世界外文圖書館，0–3歲寶寶和爸媽一起聽。"),
+ CO("林老師說故事時間","圖書館","臺北市","","臺北市立圖書館","2026-11-01",null,"說故事",KID,"各分館場次不同，請看北市圖活動頁","自由入場；手作材料名額有限","免報名","https://tpml.gov.taipei/",null,"北市圖老牌說故事活動，有時搭配簡單手作。"),
+ CO("親子讀經班（第11期）","圖書館","臺中市","西區","臺中市立圖書館西區分館","2026-11-14","2026-12-19","說故事",KID,"11/14、11/21、12/5、12/12、12/19（六）09:00–11:00","依館方公告","請看活動頁","https://www.library.taichung.gov.tw/active/index?Parser=99%2C3%2C39%2C27",null,"中市圖西區分館兒童場。"),
+ CO("大嘴巴中文說故事","圖書館","臺中市","霧峰區","臺中市立圖書館霧峰以文分館","2026-11-07","2026-11-14","說故事",KID,"11/7–11/14 10:00–11:00","依館方公告","請看活動頁","https://www.library.taichung.gov.tw/active/index?Parser=99%2C3%2C39%2C27",null,"霧峰區兒童區的繪本故事。"),
+ CO("落葉踏秋意・志工說故事（12場）","圖書館","苗栗縣","苗栗市","苗栗縣立圖書館","2026-11-01","2026-11-30","說故事",KID,"每週三 15:00–16:00；週六、日 10:00–11:00；11/14 客語場","自由參加","免報名","https://n.yam.com/Article/20261013313179",null,"1樓兒童閱覽區，秋天、感恩、動物主題繪本。（連結為新聞報導）"),
+ CO("繪本說故事：小情緒大事件","圖書館","彰化縣","竹塘鄉","竹塘鄉立圖書館","2026-11-14","2026-11-14","說故事",KID,"11/14（六）10:00–10:50","限額 20 名，備取 4 名","BeClass 線上報名","https://www.beclass.com/rid=31528a46ae1ad2a1d3e3","https://www.beclass.com/rid=31528a46ae1ad2a1d3e3","圖書館兒童室，張淑惠老師主講。"),
+ // 親子館
+ CO("臺北市親子館 入館與課程預約","親子館","臺北市","","臺北市親子館","2026-11-01",null,"入館遊戲",PRE,"各館每日分上午、下午場","每場有名額限制","各館網站預約","https://www.google.com/search?q=%E8%87%BA%E5%8C%97%E5%B8%82%E8%A6%AA%E5%AD%90%E9%A4%A8+%E9%A0%90%E7%B4%84",null,"臺北市13間親子館，0–6歲免費，課程另外報名。"),
+ CO("新北市親子館 入館與課程預約","親子館","新北市","","新北市親子館","2026-11-01",null,"入館遊戲",PRE,"每月15日中午12:00開放次月預約","假日很搶手，額滿可現場候補","新北育兒資訊網實名預約","https://www.google.com/search?q=%E6%96%B0%E5%8C%97%E8%82%B2%E5%85%92%E8%B3%87%E8%A8%8A%E7%B6%B2+%E8%A6%AA%E5%AD%90%E9%A4%A8%E9%A0%90%E7%B4%84",null,"新北數十間公立親子館，0–6歲免費，另有平價課程。"),
+ CO("桃園親子館 課程／活動報名","親子館","桃園市","","桃園市親子館","2026-11-01",null,"入館遊戲",PRE,"上午 09:00–12:00、下午 14:00–17:00；週一休館","每場有名額限制","桃園育兒資源網 → 課程/活動 → 親子館課程/活動報名","https://www.google.com/search?q=%E6%A1%83%E5%9C%92%E8%82%B2%E5%85%92%E8%B3%87%E6%BA%90%E7%B6%B2+%E8%A6%AA%E5%AD%90%E9%A4%A8",null,"桃園各區親子館，入館免費。"),
+ CO("田中親子館 入館預約","親子館","彰化縣","田中鎮","田中親子館","2026-11-12",null,"入館遊戲",PRE,"上午 09:00–12:00、下午 14:00–16:30；週一休館","每場網路 6 組＋現場 6 組","BeClass 線上預約（每場各一頁）","https://www.beclass.com/rid=31528f16aebde0a07827","https://www.beclass.com/rid=31528f16aebde0a07827","請帶彰化縣育兒資源網會員或健保卡、防滑襪。"),
+ CO("內埔親子館 11月活動（小小運動員、節氣探索家…）","親子館","屏東縣","內埔鄉","內埔親子館","2026-11-01","2026-11-30","親子共學",PRE,"11月各場次見報名頁","名額有限","BeClass 線上報名","https://www.beclass.com/rid=30528916ac88ca629858","https://www.beclass.com/rid=30528916ac88ca629858","運動、閱讀、節氣、抓週等親子活動，還有祖孫日和親職講座。"),
+ CO("斗南親子館 11月活動課程","親子館","雲林縣","斗南鎮","斗南親子館","2026-11-01","2026-11-30","親子共學",PRE,"11/1–11/30 各場次","依館方公告","請看館方公告","https://www.parenting.com.tw/article/6002726",null,"（連結為親子天下活動整理）"),
+ CO("臺東4親子館 35場免費活動","親子館","臺東縣","","臺東親子館","2026-11-01","2026-11-30","手作・感官",PRE,"臺東、關山、成功、大武4館，共35場","部分場次須事先報名","臺東縣政府社會處公告","https://n.yam.com/Article/20261029668250",null,"地瓜滾滾樂、動力沙、越式春捲DIY、氣球車等。（連結為新聞報導）"),
+ // 科學館
+ CO("科學嘉年華（臺灣科學節）","科學館","臺北市","士林區","國立臺灣科學教育館","2026-11-13","2026-11-15","科學體驗",KID,"11/13（五）校園日限團體；11/14–11/15 一般民眾","現場參加","11/13 需20人以上團體報名；週末免報名","https://www.ntsec.gov.tw/article/detail.aspx?a=6108",null,"一樓廣場和臺北科學藝術園區的科學市集，11/13 憑活動識別免費看常設展。"),
+ CO("舞台劇《尼古拉・特斯拉》","科學館","臺北市","士林區","國立臺灣科學教育館","2026-11-14","2026-11-15","科學劇場",ELEM,"11/14、11/15 15:00","依現場座位","免報名","https://www.ntsec.gov.tw/",null,"認識特斯拉和電的故事，演出免費。"),
+ CO("沉浸式大戲《永恆的傅科擺》","科學館","臺北市","士林區","國立臺灣科學教育館","2026-11-07","2026-11-07","科學劇場",ELEM,"11/7（六）14:30–16:40","依現場","演出免費，需購票入館","https://www.ntsec.gov.tw/",null,"科教館70週年大戲，跟著演員在整棟館裡追劇。","deal"),
+ CO("尬科學－科學演示擂台賽 決賽","科學館","臺北市","士林區","國立臺灣科學教育館","2026-11-08","2026-11-08","科學競賽",ELEM,"11/8（日）5樓極大極小展區","現場觀賽","免報名觀賽","https://www.ntsec.gov.tw/",null,"國小三年級以上學生的科學演示比賽，可以去看。"),
+ CO("整點實驗課程／敲敲打打工作坊","科學館","臺北市","士林區","國立臺灣科學教育館","2026-11-01",null,"科學手作",ELEM,"每日整點，見科教館每日活動行事曆","滿10人開班；工作坊開始前15分鐘現場報名","線上報名或4F科學教室服務台","https://www.ntsec.gov.tw/",null,"STEAM、Maker 小課程；敲敲打打工作坊憑常設展門票免費。","deal"),
+ CO("能源互動實驗：水果、人體也能發電","科學館","高雄市","三民區","國立科學工藝博物館","2026-11-07","2026-11-15","科學體驗",KID,"11/7–11/15；11/8 16:00–17:00 北館大廳場","現場參加","免報名","https://www.nstm.gov.tw/",null,"臺灣科學節活動，部分場次需購票入館。"),
+ CO("原住民弓琴的物理","科學館","高雄市","三民區","國立科學工藝博物館","2026-11-08","2026-11-08","科學體驗",ELEM,"11/8（日）11:00–12:00 北館1樓大廳","現場參加","免報名","https://www.nstm.gov.tw/",null,"從弓琴認識振動和共鳴，可以實際玩。"),
+ CO("科普市集","科學館","高雄市","三民區","國立科學工藝博物館","2026-11-07","2026-11-08","科學市集",KID,"11/7–11/8 B1、4F長廊","現場參加","免報名","https://www.nstm.gov.tw/",null,"親子動手玩科學攤位。"),
+ CO("科學節小市集","科學館","臺中市","北區","國立自然科學博物館","2026-11-14","2026-11-15","科學市集",KID,"11/14–11/15 橢圓形廣場內外迴廊","現場參加","免報名","https://www.nmns.edu.tw/",null,"多樣感官體驗攤位。"),
+ CO("兒童京劇《尾大不掉的海馬捲捲》","科學館","基隆市","中正區","國立海洋科技博物館","2026-11-07","2026-11-07","科學劇場",KID,"11/7（六）14:00–15:00 主題館5F階梯舞臺","依現場座位","免報名","https://www.nmmst.gov.tw/",null,"用京劇認識海洋污染，免費觀賞。"),
+ // 運動中心
+ CO("兒童體驗推廣課程（每學期免費1次）","運動中心","新竹縣","竹北市","竹北國民運動中心","2026-10-07",null,"運動體驗",ELEM,"報名後由中心電話通知上課時間","免費名額有限","線上表單報名","https://www.zbsports.com.tw/?p=14560","https://www.zbsports.com.tw/?p=14560","桌球、籃球、羽球、網球、兒童MV舞蹈、劍道任選，限新竹縣國小學童。"),
+ CO("滑步車體驗區","運動中心","新北市","新莊區","新莊國民運動中心","2026-11-01",null,"運動體驗",PRE,"開放時間依中心公告","現場報名","一樓課務櫃台現場報名","https://www.xzsports.com.tw/",null,"小小孩的滑步車場地，另有初心體驗班。","check")
+];
+// 各縣市官方活動總表（每縣市的圖書館、親子館、運動中心都有一個入口；有科學館的縣市另列）
+const GS=q=>"https://www.google.com/search?q="+encodeURIComponent(q);
+const DIR_LIB={"臺北市":"https://tpml.gov.taipei/","新北市":"https://www.library.ntpc.gov.tw/","桃園市":"https://www.typl.gov.tw/","臺中市":"https://www.library.taichung.gov.tw/active/index?Parser=99%2C3%2C39%2C27","臺南市":"https://www.tnml.tn.edu.tw/","高雄市":"https://www.ksml.edu.tw/"};
+const DIR_KID={"高雄市":"http://childcare.kcg.gov.tw"};
+const LIBN={"臺北市":"臺北市立圖書館","新北市":"新北市立圖書館","桃園市":"桃園市立圖書館","臺中市":"臺中市立圖書館","臺南市":"臺南市立圖書館","高雄市":"高雄市立圖書館","基隆市":"基隆市公共圖書館","新竹市":"新竹市文化局圖書館","新竹縣":"新竹縣公共圖書館","苗栗縣":"苗栗縣立圖書館","彰化縣":"彰化縣公共圖書館","南投縣":"南投縣政府文化局圖書館","雲林縣":"雲林縣文化觀光處圖書館","嘉義市":"嘉義市立圖書館","嘉義縣":"嘉義縣公共圖書館","屏東縣":"屏東縣立圖書館","宜蘭縣":"宜蘭縣公共圖書館","花蓮縣":"花蓮縣文化局圖書館","臺東縣":"臺東縣立圖書館","澎湖縣":"澎湖縣圖書館","金門縣":"金門縣立圖書館","連江縣":"連江縣公共圖書館"};
+Object.keys(REGION).forEach(c=>{
+  const lib=LIBN[c];
+  COURSES.push(CO(`${lib}：兒童活動總表`,"圖書館",c,"",lib,"2026-11-01",null,"官方活動總表",KID,"說故事、手作、講座，每月更新","各場不同，見活動頁","官網「活動報名／推廣活動」",DIR_LIB[c]||GS(lib+" 兒童 活動報名"),null,`${c}各分館的兒童、親子活動都列在這裡，多數免費。`));
+  COURSES.push(CO(`${c}親子館：活動與預約`,"親子館",c,"",c+"親子館","2026-11-01",null,"官方活動總表",PRE,"入館分上午、下午場；課程每月公告","每場有名額，見預約頁","縣市育兒資源網預約",DIR_KID[c]||GS(c+" 育兒資源網 親子館 活動 預約"),null,`${c}公立親子館，0–6歲免費入館，另有手作、律動、說故事課程。`));
+  COURSES.push(CO(`${c}運動中心：兒童體驗課`,"運動中心",c,"",c+" 國民運動中心","2026-11-01",null,"官方活動總表",["pre","low","high"],"各中心期課與體驗課公告","各班不同","各中心官網或APP",GS(c+" 國民運動中心 兒童 體驗課"),null,`${c}的國民／公立運動中心，常有兒童游泳、體操、球類體驗課（多數收費，部分免費體驗）。`,"check"));
+});
+[["國立臺灣科學教育館","臺北市","士林區","https://www.ntsec.gov.tw/"],["臺北市立天文科學教育館","臺北市","士林區","https://tam.gov.taipei/"],["國立自然科學博物館","臺中市","北區","https://www.nmns.edu.tw/"],["國立科學工藝博物館","高雄市","三民區","https://www.nstm.gov.tw/"],["國立海洋科技博物館","基隆市","中正區","https://www.nmmst.gov.tw/"],["國立海洋生物博物館","屏東縣","車城鄉","https://www.nmmba.gov.tw/"],["南瀛天文館","臺南市","大內區",GS("南瀛天文館 活動")],["國立公共資訊圖書館","臺中市","南區","https://www.nlpi.edu.tw/"]].forEach(([n,c,d,l])=>{
+  const t = n.includes("圖書館")?"圖書館":"科學館";
+  COURSES.push(CO(`${n}：活動與課程總表`,t,c,d,n,"2026-11-01",null,"官方活動總表",KID,"常態活動與特別活動，見官網行事曆","各場不同","官網線上報名或現場",l,null,"國立／市立館舍，常有免費的科學演示、說故事、手作或講座。"));
+});
+// 臺中市立圖書館 12月 場次（官方活動列表）
+COURSES.push(
+ CO("12月 大嘴巴中文說故事","圖書館","臺中市","霧峰區","臺中市立圖書館霧峰以文分館","2026-12-05","2026-12-12","說故事",KID,"12/5–12/12 10:00–11:00","依館方公告","請看活動頁","https://www.library.taichung.gov.tw/active/index?Parser=99%2C3%2C39%2C27",null,"霧峰區兒童區。"),
+ CO("12月 大嘴巴英文說故事","圖書館","臺中市","霧峰區","臺中市立圖書館霧峰以文分館","2026-12-13","2026-12-13","說故事",KID,"12/13 10:00–11:00","依館方公告","請看活動頁","https://www.library.taichung.gov.tw/active/index?Parser=99%2C3%2C39%2C27",null,"英文繪本。"),
+ CO("12月 大嘴巴台語說故事","圖書館","臺中市","霧峰區","臺中市立圖書館霧峰以文分館","2026-12-19","2026-12-26","說故事",KID,"12/19–12/26 10:00–11:00","依館方公告","請看活動頁","https://www.library.taichung.gov.tw/active/index?Parser=99%2C3%2C39%2C27",null,"台語繪本。"),
+ CO("12月 創作樂DIY創手作","圖書館","臺中市","霧峰區","臺中市立圖書館霧峰以文分館","2026-12-05","2026-12-19","手作",KID,"12/5–12/19 10:00–11:00","依館方公告","請看活動頁","https://www.library.taichung.gov.tw/active/index?Parser=99%2C3%2C39%2C27",null,"兒童手作。"),
+ CO("行動圖書車閱讀駐點服務","圖書館","臺中市","大里區","臺中市立圖書館大里分館","2026-12-01","2027-01-31","閱讀",KID,"12/1–1/31 09:30–15:30","自由參加","免報名","https://www.library.taichung.gov.tw/active/index?Parser=99%2C3%2C39%2C27",null,"行動圖書車到社區駐點。")
+);
+
+COURSES.forEach(e=>{e.S=P(e.s);e.E=e.e?P(e.e):null});
+const liveCourses = COURSES.filter(e=>!e.E||e.E>=today).sort((a,b)=>((a.sub==="官方活動總表")-(b.sub==="官方活動總表"))||((a.S>today)-(b.S>today))||(a.S-b.S));
+
+const ALLITEMS = () => [...liveEvents,...liveCourses,...PARKS,...PLACES];
+const srcOf = t => t==="co"?liveCourses : t==="ev"?liveEvents : t==="pk"?PARKS : t==="pl"?PLACES : ALLITEMS();
+
+let favs = new Set();
+try{ favs = new Set(JSON.parse(localStorage.getItem("bm-favs")||"[]")); }catch(e){}
+const saveFavs=()=>{try{localStorage.setItem("bm-favs",JSON.stringify([...favs]))}catch(e){}};
+
+const state = {tab:"ev", q:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), dist:"", plCat:"", limit:60, ck:""};
+try{ JSON.parse(localStorage.getItem("bm-counties")||"[]").forEach(c=>state.counties.add(c)); }catch(e){}
+
+/* ---------- 週末計算 ---------- */
+function weekendRange(){
+  const d=new Date(today); const dow=d.getDay();
+  const sat=new Date(d); sat.setDate(d.getDate()+((6-dow+7)%7));
+  if(dow===0){ sat.setDate(d.getDate()-1); }
+  const sun=new Date(sat); sun.setDate(sat.getDate()+1);
+  return [sat,sun];
+}
+function overlaps(e,a,b){ return e.S<=b && (!e.E || e.E>=a); }
+
+/* ---------- 篩選 UI ---------- */
+const $ = id=>document.getElementById(id);
+function chip(row, label, cls, onClick, pressed){
+  const b=document.createElement("button");
+  b.className="chip "+cls; b.textContent=label; b.type="button";
+  b.setAttribute("aria-pressed", pressed?"true":"false");
+  b.addEventListener("click",()=>{onClick(b)});
+  $(row).appendChild(b); return b;
+}
+function multi(set,val,b){ set.has(val)?set.delete(val):set.add(val); b.setAttribute("aria-pressed",set.has(val)); render(); }
+function single(prop,val,row,b){
+  state[prop] = state[prop]===val ? "" : val;
+  [...$(row).querySelectorAll(".chip")].forEach(x=>x.setAttribute("aria-pressed","false"));
+  if(state[prop]) b.setAttribute("aria-pressed","true");
+  render();
+}
+function buildFilters(){
+  ["row-when","row-age","row-type","row-fee","row-io"].forEach(r=>{$(r).querySelectorAll(".chip").forEach(c=>c.remove())});
+  const whenRow=$("row-when");
+  whenRow.style.display = (state.tab==="pl"||state.tab==="pk") ? "none" : "";
+  [["weekend","這個週末"],["next","下個週末"],["month","這個月"],["soon","即將開始"]].forEach(([k,l])=>chip("row-when",l,"wk",b=>single("when",k,"row-when",b),state.when===k));
+  $("row-ck").querySelectorAll(".chip").forEach(c=>c.remove());
+  $("row-ck").style.display = state.tab==="co" ? "" : "none";
+  [["s","有日期的場次"],["d","各縣市官方活動總表"]].forEach(([k,l])=>chip("row-ck",l,"wk",b=>single("ck",k,"row-ck",b),state.ck===k));
+  AGES.forEach(a=>chip("row-age",a.label,"age",b=>multi(state.ages,a.k,b),state.ages.has(a.k)));
+  const src = srcOf(state.tab);
+  $("row-type").style.display = state.tab==="pl" ? "none" : "";
+  const types=[...new Set(src.map(x=>x.t))];
+  [...state.types].forEach(t=>{if(!types.includes(t))state.types.delete(t)});
+  types.forEach(t=>chip("row-type",t,"",b=>multi(state.types,t,b),state.types.has(t)));
+  const feeKeys = Object.keys(FEES).filter(k=>src.some(x=>x.f===k));
+  feeKeys.forEach(k=>chip("row-fee",FEES[k],"fee",b=>multi(state.fees,k,b),state.fees.has(k)));
+  const hasIn = src.some(x=>x.io!=="out");
+  $("row-io").style.display = hasIn ? "" : "none";
+  if(!hasIn) state.io="";
+  [["in","室內（下雨也OK）"],["out","戶外"]].forEach(([k,l])=>chip("row-io",l,"io",b=>single("io",k,"row-io",b),state.io===k));
+  fillCounties();
+}
+function fillCounties(){
+  const src = srcOf(state.tab);
+  const avail = COUNTY_ORDER.filter(c=>src.some(x=>x.c===c));
+  [...state.counties].forEach(c=>{ if(!avail.includes(c)) state.counties.delete(c); });
+  const groups=["北部","中部","南部","東部","離島"];
+  $("cpop-body").innerHTML="";
+  groups.forEach(g=>{
+    const cs=avail.filter(c=>REGION[c]===g); if(!cs.length) return;
+    const row=document.createElement("div"); row.className="cgrp"; row.id="cg-"+g;
+    const t=document.createElement("b"); t.textContent=g; t.title="整區全選"; row.appendChild(t);
+    t.onclick=()=>{const all=cs.every(c=>state.counties.has(c)); cs.forEach(c=>all?state.counties.delete(c):state.counties.add(c)); fillCounties(); render();};
+    $("cpop-body").appendChild(row);
+    cs.forEach(c=>{ const n=src.filter(x=>x.c===c).length; chip(row.id,`${c} ${n}`,"cty",b=>{state.counties.has(c)?state.counties.delete(c):state.counties.add(c); b.setAttribute("aria-pressed",state.counties.has(c)); updCountyBtn(); fillDists(); render();},state.counties.has(c)); });
+  });
+  updCountyBtn(); fillDists();
+}
+function updCountyBtn(){
+  try{localStorage.setItem("bm-counties",JSON.stringify([...state.counties]))}catch(e){}
+  const b=$("btn-county"), cs=[...state.counties];
+  b.textContent = cs.length===0 ? "所有縣市 ▾" : cs.length<=3 ? cs.join("＋")+" ▾" : `${cs.slice(0,2).join("＋")} 等${cs.length}個 ▾`;
+  b.classList.toggle("on",cs.length>0);
+}
+function fillDists(){
+  const sel=$("sel-dist"); const cur=state.dist;
+  const src = srcOf(state.tab);
+  const one = state.counties.size===1 ? [...state.counties][0] : "";
+  const ds = one ? [...new Set(src.filter(x=>x.c===one && x.d).map(x=>x.d))] : [];
+  sel.innerHTML='<option value="">所有鄉鎮區</option>'+ds.map(d=>`<option ${d===cur?"selected":""}>${d}</option>`).join("");
+  sel.disabled = !one; sel.title = one?"":"選一個縣市後可以再選鄉鎮區";
+  if(cur && !ds.includes(cur)) state.dist="";
+}
+
+/* ---------- 篩選邏輯 ---------- */
+function match(x){
+  if(state.q){
+    const hay=(x.n+x.c+(x.d||"")+x.t+(x.note||"")+FEES[x.f]+x.a.map(a=>AGE_SHORT[a]).join("")).toLowerCase();
+    const terms=state.q.toLowerCase().replace(/台/g,"臺").split(/\s+/).filter(Boolean);
+    const hay2=hay.replace(/台/g,"臺");
+    if(!terms.every(t=>hay2.includes(t))) return false;
+  }
+  if(state.ages.size && !x.a.some(a=>state.ages.has(a))) return false;
+  if(state.types.size && !state.types.has(x.t)) return false;
+  if(state.fees.size && !state.fees.has(x.f)) return false;
+  if(state.io && !(x.io===state.io || x.io==="both")) return false;
+  if(state.region && !state.counties.size && REGION[x.c]!==state.region) return false;
+  if(state.counties.size && !state.counties.has(x.c)) return false;
+  if(state.tab==="pl" && x.kind==="pl" && state.plCat && x.t!==state.plCat) return false;
+  if(x.kind==="co" && state.ck){ const d=x.sub==="官方活動總表"; if(state.ck==="s"&&d) return false; if(state.ck==="d"&&!d) return false; }
+  if(state.dist && x.d!==state.dist) return false;
+  if((x.kind==="ev"||x.kind==="co") && state.when){
+    if(state.when==="weekend"){const [a,b]=weekendRange(); if(!overlaps(x,a,b)) return false;}
+    if(state.when==="next"){const [a,b]=weekendRange(); a.setDate(a.getDate()+7); b.setDate(b.getDate()+7); if(!overlaps(x,a,b)) return false;}
+    if(state.when==="month"){const a=today,b=new Date(today.getFullYear(),today.getMonth()+1,0); if(!overlaps(x,a,b)) return false;}
+    if(state.when==="soon"){ if(x.S<=today) return false; }
+  }
+  return true;
+}
+
+/* ---------- 卡片 ---------- */
+const fmt = d=>`${d.getMonth()+1}/${d.getDate()}`;
+const fmtY = d=> d.getFullYear()!==today.getFullYear() ? `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}` : fmt(d);
+const DAY=86400000;
+function statusOf(e){
+  if(e.S>today){const n=Math.round((e.S-today)/DAY); return `<span class="when st-soon">${n<=1?"明天開始":n+"天後開始"}</span>`;}
+  if(e.E){const n=Math.round((e.E-today)/DAY); if(n===0) return `<span class="when st-last">今天最後一天</span>`; if(n<=7) return `<span class="when st-last">剩${n}天</span>`;}
+  return `<span class="when st-on">進行中</span>`;
+}
+const TAPE=["#f1b33b","#ee8fa6","#8cc58f","#8bb9e3","#c9a2cc"];
+const heart = on=>`<svg viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.3-9.2C1.4 7.3 3.8 4 7.1 4c2 0 3.6 1.1 4.9 2.9C13.3 5.1 14.9 4 16.9 4c3.3 0 5.7 3.3 4.4 6.8C19.5 15.4 12 20 12 20z" fill="${on?"#e4664a":"none"}" stroke="#3a2e28" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function card(x,i){
+  const k=key(x), on=favs.has(k);
+  const feeCls={free:"t-free",paid:"t-paid",deal:"t-deal",check:"t-chk"}[x.f];
+  const ages = x.a.length===4 ? `<span class="tag t-age">全年齡</span>` : x.a.map(a=>`<span class="tag t-age">${AGE_SHORT[a]}</span>`).join("");
+  const io = x.io==="in"?"室內":x.io==="out"?"戶外":"室內＋戶外";
+  let dateLine="";
+  if(x.kind==="ev"||x.kind==="co"){
+    const range = x.E ? (x.s===x.e? fmtY(x.S) : `${fmtY(x.S)} – ${fmtY(x.E)}`) : `${fmtY(x.S)} 起（多場次）`;
+    dateLine=`<div class="meta">${statusOf(x)}<b>${range}</b></div>`;
+  }
+  const q = encodeURIComponent((x.v||x.n).replace(/[（(].*?[）)]/g,"")+" "+x.c+(x.d||""));
+  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${q}`;
+  const off = x.kind==="co" ? `<a href="${x.l}" target="_blank" rel="noopener" class="${/google\.com\/search/.test(x.l)?"srch":""}">${/google\.com\/search/.test(x.l)?"搜尋官網":/yam\.com|parenting\.com/.test(x.l)?"相關報導":"官網"} ↗</a>${x.r?` <a class="regbtn" href="${x.r}" target="_blank" rel="noopener">報名・看剩餘名額 ↗</a>`:""}` : x.kind==="pk" ? "" : x.l ? `<a href="${x.l[1]}" target="_blank" rel="noopener">${LK[x.l[0]]} ↗</a>`
+                  : `<a href="https://www.google.com/search?q=${encodeURIComponent(x.n+" 官網")}" target="_blank" rel="noopener" class="srch">搜尋官網 ↗</a>`;
+  return `<article class="card">
+    <a class="stretch" href="${mapUrl}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"></a>
+    <span class="tape" style="background:${TAPE[i%TAPE.length]}"></span>
+    <button class="fav" data-k="${esc(k)}" aria-label="${on?"取消收藏":"收藏"}" aria-pressed="${on}">${heart(on)}</button>
+    ${ICON[x.t]?`<span class="pic" aria-hidden="true">${ICON[x.t]}</span>`:""}<h3>${esc(x.n)}</h3>
+    ${dateLine}${x.kind==="co"?`<div class="cinfo"><div><b>場館</b>${esc(x.v)}</div><div><b>場次</b>${esc(x.ses)}</div><div><b>名額</b>${esc(x.cap)}${x.r?`<span class="live">（剩餘名額以報名頁即時顯示為準）</span>`:""}</div><div><b>報名</b>${esc(x.reg)}</div></div>`:""}
+    <a class="where" href="${mapUrl}" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟 ${esc(x.n)}"><svg width="12" height="14" viewBox="0 0 12 14" style="vertical-align:-1px;margin-right:3px"><path d="M6 13s4.6-4.3 4.6-7.6A4.6 4.6 0 0 0 1.4 5.4C1.4 8.7 6 13 6 13z" fill="#e4664a" stroke="#3a2e28" stroke-width="1.2"/><circle cx="6" cy="5.4" r="1.6" fill="#fff"/></svg>${esc(x.c)}${x.d?"・"+esc(x.d):""}<span class="go">地圖・導航 ↗</span></a>
+    ${x.kind!=="ev"&&GKEY?`<div class="gslot" data-q="${esc(gq(x))}">${gHtml(gq(x))}</div>`:""}
+    <div class="tags">${ages}<span class="tag t-type">${esc(x.t)}</span>${x.sub?`<span class="tag t-type">${esc(x.sub)}</span>`:""}<span class="tag ${feeCls}">${FEES[x.f]}</span><span class="tag t-io">${io}</span></div>
+    <p class="note">${esc(x.note||"")}</p>
+    <div class="react">${reactRow(x)}</div>
+    <div class="foot"><span class="lnk">${off}</span><span style="color:var(--ink2)">${x.kind==="ev"?"活動":x.kind==="co"?"公辦活動":x.kind==="pk"?"點卡片開地圖":"景點"}</span></div>
+  </article>`;
+}
+
+const K='stroke="#3a2e28" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"';
+const ICON={
+"博物館・美術館":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="40" ry="4" fill="#eadfcf"/><path d="M14 60 C14 44 22 36 34 36 L44 36 L52 20 C54 14 62 12 68 16 C74 20 74 28 68 30 L60 32 L62 44 C70 46 78 52 84 46 C84 56 74 62 62 60 Z" fill="#8cc58f" ${K}/><circle cx="64" cy="21" r="2" fill="#3a2e28"/><path d="M24 60v-8M36 60v-10M50 60v-8" ${K} fill="none"/><path d="M30 40l3 -6 3 6M40 38l3 -6 3 6" fill="#f1b33b" ${K}/></svg>`,
+"科學・教育館":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="34" ry="4" fill="#eadfcf"/><path d="M38 10h20M42 10v18L26 56c-2 4 0 8 5 8h34c5 0 7-4 5-8L54 28V10" fill="#fff" ${K}/><path d="M32 46h32l6 10c2 4 0 8-5 8H31c-5 0-7-4-5-8z" fill="#8bb9e3" ${K}/><circle cx="42" cy="54" r="3" fill="#fff"/><circle cx="53" cy="50" r="2" fill="#fff"/><circle cx="70" cy="20" r="4" fill="#f1b33b" ${K}/><circle cx="20" cy="30" r="3" fill="#ee8fa6" ${K}/></svg>`,
+"主題樂園":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="34" ry="4" fill="#eadfcf"/><circle cx="48" cy="32" r="24" fill="none" ${K}/><path d="M48 32L48 8M48 32L72 32M48 32L48 56M48 32L24 32M48 32L65 15M48 32L31 49M48 32L65 49M48 32L31 15" ${K}/><g ${K}><rect x="43" y="3" width="10" height="8" rx="2" fill="#ee8fa6"/><rect x="68" y="28" width="10" height="8" rx="2" fill="#f1b33b"/><rect x="18" y="28" width="10" height="8" rx="2" fill="#8bb9e3"/><rect x="61" y="10" width="9" height="7" rx="2" fill="#8cc58f"/><rect x="26" y="45" width="9" height="7" rx="2" fill="#c9a2cc"/></g><path d="M40 64L48 32L56 64" fill="none" ${K}/></svg>`,
+"動物園・水族館":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="36" ry="4" fill="#eadfcf"/><path d="M18 36c8-14 30-14 40 0c-10 14-32 14-40 0z" fill="#8bb9e3" ${K}/><path d="M58 36l12-10v20z" fill="#8bb9e3" ${K}/><circle cx="28" cy="33" r="2" fill="#3a2e28"/><path d="M38 28c2 4 2 12 0 16" fill="none" ${K}/><path d="M74 62c0-10 2-18 8-22c4-3 8 0 6 5c-2 4-4 4-4 10v7" fill="#f1b33b" ${K}/><circle cx="84" cy="43" r="1.6" fill="#3a2e28"/><circle cx="12" cy="20" r="3" fill="none" ${K}/><circle cx="18" cy="12" r="2" fill="none" ${K}/></svg>`,
+"農場・牧場":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="40" ry="4" fill="#eadfcf"/><path d="M10 62V34l16-14 16 14v28z" fill="#e4664a" ${K}/><path d="M20 62V46h12v16M20 46l12 16M32 46L20 62" fill="#fff" ${K}/><path d="M50 44c0-6 6-8 14-8h12c6 0 10 4 10 10v6H50z" fill="#fff" ${K}/><path d="M56 40c3 2 6 2 8 0M70 44c2 3 6 3 8 0" fill="none" ${K}/><path d="M54 52v10M62 52v10M74 52v10M82 52v10" ${K}/><path d="M82 38l6-4M86 40c3 0 4 3 2 5" fill="none" ${K}/><circle cx="84" cy="42" r="1.4" fill="#3a2e28"/></svg>`,
+"觀光工廠":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="38" ry="4" fill="#eadfcf"/><path d="M12 62V36l16 10V36l16 10V36l16 10V20h12v42z" fill="#f1b33b" ${K}/><path d="M20 54h8M36 54h8M52 54h8" ${K}/><path d="M66 16c0-6 6-6 6-10M74 14c0-4 4-5 4-8" fill="none" ${K}/><circle cx="82" cy="54" r="8" fill="#ee8fa6" ${K}/><path d="M78 54h8M82 50v8" ${K}/></svg>`,
+"文化・鐵道園區":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="40" ry="4" fill="#eadfcf"/><path d="M8 62h80" ${K}/><rect x="14" y="30" width="34" height="24" rx="4" fill="#e4664a" ${K}/><rect x="48" y="22" width="30" height="32" rx="4" fill="#4f8fca" ${K}/><rect x="54" y="28" width="18" height="10" rx="2" fill="#fff" ${K}/><path d="M20 30v-10h10v10" fill="#3a2e28" ${K}/><path d="M78 46l8 8H78" fill="#f1b33b" ${K}/><circle cx="24" cy="58" r="5" fill="#fff" ${K}/><circle cx="40" cy="58" r="5" fill="#fff" ${K}/><circle cx="62" cy="58" r="5" fill="#fff" ${K}/><path d="M24 14c4-2 2-6 6-8" fill="none" ${K}/></svg>`,
+"室內遊戲・親子館":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="38" ry="4" fill="#eadfcf"/><rect x="14" y="42" width="20" height="20" rx="3" fill="#ee8fa6" ${K}/><rect x="34" y="42" width="20" height="20" rx="3" fill="#8bb9e3" ${K}/><rect x="24" y="22" width="20" height="20" rx="3" fill="#f1b33b" ${K}/><path d="M20 52h8M44 48v8M30 32h8" ${K}/><circle cx="72" cy="48" r="14" fill="#8cc58f" ${K}/><path d="M58 48h28M72 34c-6 8-6 20 0 28M72 34c6 8 6 20 0 28" fill="none" ${K}/><path d="M70 12c-8 0-10 8-4 10M78 8l-2 6" fill="none" ${K}/></svg>`,
+"森林・自然":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="40" ry="4" fill="#eadfcf"/><path d="M6 62l22-34 14 20 14-26 34 40z" fill="#c8e1c4" ${K}/><path d="M50 30l6-8 6 10" fill="#fff" ${K}/><path d="M20 62V50M20 30l-10 20h20z" fill="#5f9e62" ${K}/><path d="M76 62V52M76 34l-9 18h18z" fill="#5f9e62" ${K}/><circle cx="80" cy="14" r="7" fill="#f1b33b" ${K}/></svg>`,
+"*":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="30" ry="4" fill="#eadfcf"/><path d="M14 18l22-8 24 8 22-8v42l-22 8-24-8-22 8z" fill="#fff" ${K}/><path d="M36 10v42M60 18v42" ${K}/><path d="M48 46s10-9 10-16a10 10 0 0 0-20 0c0 7 10 16 10 16z" fill="#e4664a" ${K}/><circle cx="48" cy="30" r="3.5" fill="#fff" ${K}/></svg>`,
+"共融遊戲場":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="38" ry="4" fill="#eadfcf"/><path d="M20 62V22h18v40" fill="none" ${K}/><path d="M20 30h18M20 40h18M20 50h18" ${K}/><path d="M38 24h10l30 34c2 3 0 5-3 5h-8L42 34h-4" fill="#f1b33b" ${K}/><path d="M16 22l13-12 13 12z" fill="#e4664a" ${K}/></svg>`
+};
+ICON["特色溜滑梯"]=ICON["共融遊戲場"]; ICON["校園遊戲場"]=ICON["共融遊戲場"]; ICON["親子館"]=ICON["室內遊戲・親子館"]; ICON["科學館"]=ICON["科學・教育館"];
+ICON["戲水"]=`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="38" ry="4" fill="#eadfcf"/><path d="M10 54c8-6 14 6 22 0s14 6 22 0s14 6 22 0s10 4 12 2v10H10z" fill="#8bb9e3" ${K}/><path d="M48 44V20M48 20c-10 0-16 8-18 14M48 20c10 0 16 8 18 14M48 20c-4 6-6 12-6 18M48 20c4 6 6 12 6 18" fill="none" ${K}/><circle cx="30" cy="38" r="2" fill="#8bb9e3"/><circle cx="66" cy="38" r="2" fill="#8bb9e3"/></svg>`;
+ICON["大草地"]=`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="40" ry="4" fill="#eadfcf"/><path d="M6 62c10-12 74-12 84 0z" fill="#8cc58f" ${K}/><path d="M60 14l14 4-6 12z" fill="#ee8fa6" ${K}/><path d="M68 30c-4 8 4 14-2 22" fill="none" ${K}/><rect x="18" y="44" width="24" height="10" rx="2" fill="#fff" ${K}/><path d="M18 49h24M30 44v10" ${K}/><circle cx="20" cy="16" r="6" fill="#f1b33b" ${K}/></svg>`;
+
+ICON["展覽"]=ICON["博物館・美術館"]; ICON["科學體驗"]=ICON["科學・教育館"]; ICON["市集・嘉年華"]=ICON["主題樂園"]; ICON["樂園優惠"]=ICON["主題樂園"]; ICON["戶外・自然"]=ICON["森林・自然"];
+ICON["節慶燈飾"]=`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="30" ry="4" fill="#eadfcf"/><path d="M8 10c20 10 60 10 80 0" fill="none" ${K}/><path d="M48 16v6" ${K}/><path d="M36 26h24M38 54h20" ${K}/><path d="M36 26c-8 8-8 20 2 28h20c10-8 10-20 2-28z" fill="#e4664a" ${K}/><path d="M48 26v28M42 27c-4 8-4 18 0 27M54 27c4 8 4 18 0 27" fill="none" ${K}/><path d="M44 54v6h8v-6" fill="#f1b33b" ${K}/><circle cx="20" cy="16" r="4" fill="#f1b33b" ${K}/><circle cx="76" cy="16" r="4" fill="#8cc58f" ${K}/></svg>`;
+ICON["兒童劇・音樂會"]=`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="40" ry="4" fill="#eadfcf"/><path d="M8 8h80v8H8z" fill="#e4664a" ${K}/><path d="M10 16c0 20 6 36 14 46H10zM86 16c0 20-6 36-14 46h14z" fill="#e4664a" ${K}/><circle cx="48" cy="38" r="9" fill="#f1b33b" ${K}/><circle cx="45" cy="36" r="1.4" fill="#3a2e28"/><circle cx="51" cy="36" r="1.4" fill="#3a2e28"/><path d="M44 41c2 2 6 2 8 0" fill="none" ${K}/><path d="M62 30v14M62 30l8-2v12" fill="none" ${K}/><circle cx="60" cy="44" r="2.5" fill="#3a2e28"/><circle cx="68" cy="40" r="2.5" fill="#3a2e28"/></svg>`;
+ICON["圖書館"]=`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="36" ry="4" fill="#eadfcf"/><path d="M48 22c-10-6-24-6-34-2v40c10-4 24-4 34 2c10-6 24-6 34-2V20c-10-4-24-4-34 2z" fill="#fff" ${K}/><path d="M48 22v40" ${K}/><path d="M22 30h16M22 38h16M58 30h16M58 38h16" ${K}/><path d="M64 6l4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z" fill="#f1b33b" ${K}/></svg>`;
+ICON["運動中心"]=`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="36" ry="4" fill="#eadfcf"/><circle cx="34" cy="38" r="20" fill="#e4664a" ${K}/><path d="M14 38h40M34 18c-8 10-8 30 0 40M34 18c8 10 8 30 0 40" fill="none" ${K}/><path d="M62 58l20-36M76 18l10 6-4 6-10-6z" fill="#8bb9e3" ${K}/><circle cx="70" cy="58" r="5" fill="#f1b33b" ${K}/></svg>`;
+const CAT_ORDER=["博物館・美術館","科學・教育館","主題樂園","動物園・水族館","農場・牧場","觀光工廠","文化・鐵道園區","室內遊戲・親子館","森林・自然"];
+const CAT_DESC={"博物館・美術館":"看展、恐龍、藝術","科學・教育館":"動手玩科學","主題樂園":"遊樂設施、樂園","動物園・水族館":"看動物、看魚","農場・牧場":"餵動物、採果、草地","觀光工廠":"參觀工廠、DIY","文化・鐵道園區":"老街、火車、園區","室內遊戲・親子館":"下雨天也能去","森林・自然":"步道、海邊、森林"};
+function render(more){
+  if(!more) state.limit=60;
+  const g=$("grid");
+  if(state.tab==="pl" && !state.plCat && !state.q){
+    const base = PLACES.filter(match);
+    g.className="cats";
+    g.innerHTML = CAT_ORDER.map((c,i)=>{const n=base.filter(x=>x.t===c).length; return `<button class="cat" data-cat="${c}" type="button" ${n?"":"disabled style=\"opacity:.45\""}><span class="blob" style="background:${TAPE[i%TAPE.length]}"></span><span class="ic">${ICON[c]}</span><span class="cn">${c}</span><span class="cc">${n} 個・${CAT_DESC[c]}</span></button>`}).join("")
+      + `<button class="cat" data-cat="*" type="button"><span class="blob" style="background:#ddd"></span><span class="ic">${ICON["*"]}</span><span class="cn">全部景點</span><span class="cc">${base.length} 個・不分類全部看</span></button>`;
+    $("rcount").innerHTML = `先選一種想去的地方 <span style="font-size:14px;color:var(--ink2)">（共 ${base.length} 個景點）</span>`;
+    updCounts(); return;
+  }
+  g.className="grid";
+  const src = state.tab==="fv" ? ALLITEMS().filter(x=>favs.has(key(x))) : srcOf(state.tab);
+  const list = src.filter(match);
+  const shown = list.slice(0,state.limit);
+  g.innerHTML = list.length ? shown.map(card).join("") + (list.length>shown.length?`<button class="more" id="more" type="button" style="grid-column:1/-1">再看 ${Math.min(60,list.length-shown.length)} 個（還有 ${list.length-shown.length} 個）</button>`:"") :
+    `<div class="empty" style="grid-column:1/-1"><div class="hand">${state.tab==="fv"&&!src.length?"還沒有收藏喔":"找不到符合的，換個條件試試看"}</div><p>${state.tab==="fv"&&!src.length?"在卡片右上角按愛心，就會存在這裡（只存在這台裝置）。":"可以少選幾個條件，或改搜尋其他關鍵字。"}</p></div>`;
+  const lbl = state.tab==="co"?"個公辦親子活動":state.tab==="ev"?"個活動":state.tab==="pk"?"座公園":state.tab==="pl"?"個景點":"個收藏";
+  const back = state.tab==="pl" && state.plCat ? `<button class="back" id="back" type="button">← 回到分類</button>　` : "";
+  const catName = state.tab==="pl" && state.plCat && state.plCat!=="*" ? `「${state.plCat}」` : "";
+  $("rcount").innerHTML = `${back}${catName}找到 ${list.length} ${lbl}`;
+  if(state.tab==="co") $("rcount").innerHTML += `<span style="font-size:13px;color:var(--ink2);margin-left:8px">圖書館・親子館・科學館・運動中心辦的，多數免費</span>`;
+  if(typeof watchRatings==="function") watchRatings();
+  updCounts();
+}
+function updCounts(){
+  $("cnt-ev").textContent=liveEvents.length; $("cnt-co").textContent=liveCourses.length; $("cnt-pk").textContent=PARKS.length; $("cnt-pl").textContent=PLACES.length;
+  $("cnt-fv").textContent=ALLITEMS().filter(x=>favs.has(key(x))).length;
+}
+/* ---------- Google 評分（Google Maps JavaScript API） ---------- */
+const GKEY = ""; // ← 填入 Google Maps API 金鑰後才會顯示星星（見「發佈與開通步驟」）
+const gq = x => x.n.replace(/[（(].*?[）)]/g,"")+" "+x.c+(x.d||"");
+let GR={}; try{ GR=JSON.parse(sessionStorage.getItem("bm-gr")||"{}"); }catch(e){}
+function gHtml(q){
+  const r=GR[q]; if(!r) return ""; if(r===-1) return "";
+  const full=Math.round(r.rating*2)/2;
+  const stars="★".repeat(Math.floor(full))+(full%1?"½":"");
+  return `<a class="gstar" href="${r.url}" target="_blank" rel="noopener"><b>${stars}</b> ${r.rating.toFixed(1)}（${r.count.toLocaleString()} 則評論）<span class="g">Google</span></a>`;
+}
+let gLib=null, gQueue=[], gBusy=0;
+function loadGoogle(){
+  if(gLib||!GKEY) return gLib;
+  gLib=new Promise((res,rej)=>{
+    window.__gInit=()=>google.maps.importLibrary("places").then(res,rej);
+    const sc=document.createElement("script");
+    sc.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GKEY)}&v=weekly&language=zh-TW&region=TW&loading=async&callback=__gInit`;
+    sc.async=true; sc.onerror=rej; document.head.appendChild(sc);
+  });
+  return gLib;
+}
+async function gFetch(q){
+  if(GR[q]!==undefined) return;
+  GR[q]=-1;
+  try{
+    const {Place}=await loadGoogle();
+    const {places}=await Place.searchByText({textQuery:q,fields:["rating","userRatingCount","googleMapsURI"],maxResultCount:1,language:"zh-TW",region:"tw"});
+    const p=places&&places[0];
+    if(p&&p.rating) GR[q]={rating:p.rating,count:p.userRatingCount||0,url:p.googleMapsURI};
+  }catch(e){ console.warn("google rating",e); }
+  try{ sessionStorage.setItem("bm-gr",JSON.stringify(GR)); }catch(e){}
+  document.querySelectorAll(".gslot").forEach(el=>{ if(el.dataset.q===q) el.innerHTML=gHtml(q); });
+}
+const gObs = ("IntersectionObserver" in window) ? new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ gObs.unobserve(e.target); gFetch(e.target.dataset.q); } }); },{rootMargin:"200px"}) : null;
+function watchRatings(){ if(!GKEY||!gObs) return; document.querySelectorAll(".gslot").forEach(el=>{ if(GR[el.dataset.q]===undefined) gObs.observe(el); }); }
+
+/* ---------- 留言・讚・回報（Supabase） ---------- */
+const CFG = { SUPABASE_URL: "", SUPABASE_KEY: "" }; // ← 開通後填入（見「發佈與開通步驟」）
+const BE = !!(CFG.SUPABASE_URL && CFG.SUPABASE_KEY);
+let DEV=""; try{ DEV=localStorage.getItem("bm-dev")||""; if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now()); localStorage.setItem("bm-dev",DEV);} }catch(e){ DEV="nostore-"+Math.random(); }
+let myVotes={}; try{ myVotes=JSON.parse(localStorage.getItem("bm-votes")||"{}"); }catch(e){}
+const STATS={};
+async function api(path,opt={}){
+  const r=await fetch(CFG.SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/"+path,{...opt,headers:{apikey:CFG.SUPABASE_KEY,Authorization:"Bearer "+CFG.SUPABASE_KEY,"Content-Type":"application/json",...(opt.headers||{})}});
+  if(!r.ok) throw new Error(r.status+" "+(await r.text()).slice(0,200));
+  return r.status===204?null:r.json().catch(()=>null);
+}
+const TH = d=>`<svg viewBox="0 0 24 24" style="${d?"transform:rotate(180deg)":""}"><path d="M7 10v10H4V10zM7 10l4-7c2 0 3 1 2.6 3L13 9h6c1.2 0 2 1 1.8 2.2l-1.4 7C19.2 19.3 18.4 20 17.3 20H7" fill="none" stroke="#3a2e28" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+const BUB = `<svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="#3a2e28" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+function reactRow(x){
+  const k=key(x), st=STATS[k]||{up:0,down:0,comments:0}, mv=myVotes[k]||0, dis=BE?"":"disabled title=\"留言與讚尚未開通\"";
+  return `<button class="rb up" type="button" data-v="1" data-k="${esc(k)}" aria-pressed="${mv===1}" aria-label="讚" ${dis}>${TH(0)}${st.up}</button>`+
+         `<button class="rb dn" type="button" data-v="-1" data-k="${esc(k)}" aria-pressed="${mv===-1}" aria-label="倒讚" ${dis}>${TH(1)}${st.down}</button>`+
+         `<button class="rb cm" type="button" data-cm="${esc(k)}" data-name="${esc(x.n)}">${BUB}留言 ${st.comments||0}</button>`;
+}
+async function loadStats(){
+  if(!BE) return;
+  try{ const rows=await api("item_stats?select=item_key,up,down,comments"); (rows||[]).forEach(r=>{STATS[r.item_key]={up:+r.up||0,down:+r.down||0,comments:+r.comments||0}}); render(true); }catch(e){ console.warn("stats",e); }
+}
+async function vote(k,v){
+  const old=myVotes[k]||0, nv = old===v?0:v;
+  const st=STATS[k]||(STATS[k]={up:0,down:0,comments:0});
+  if(old===1) st.up--; if(old===-1) st.down--; if(nv===1) st.up++; if(nv===-1) st.down++;
+  myVotes[k]=nv; try{localStorage.setItem("bm-votes",JSON.stringify(myVotes))}catch(e){}
+  render(true);
+  try{ await api("votes?on_conflict=item_key,device_id",{method:"POST",headers:{Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({item_key:k,device_id:DEV,val:nv})}); }
+  catch(e){ console.warn(e); alert("按讚沒有送出，請稍後再試"); }
+}
+let cmKey="", cmName="";
+const fmtT=s=>{const d=new Date(s);return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`};
+async function openComments(k,name){
+  cmKey=k; cmName=name; $("cm-t").textContent=name; $("cm-msg").textContent="";
+  try{$("cm-nick").value=localStorage.getItem("bm-nick")||""}catch(e){}
+  $("cm").classList.add("show");
+  if(!BE){ $("cm-sub").textContent="留言功能還沒開通（網站管理者設定好資料庫後就能用）。"; $("cm-list").innerHTML=""; $("cm-form").querySelector("[type=submit]").disabled=true; return; }
+  $("cm-form").querySelector("[type=submit]").disabled=false;
+  $("cm-sub").textContent="其他爸媽的心得，請友善留言 🙂"; $("cm-list").innerHTML='<div class="msg">載入中⋯</div>';
+  try{
+    const rows=await api("comments?select=nickname,body,created_at&item_key=eq."+encodeURIComponent(k)+"&order=created_at.desc&limit=100");
+    $("cm-list").innerHTML = rows&&rows.length ? rows.map(r=>`<div class="cmi"><span class="who">${esc(r.nickname)}</span><span class="t">${fmtT(r.created_at)}</span><div>${esc(r.body)}</div></div>`).join("") : '<div class="msg">還沒有人留言，當第一個吧！</div>';
+  }catch(e){ $("cm-list").innerHTML='<div class="msg">留言讀取失敗，請稍後再試。</div>'; }
+}
+$("cm-form").addEventListener("submit",async e=>{
+  e.preventDefault(); if(!BE) return;
+  const nick=$("cm-nick").value.trim(), body=$("cm-body").value.trim(); if(!nick||!body) return;
+  try{localStorage.setItem("bm-nick",nick)}catch(e){}
+  $("cm-msg").textContent="送出中⋯";
+  try{
+    await api("comments",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({item_key:cmKey,item_name:cmName,nickname:nick,body,device_id:DEV})});
+    $("cm-body").value=""; $("cm-msg").textContent="已送出，謝謝分享！";
+    const st=STATS[cmKey]||(STATS[cmKey]={up:0,down:0,comments:0}); st.comments++; render(true); openComments(cmKey,cmName);
+  }catch(err){ $("cm-msg").textContent="送出失敗，請稍後再試。"; }
+});
+$("cm-close").onclick=()=>$("cm").classList.remove("show");
+$("cm").addEventListener("click",e=>{if(e.target.id==="cm")$("cm").classList.remove("show")});
+$("cm-report").onclick=()=>{ $("cm").classList.remove("show"); openReport(cmName); };
+function openReport(name){
+  $("rp-item").value=name||""; $("rp-msg").textContent=BE?"":"回報功能還沒開通，按送出會先把內容複製起來。"; $("rp").classList.add("show");
+}
+$("open-report").onclick=()=>openReport("");
+$("rp-close").onclick=()=>$("rp").classList.remove("show");
+$("rp").addEventListener("click",e=>{if(e.target.id==="rp")$("rp").classList.remove("show")});
+$("rp-form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const data={item_name:$("rp-item").value.trim(),kind:$("rp-kind").value,body:$("rp-body").value.trim(),contact:$("rp-contact").value.trim(),page:navigator.userAgent.slice(0,200)};
+  if(!data.body) return;
+  if(!BE){ try{await navigator.clipboard.writeText(`[${data.kind}] ${data.item_name}\n${data.body}\n${data.contact}`); $("rp-msg").textContent="回報功能還沒開通，內容已複製。";}catch(err){$("rp-msg").textContent="回報功能還沒開通。";} return; }
+  $("rp-msg").textContent="送出中⋯";
+  try{ await api("reports",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify(data)}); $("rp-body").value=""; $("rp-msg").textContent="收到了，謝謝你！我們會盡快更新。"; }
+  catch(err){ $("rp-msg").textContent="送出失敗，請稍後再試。"; }
+});
+
+$("sg-county").innerHTML='<option value="">縣市</option>'+COUNTY_ORDER.map(c=>`<option>${c}</option>`).join("");
+$("open-suggest").onclick=()=>{ $("sg-msg").textContent=BE?"":"推薦功能還沒開通（網站管理者設定好資料庫後就能用）。"; $("sg").classList.add("show"); };
+$("sg-close").onclick=()=>$("sg").classList.remove("show");
+$("sg").addEventListener("click",e=>{if(e.target.id==="sg")$("sg").classList.remove("show")});
+$("sg-form").addEventListener("submit",async e=>{
+  e.preventDefault(); if(!BE) return;
+  const d={kind:$("sg-kind").value,name:$("sg-name").value.trim(),county:$("sg-county").value,district:$("sg-dist").value.trim(),dates:$("sg-dates").value.trim(),link:$("sg-link").value.trim(),note:$("sg-note").value.trim(),contact:$("sg-contact").value.trim()};
+  if(!d.name||!d.county) return;
+  $("sg-msg").textContent="送出中⋯";
+  try{ await api("suggestions",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify(d)}); ["sg-name","sg-dist","sg-dates","sg-link","sg-note"].forEach(i=>$(i).value=""); $("sg-msg").textContent="收到推薦，謝謝你！審核通過後就會出現在這裡。"; }
+  catch(err){ $("sg-msg").textContent="送出失敗，請稍後再試。"; }
+});
+
+/* ---------- 匿名使用分析 ---------- */
+const SID = Math.random().toString(36).slice(2)+Date.now().toString(36);
+let AQ=[], aTimer=null;
+function track(type,label,item,extra){
+  if(!BE) return;
+  AQ.push({type,label:String(label??"").slice(0,200),item:String(item??"").slice(0,200),extra:extra||null,sid:SID,dev:DEV.slice(0,64)});
+  if(AQ.length>=20) flushA(); else { clearTimeout(aTimer); aTimer=setTimeout(flushA,4000); }
+}
+function flushA(){
+  if(!AQ.length||!BE) return; const rows=AQ.splice(0);
+  try{ fetch(CFG.SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/analytics",{method:"POST",keepalive:true,headers:{apikey:CFG.SUPABASE_KEY,Authorization:"Bearer "+CFG.SUPABASE_KEY,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(rows)}).catch(()=>{}); }catch(e){}
+}
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") flushA(); });
+let qTimer=null;
+$("q").addEventListener("input",()=>{ clearTimeout(qTimer); qTimer=setTimeout(()=>{ if(state.q) track("search",state.q,state.tab,{n:srcOf(state.tab==="fv"?"all":state.tab).filter(match).length, all:ALLITEMS().filter(match).length}); },1500); });
+$("grid").addEventListener("click",e=>{
+  const card=e.target.closest(".card"); const name=card?card.querySelector("h3")?.textContent:"";
+  if(e.target.closest(".stretch,.where")) track("map",name,state.tab);
+  else if(e.target.closest(".lnk a")) track("link",name,state.tab);
+  else if(e.target.closest(".gstar")) track("google",name,state.tab);
+  else if(e.target.closest(".fav")) track("fav",name,state.tab);
+  else if(e.target.closest(".rb.up")) track("vote",name,"up");
+  else if(e.target.closest(".rb.dn")) track("vote",name,"down");
+  else if(e.target.closest(".rb.cm")) track("comment_open",name,state.tab);
+  else if(e.target.closest(".cat")) track("cat",e.target.closest(".cat").dataset.cat,"pl");
+},true);
+document.querySelector(".panel").addEventListener("click",e=>{
+  const c=e.target.closest(".chip"); if(!c) return;
+  const row=c.closest(".frow,.cgrp"); const kind=row?(row.id||"").replace("row-","").replace(/^cg-.*/,"county"):"";
+  setTimeout(()=>track("filter",c.textContent.replace(/\s\d+$/,""),kind||"other",{on:c.getAttribute("aria-pressed")==="true"}),0);
+});
+["sel-region","sel-dist"].forEach(id=>$(id).addEventListener("change",e=>track("filter",e.target.value||"全部",id.replace("sel-",""))));
+$("install").addEventListener("click",()=>track("install","",""));
+$("sg-form").addEventListener("submit",()=>track("suggest",$("sg-name").value,$("sg-kind").value));
+$("rp-form").addEventListener("submit",()=>track("report",$("rp-item").value,$("rp-kind").value));
+["tab-ev","tab-pk","tab-pl","tab-co","tab-fv"].forEach(id=>$(id).addEventListener("click",()=>track("tab",id.replace("tab-",""),"")));
+track("visit",document.referrer?new URL(document.referrer).hostname:"直接開啟",(window.matchMedia("(display-mode: standalone)").matches?"桌面App":"瀏覽器"),{w:innerWidth});
+
+/* ---------- 事件 ---------- */
+document.querySelector(".resultbar").addEventListener("click",e=>{ if(e.target.id==="back"){ state.plCat=""; render(); } });
+$("q").addEventListener("input",e=>{state.q=e.target.value.trim();render()});
+$("sel-region").addEventListener("change",e=>{state.region=e.target.value;state.counties.clear();state.dist="";fillCounties();render()});
+$("btn-county").addEventListener("click",()=>{const pop=$("cpop");pop.hidden=!pop.hidden;$("btn-county").setAttribute("aria-expanded",!pop.hidden);});
+$("cpop-ok").addEventListener("click",()=>{$("cpop").hidden=true;$("btn-county").setAttribute("aria-expanded","false");});
+$("cpop-clear").addEventListener("click",()=>{state.counties.clear();state.dist="";fillCounties();render();});
+$("sel-dist").addEventListener("change",e=>{state.dist=e.target.value;render()});
+$("grid").addEventListener("click",e=>{
+  const c=e.target.closest(".cat"); if(c){ state.plCat=c.dataset.cat; render(); window.scrollTo({top:$("grid").offsetTop-120,behavior:"smooth"}); return; }
+  if(e.target.id==="more"){ state.limit+=60; render(true); return; }
+  const rb=e.target.closest(".rb"); if(rb){ if(rb.dataset.cm!==undefined) openComments(rb.dataset.cm,rb.dataset.name); else if(BE) vote(rb.dataset.k,+rb.dataset.v); return; }
+  const b=e.target.closest(".fav"); if(!b) return;
+  const k=b.dataset.k; favs.has(k)?favs.delete(k):favs.add(k); saveFavs(); render(true);
+});
+function setTab(t){
+  state.tab=t;
+  [["ev","tab-ev"],["pk","tab-pk"],["pl","tab-pl"],["co","tab-co"],["fv","tab-fv"]].forEach(([k,id])=>$(id).setAttribute("aria-selected",k===t));
+  if(t!=="ev"&&t!=="fv") state.when="";
+  state.plCat="";
+  buildFilters(); render();
+}
+$("tab-ev").onclick=()=>setTab("ev"); $("tab-pk").onclick=()=>setTab("pk"); $("tab-pl").onclick=()=>setTab("pl"); $("tab-fv").onclick=()=>setTab("fv"); $("tab-co").onclick=()=>setTab("co");
+$("clear").onclick=()=>{
+  Object.assign(state,{q:"",when:"",io:"",region:"",dist:"",plCat:"",ck:""}); state.counties.clear();
+  state.ages.clear();state.types.clear();state.fees.clear();
+  $("q").value="";$("sel-region").value="";buildFilters();render();
+};
+
+$("toggle").onclick=()=>{const pn=document.querySelector(".panel");const o=pn.classList.toggle("open");$("toggle").setAttribute("aria-expanded",o);$("toggle").textContent=o?"－ 收起篩選":"＋ 更多篩選（類型、費用、室內外）";};
+
+/* ---------- 加到桌面 ---------- */
+let deferredInstall=null;
+const inFrame = (()=>{try{return window.self!==window.top}catch(e){return true}})();
+const isStandalone = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone===true;
+if(isStandalone) $("install").style.display="none";
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;});
+window.addEventListener("appinstalled",()=>{$("install").style.display="none";});
+$("install").addEventListener("click",async()=>{
+  if(deferredInstall){ deferredInstall.prompt(); try{await deferredInstall.userChoice;}catch(e){} deferredInstall=null; return; }
+  const ua=navigator.userAgent; const ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&"ontouchend" in document); const and=/Android/.test(ua);
+  $("dlg-frame").hidden=!inFrame;
+  $("dlg-ios").hidden = !(ios || (!and && !ios));
+  $("dlg-and").hidden = !(and || (!and && !ios));
+  $("dlg-pc").hidden = ios || and;
+  $("dlg").classList.add("show");
+});
+$("dlg-close").addEventListener("click",()=>$("dlg").classList.remove("show"));
+$("dlg").addEventListener("click",e=>{if(e.target.id==="dlg")$("dlg").classList.remove("show")});
+if("serviceWorker" in navigator && !inFrame && location.protocol==="https:"){
+  try{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){}
+}
+buildFilters(); render();
+loadStats();
+</script>
+</body>
+</html>

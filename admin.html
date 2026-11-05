@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>管理後台｜爸~媽!!假日要去哪裡玩</title>
+<style>
+body{font-family:"Noto Sans TC",system-ui,sans-serif;background:#faf3e6;color:#3a2e28;margin:0;padding:16px;max-width:900px;margin:auto}
+h1{font-size:22px}h2{font-size:18px;margin-top:28px}
+.card{background:#fff;border:2px solid #3a2e28;border-radius:12px;padding:12px;margin:10px 0}
+.meta{font-size:13px;color:#7a6a5f}
+button{font:inherit;border:2px solid #3a2e28;border-radius:999px;padding:4px 14px;background:#fff;cursor:pointer;margin-right:6px}
+.ok{background:#8cc58f}.no{background:#f4c6b8}
+input{font:inherit;padding:6px 10px;border:2px solid #3a2e28;border-radius:10px;width:260px}
+.tabs button[aria-pressed=true]{background:#f1b33b}
+.kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.kpi div{background:#fff;border:2px solid #3a2e28;border-radius:12px;padding:10px}.kpi b{display:block;font-size:26px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}td{padding:3px 4px;border-bottom:1px dashed #d8c9b5;vertical-align:top}
+td.n{text-align:right;white-space:nowrap;width:1%}.bar{height:8px;background:#f1b33b;border-radius:4px}
+.zero{color:#c0442b}
+</style></head><body>
+<h1>管理後台</h1>
+<div id="login">
+  <p>輸入你的 Email，會寄一封登入連結給你（只有管理者 Email 能看到資料）。</p>
+  <input id="email" type="email" placeholder="you@gmail.com"> <button id="send">寄登入連結</button>
+  <p class="meta" id="lmsg"></p>
+</div>
+<div id="app" hidden>
+  <p class="meta">已登入：<span id="me"></span>　<button id="out">登出</button></p>
+  <div class="tabs"><button data-t="stats" aria-pressed="true">數據分析</button><button data-t="pending" aria-pressed="false">待審核推薦</button><button data-t="approved">已通過（等待加入）</button><button data-t="rejected">已拒絕</button><button data-t="reports">回報問題</button></div>
+  <div id="list"></div>
+  <p class="meta">按「通過」後，每天晚上 12 點的自動更新會查證並把它加進網站。</p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const CFG = { SUPABASE_URL: "", SUPABASE_KEY: "" }; // ← 和 index.html 填一樣的值
+const sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let tab="stats", days=7;
+$("send").onclick=async()=>{ const {error}=await sb.auth.signInWithOtp({email:$("email").value.trim(),options:{emailRedirectTo:location.href.split("#")[0],shouldCreateUser:true}}); $("lmsg").textContent=error?("失敗："+error.message):"已寄出，請到信箱點連結。"; };
+$("out").onclick=async()=>{ await sb.auth.signOut(); location.reload(); };
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{ tab=b.dataset.t; document.querySelectorAll(".tabs button").forEach(x=>x.setAttribute("aria-pressed",x===b)); load(); });
+async function load(){
+  $("list").innerHTML="載入中⋯";
+  if(tab==="stats") return loadStats();
+  if(tab==="reports"){
+    const {data,error}=await sb.from("reports").select("*").order("created_at",{ascending:false}).limit(200);
+    if(error) return $("list").textContent="讀取失敗："+error.message;
+    $("list").innerHTML=data.length?data.map(r=>`<div class="card"><b>${esc(r.kind)}</b>　${esc(r.item_name)}<div>${esc(r.body)}</div><div class="meta">${new Date(r.created_at).toLocaleString()}　${esc(r.contact)}</div><button class="${r.done?"":"ok"}" data-rep="${r.id}" data-done="${!r.done}">${r.done?"改回未處理":"標記已處理"}</button></div>`).join(""):"沒有回報";
+    return;
+  }
+  const {data,error}=await sb.from("suggestions").select("*").eq("status",tab).order("created_at",{ascending:false}).limit(200);
+  if(error) return $("list").textContent="讀取失敗："+error.message;
+  $("list").innerHTML=data.length?data.map(r=>`<div class="card"><b>[${esc(r.kind)}] ${esc(r.name)}</b>　${esc(r.county)}${esc(r.district)}
+    <div class="meta">${esc(r.dates)} ${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">連結</a>`:""}</div><div>${esc(r.note)}</div>
+    <div class="meta">${new Date(r.created_at).toLocaleString()}　${esc(r.contact)}</div>
+    ${tab!=="approved"?`<button class="ok" data-id="${r.id}" data-s="approved">通過</button>`:""}${tab!=="rejected"?`<button class="no" data-id="${r.id}" data-s="rejected">拒絕</button>`:""}${tab!=="pending"?`<button data-id="${r.id}" data-s="pending">改回待審</button>`:""}</div>`).join(""):"目前沒有";
+}
+async function loadStats(){
+  const since=new Date(Date.now()-days*864e5).toISOString(); let rows=[], from=0;
+  while(true){ const {data,error}=await sb.from("analytics").select("ts,type,label,item,extra,sid,dev").gte("ts",since).order("ts",{ascending:false}).range(from,from+999); if(error) return $("list").textContent="讀取失敗："+error.message; rows=rows.concat(data); if(data.length<1000||rows.length>=50000) break; from+=1000; }
+  const cnt=(arr,f)=>{const m=new Map(); arr.forEach(r=>{const k=f(r); if(k) m.set(k,(m.get(k)||0)+1)}); return [...m].sort((a,b)=>b[1]-a[1]);};
+  const by=t=>rows.filter(r=>r.type===t);
+  const uniq=(arr,f)=>new Set(arr.map(f)).size;
+  const searches=by("search"); const lastQ=new Map(); searches.forEach(r=>{const k=r.sid+"|"+r.label; if(!lastQ.has(k)) lastQ.set(k,r)});
+  const sq=[...lastQ.values()];
+  const zero=cnt(sq.filter(r=>r.extra&&(r.extra.all??r.extra.n)===0),r=>r.label);
+  const tbl=(title,list,unit="次",cls="")=>{const max=list[0]?list[0][1]:1; return `<div class="card"><h3 style="margin:0 0 6px">${title}</h3>${list.length?`<table>${list.slice(0,30).map(([k,v])=>`<tr><td class="${cls}">${esc(k)}<div class="bar" style="width:${Math.max(4,v/max*100)}%"></div></td><td class="n">${v} ${unit}</td></tr>`).join("")}</table>`:'<div class="meta">還沒有資料</div>'}</div>`;};
+  const daily=cnt(by("visit"),r=>r.ts.slice(0,10)).sort((a,b)=>a[0]<b[0]?-1:1);
+  const TABN={co:"公辦親子活動",ev:"最近有辦的活動",pk:"共融公園",pl:"隨時可去的景點",fv:"我的收藏"};
+  $("list").innerHTML=`<p>期間：<select id="days">${[1,7,30,90].map(d=>`<option value="${d}" ${d===days?"selected":""}>最近 ${d} 天</option>`).join("")}</select>　<span class="meta">共 ${rows.length} 筆紀錄</span></p>
+  <div class="kpi"><div>訪問次數<b>${by("visit").length}</b></div><div>不重複裝置<b>${uniq(rows,r=>r.dev)}</b></div><div>搜尋次數<b>${sq.length}</b></div><div>開地圖導航<b>${by("map").length}</b></div><div>點官網<b>${by("link").length}</b></div><div>收藏<b>${by("fav").length}</b></div><div>推薦／回報<b>${by("suggest").length} / ${by("report").length}</b></div><div>加到桌面<b>${by("install").length}</b></div></div>
+  <div class="grid2" style="margin-top:14px">
+  ${tbl("每天訪問次數",daily.reverse())}
+  ${tbl("熱門搜尋關鍵字",cnt(sq,r=>r.label))}
+  ${tbl("搜尋了卻找不到（該補資料！）",zero,"次","zero")}
+  ${tbl("最多人開地圖導航",cnt(by("map"),r=>r.label))}
+  ${tbl("最多人點官網",cnt(by("link"),r=>r.label))}
+  ${tbl("最多人收藏",cnt(by("fav"),r=>r.label))}
+  ${tbl("景點分類點擊",cnt(by("cat"),r=>r.label))}
+  ${tbl("分頁使用",cnt(by("tab"),r=>TABN[r.label]||r.label))}
+  ${tbl("縣市篩選",cnt(by("filter").filter(r=>r.item==="county"&&r.extra&&r.extra.on),r=>r.label))}
+  ${tbl("年齡篩選",cnt(by("filter").filter(r=>r.item==="age"&&r.extra&&r.extra.on),r=>r.label))}
+  ${tbl("類型／費用／時間篩選",cnt(by("filter").filter(r=>["type","fee","when","io"].includes(r.item)&&r.extra&&r.extra.on),r=>r.label))}
+  ${tbl("讚／倒讚",cnt(by("vote"),r=>(r.item==="up"?"👍 ":"👎 ")+r.label))}
+  ${tbl("打開留言",cnt(by("comment_open"),r=>r.label))}
+  ${tbl("從哪裡來",cnt(by("visit"),r=>r.label))}
+  ${tbl("使用方式",cnt(by("visit"),r=>r.item+((r.extra&&r.extra.w<700)?"・手機":"・電腦"))) }
+  </div>`;
+  $("days").onchange=e=>{days=+e.target.value; load();};
+}
+$("list").onclick=async e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.rep){ await sb.from("reports").update({done:b.dataset.done==="true"}).eq("id",b.dataset.rep); return load(); }
+  const {error}=await sb.from("suggestions").update({status:b.dataset.s,reviewed_at:new Date().toISOString()}).eq("id",b.dataset.id);
+  if(error) alert("沒有權限或失敗："+error.message); load();
+};
+sb.auth.onAuthStateChange((_e,session)=>{ if(session){ $("login").hidden=true; $("app").hidden=false; $("me").textContent=session.user.email; load(); } });
+</script></body></html>
