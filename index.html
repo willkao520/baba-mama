@@ -1716,6 +1716,7 @@ async function loadKidsmap(){
     items.forEach(o=>{ const x=CO(o.n,o.t,o.c,o.d,o.v,o.s,o.e,o.sub,o.a,o.ses,o.cap,o.reg,o.l,o.r||o.l,o.note,o.f); x.km=1; x.S=P(x.s); tagCo(x); x.E=x.e?P(x.e):null; COURSES.push(x); });
     liveCourses = COURSES.filter(e=>!e.E||e.E>=today).sort((a,b)=>((a.sub==="官方活動總表")-(b.sub==="官方活動總表"))||((a.S>today)-(b.S>today))||(a.S-b.S));
     $("cnt-co") && ($("cnt-co").textContent=liveCourses.length);
+    if(pendingSid && openSid(pendingSid)) pendingSid=null;
     if(state.tab==="co"){ buildFilters(); } render(true);
   }catch(e){ console.warn("kidsmap",e); }
 }
@@ -2064,15 +2065,31 @@ const BUB = `<svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" s
 const SHR=`<svg viewBox="0 0 24 24"><circle cx="18" cy="5.5" r="2.5" fill="none" stroke="#3a2e28" stroke-width="1.8"/><circle cx="6" cy="12" r="2.5" fill="none" stroke="#3a2e28" stroke-width="1.8"/><circle cx="18" cy="18.5" r="2.5" fill="none" stroke="#3a2e28" stroke-width="1.8"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1" stroke="#3a2e28" stroke-width="1.8"/></svg>`;
 const SITE="https://babamama-wherewego.netlify.app/";
 function fmtD(x){ if(!x.s) return ""; const f=d=>`${d.getMonth()+1}/${d.getDate()}`; return x.E&&x.E.getTime()!==x.S.getTime()?`${f(x.S)}–${f(x.E)}`:f(x.S); }
+function sid(x){ const k=key(x); let h=2166136261; for(let i=0;i<k.length;i++){ h^=k.charCodeAt(i); h=Math.imul(h,16777619); } return (h>>>0).toString(36); }
+const WDN="日一二三四五六";
+function fmtW(d){ return `${d.getMonth()+1}/${d.getDate()}（${WDN[d.getDay()]}）`; }
 async function shareItem(k){
   const x=ALLITEMS().find(i=>key(i)===k); if(!x) return;
-  const url=SITE+"?tab="+state.tab+"&q="+encodeURIComponent(x.n);
-  const when=(x.kind==="ev"||x.kind==="co")?fmtD(x):"";
-  const map="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent((x.v||x.n)+" "+x.c+(x.d||""));
-  const text=`${x.n}\n${when?"📅 "+when+"　":""}📍 ${x.c}${x.d?"・"+x.d:""}\n地圖：${map}\n`;
+  const url=SITE+"?i="+sid(x);
+  let when=""; if((x.kind==="ev"||x.kind==="co")&&x.S){ when = x.E&&x.E.getTime()!==x.S.getTime() ? `${fmtW(x.S)} – ${fmtW(x.E)}` : fmtW(x.S); }
+  const place = x.v ? `${x.v}（${x.c}${x.d||""}）` : `${x.c}${x.d?"・"+x.d:""}`;
+  const age = x.a&&x.a.length&&x.a.length<4 ? x.a.map(a=>AGE_SHORT[a]).join("・") : "全年齡";
+  const fee = FEES[x.f]||"";
+  const lines=[`🎉 ${x.n}`];
+  if(when) lines.push(`📅 ${when}`);
+  lines.push(`📍 ${place}`);
+  lines.push(`👶 ${age}${fee?"　💰 "+fee:""}`);
+  lines.push("", `👉 看詳情：${url}`, `🔎 點擊看看更多活動：${SITE}`, "", "—— 爸~媽!!假日要去哪裡玩");
+  const text=lines.join("\n");
   track("share",x.n,state.tab);
-  if(navigator.share){ try{ await navigator.share({title:x.n,text,url}); return; }catch(e){ if(e&&e.name==="AbortError") return; } }
-  window.open("https://line.me/R/share?text="+encodeURIComponent(text+"\n更多："+url),"_blank","noopener");
+  if(navigator.share){ try{ await navigator.share({title:x.n,text}); return; }catch(e){ if(e&&e.name==="AbortError") return; } }
+  window.open("https://line.me/R/share?text="+encodeURIComponent(text),"_blank","noopener");
+}
+let pendingSid=null;
+function openSid(id){
+  const x=ALLITEMS().find(i=>sid(i)===id); if(!x) return false;
+  const t={ev:"ev",pk:"pk",pl:"pl",co:"co"}[x.kind]; const q=x.v&&!x.n.includes(x.v)?`${x.n} ${x.v}`:x.n;
+  setTab(t); state.q=q; $("q").value=q; render(); return true;
 }
 function reactRow(x){
   const k=key(x), st=STATS[k]||{up:0,down:0,comments:0}, mv=myVotes[k]||0, dis=BE?"":"disabled title=\"留言與讚尚未開通\"";
@@ -2270,10 +2287,12 @@ if("serviceWorker" in navigator && !inFrame && location.protocol==="https:"){
   const t=u.get("tab"); if(t&&["ev","pk","pl","co","fv"].includes(t)){ state.tab=t; [["home","tab-home"],["ev","tab-ev"],["pk","tab-pk"],["pl","tab-pl"],["co","tab-co"],["fv","tab-fv"]].forEach(([k,id])=>$(id).setAttribute("aria-selected",k===t)); }
   else if(u.get("c")||u.get("q")){ state.tab="ev"; $("tab-home").setAttribute("aria-selected","false"); $("tab-ev").setAttribute("aria-selected","true"); }
   const q=u.get("q"); if(q){ state.q=q; $("q").value=q; }
+  const si=u.get("i"); if(si) pendingSid=si;
   const c=u.get("c"); if(c){ state.counties.clear(); c.split(",").forEach(x=>state.counties.add(x.replace(/^台/,"臺"))); }
   const cat=u.get("cat"); if(cat){ if(state.tab==="pl") state.plCat=cat; if(state.tab==="ev") state.evCat=cat; if(state.tab==="co") state.cc=cat; }
 }catch(e){} })();
 buildFilters(); render();
+if(pendingSid && openSid(pendingSid)) pendingSid=null;
 loadStats();
 loadKidsmap();
 setInterval(()=>{ if(!document.hidden) loadStats(); },60000);

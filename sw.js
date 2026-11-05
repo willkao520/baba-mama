@@ -1,5 +1,5 @@
 // 爸~媽!!假日要去哪裡玩 — 離線快取（頁面優先抓最新版，沒網路時用快取）
-const CACHE = "bm-v6";
+const CACHE = "bm-v7";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
