@@ -23,3 +23,6 @@
 ## 每月 1 日（共融公園、景點）
 - 共融公園：重新看臺北市開放資料「臺北市共融式遊戲場資訊」、新北「來新北玩公園」(ntparks.tw)、臺中美樂地、各縣市工務局新聞稿，補上新啟用的。
 - 景點：補上新開幕的親子景點，移除確定歇業的。
+
+## kidsmap.json（不用手動更新）
+北部公辦親子活動（新北、臺北、桃園、新竹、宜蘭、基隆）由 GitHub Actions `.github/workflows/kidsmap.yml` 每天台灣時間 00:05 自動從 https://kidsmap.tw/data.json 轉出，請不要手動編輯 kidsmap.json。每日更新時，COURSES 只需補中南部、東部與離島的場次。
