@@ -196,6 +196,7 @@ details summary{cursor:pointer;color:var(--ink)}
     <input id="q" type="search" placeholder="搜尋：恐龍、耶誕、板橋、動物園⋯" autocomplete="off">
   </label>
   <div class="frow" id="row-when"><span class="flabel">時間</span></div>
+  <div class="frow" id="row-cc"><span class="flabel">分類</span></div>
   <div class="frow" id="row-ck"><span class="flabel">顯示</span></div>
   <div class="frow" id="row-age"><span class="flabel">年齡</span></div>
   <div class="frow opt" id="row-type"><span class="flabel">類型</span></div>
@@ -1616,7 +1617,40 @@ COURSES.push(
 );
 
 COURSES.forEach(e=>{e.S=P(e.s);e.E=e.e?P(e.e):null});
-const liveCourses = COURSES.filter(e=>!e.E||e.E>=today).sort((a,b)=>((a.sub==="官方活動總表")-(b.sub==="官方活動總表"))||((a.S>today)-(b.S>today))||(a.S-b.S));
+let liveCourses = COURSES.filter(e=>!e.E||e.E>=today).sort((a,b)=>((a.sub==="官方活動總表")-(b.sub==="官方活動總表"))||((a.S>today)-(b.S>today))||(a.S-b.S));
+
+/* ---------- 分類（故事、運動…） ---------- */
+const CC=[
+ ["自由玩・入館",/自由探索|自由入館|自由活動|空間使用|遊戲區|入館|自由參觀|遊戲室/],
+ ["講座・育兒",/講座|親職|育兒|研習|支持團體|諮詢|演講|宣導|分享會|早療|育兒準備/],
+ ["說故事・閱讀",/故事|繪本|閱讀|讀經|說書|書香|讀書|圖書車|新書/],
+ ["游泳・玩水",/游泳|泳池|泳/],
+ ["親子廚房",/廚房|廚坊|廚神|烘焙|料理|副食品|麵粉|點心|飲食|家家酒/],
+ ["戲劇・電影・表演",/劇|電影|影展|影片|表演|音樂會|偶戲|魔術|小丑|演出/],
+ ["音樂・律動",/音樂|律動|奧福|唱|樂團|鋼琴|鼓|節奏/],
+ ["運動・體能",/體能|球|武術|體操|跆拳|舞蹈|芭蕾|運動|滑步|攀岩|直排輪|體適能|搏擊|空手道|柔道|跑|跳|舞|大肌肉|感統|感覺統合|瑜珈|平衡車|防身|樂樂棒/],
+ ["藝術・手作",/美術|藝術|創作|手作|DIY|塗鴉|黏土|繪畫|拼貼|積木|LASY|樂高|摺紙|勞作|彩繪|工作坊|蠟筆|版畫|拼豆|捏|陶|磁力片|史萊姆|塑|花藝|美甲|小手|塗ㄚ|創藝/],
+ ["科學・自然",/科學|實驗|自然|昆蟲|生物|STEAM|STEM|程式|Roblox|AI|天文|生態|恐龍|植物|地質|海洋|機器人|機械|電|種植|蟲/],
+ ["語言・學習",/美語|英語|ABC|台語|客語|ㄅㄆㄇ|字母|蒙特梭利|蒙氏|職業體驗|桌遊/],
+ ["嬰幼兒・感官",/嬰幼兒|寶寶|嬰兒|抓周|抓週|五感|感官|爬行|月齡/],
+ ["展覽・導覽",/展覽|導覽|特展|展/]
+];
+CC.splice(1,0,["親子遊戲・探索",/親子遊戲|親子共玩|親子探索|遊戲/]);
+const CC_NAMES=[...CC.map(c=>c[0]),"其他"];
+function coCat(x){ const h=(x.n||"")+" "+(x.sub||"")+" "+(x.ty||""); for(const [k,re] of CC) if(re.test(h)) return k; return x.t==="運動中心"?"運動・體能":x.t==="科學館"?"科學・自然":"其他"; }
+COURSES.forEach(x=>{x.cc=coCat(x)});
+let KM_INFO=null;
+async function loadKidsmap(){
+  try{
+    const r=await fetch("kidsmap.json",{cache:"no-cache"}); if(!r.ok) return;
+    const j=await r.json(); const items=(j.items||[]); if(!items.length) return;
+    KM_INFO=j;
+    items.forEach(o=>{ const x=CO(o.n,o.t,o.c,o.d,o.v,o.s,o.e,o.sub,o.a,o.ses,o.cap,o.reg,o.l,o.r||o.l,o.note,o.f); x.km=1; x.cc=coCat(x); x.S=P(x.s); x.E=x.e?P(x.e):null; COURSES.push(x); });
+    liveCourses = COURSES.filter(e=>!e.E||e.E>=today).sort((a,b)=>((a.sub==="官方活動總表")-(b.sub==="官方活動總表"))||((a.S>today)-(b.S>today))||(a.S-b.S));
+    $("cnt-co") && ($("cnt-co").textContent=liveCourses.length);
+    if(state.tab==="co"){ buildFilters(); } render(true);
+  }catch(e){ console.warn("kidsmap",e); }
+}
 
 const ALLITEMS = () => [...liveEvents,...liveCourses,...PARKS,...PLACES];
 const srcOf = t => t==="co"?liveCourses : t==="ev"?liveEvents : t==="pk"?PARKS : t==="pl"?PLACES : ALLITEMS();
@@ -1625,7 +1659,7 @@ let favs = new Set();
 try{ favs = new Set(JSON.parse(localStorage.getItem("bm-favs")||"[]")); }catch(e){}
 const saveFavs=()=>{try{localStorage.setItem("bm-favs",JSON.stringify([...favs]))}catch(e){}};
 
-const state = {tab:"ev", q:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), dist:"", plCat:"", limit:60, ck:""};
+const state = {tab:"ev", q:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), cc:"", dist:"", plCat:"", limit:60, ck:""};
 try{ JSON.parse(localStorage.getItem("bm-counties")||"[]").forEach(c=>state.counties.add(c)); }catch(e){}
 
 /* ---------- 週末計算 ---------- */
@@ -1659,6 +1693,9 @@ function buildFilters(){
   const whenRow=$("row-when");
   whenRow.style.display = (state.tab==="pl"||state.tab==="pk") ? "none" : "";
   [["weekend","這個週末"],["next","下個週末"],["month","這個月"],["soon","即將開始"]].forEach(([k,l])=>chip("row-when",l,"wk",b=>single("when",k,"row-when",b),state.when===k));
+  $("row-cc").querySelectorAll(".chip").forEach(c=>c.remove());
+  $("row-cc").style.display = state.tab==="co" ? "" : "none";
+  if(state.tab==="co"){ const lc=liveCourses; CC_NAMES.forEach(k=>{ const n=lc.filter(x=>x.cc===k).length; if(n) chip("row-cc",`${k} ${n}`,"wk",b=>single("cc",k,"row-cc",b),state.cc===k); }); }
   $("row-ck").querySelectorAll(".chip").forEach(c=>c.remove());
   $("row-ck").style.display = state.tab==="co" ? "" : "none";
   [["s","有日期的場次"],["d","各縣市官方活動總表"]].forEach(([k,l])=>chip("row-ck",l,"wk",b=>single("ck",k,"row-ck",b),state.ck===k));
@@ -1711,7 +1748,7 @@ function fillDists(){
 /* ---------- 篩選邏輯 ---------- */
 function match(x){
   if(state.q){
-    const hay=(x.n+x.c+(x.d||"")+x.t+(x.note||"")+FEES[x.f]+x.a.map(a=>AGE_SHORT[a]).join("")).toLowerCase();
+    const hay=(x.n+x.c+(x.d||"")+x.t+(x.v||"")+(x.cc||"")+(x.note||"")+FEES[x.f]+x.a.map(a=>AGE_SHORT[a]).join("")).toLowerCase();
     const terms=state.q.toLowerCase().replace(/台/g,"臺").split(/\s+/).filter(Boolean);
     const hay2=hay.replace(/台/g,"臺");
     if(!terms.every(t=>hay2.includes(t))) return false;
@@ -1723,6 +1760,7 @@ function match(x){
   if(state.region && !state.counties.size && REGION[x.c]!==state.region) return false;
   if(state.counties.size && !state.counties.has(x.c)) return false;
   if(state.tab==="pl" && x.kind==="pl" && state.plCat && x.t!==state.plCat) return false;
+  if(x.kind==="co" && state.cc && x.cc!==state.cc) return false;
   if(x.kind==="co" && state.ck){ const d=x.sub==="官方活動總表"; if(state.ck==="s"&&d) return false; if(state.ck==="d"&&!d) return false; }
   if(state.dist && x.d!==state.dist) return false;
   if((x.kind==="ev"||x.kind==="co") && state.when){
@@ -1766,7 +1804,7 @@ function card(x,i){
     <span class="tape" style="background:${TAPE[i%TAPE.length]}"></span>
     <button class="fav" data-k="${esc(k)}" aria-label="${on?"取消收藏":"收藏"}" aria-pressed="${on}">${heart(on)}</button>
     ${ICON[x.t]?`<span class="pic" aria-hidden="true">${ICON[x.t]}</span>`:""}<h3>${esc(x.n)}</h3>
-    ${dateLine}${x.kind==="co"?`<div class="cinfo"><div><b>場館</b>${esc(x.v)}</div><div><b>場次</b>${esc(x.ses)}</div><div><b>名額</b>${esc(x.cap)}${x.r?`<span class="live">（剩餘名額以報名頁即時顯示為準）</span>`:""}</div><div><b>報名</b>${esc(x.reg)}</div></div>`:""}
+    ${dateLine}${x.kind==="co"?`<div class="cinfo"><div><b>場館</b>${esc(x.v)}</div><div><b>場次</b>${esc(x.ses)}</div><div><b>分類</b>${esc(x.cc||"")}</div><div><b>名額</b>${esc(x.cap)}${x.r?`<span class="live">${x.km?"（每天凌晨更新，以報名頁即時顯示為準）":"（剩餘名額以報名頁即時顯示為準）"}</span>`:""}</div><div><b>報名</b>${esc(x.reg)}</div></div>`:""}
     <a class="where" href="${mapUrl}" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟 ${esc(x.n)}"><svg width="12" height="14" viewBox="0 0 12 14" style="vertical-align:-1px;margin-right:3px"><path d="M6 13s4.6-4.3 4.6-7.6A4.6 4.6 0 0 0 1.4 5.4C1.4 8.7 6 13 6 13z" fill="#e4664a" stroke="#3a2e28" stroke-width="1.2"/><circle cx="6" cy="5.4" r="1.6" fill="#fff"/></svg>${esc(x.c)}${x.d?"・"+esc(x.d):""}<span class="go">地圖・導航 ↗</span></a>
     ${x.kind!=="ev"&&GKEY?`<div class="gslot" data-q="${esc(gq(x))}">${gHtml(gq(x))}</div>`:""}
     <div class="tags">${ages}<span class="tag t-type">${esc(x.t)}</span>${x.sub?`<span class="tag t-type">${esc(x.sub)}</span>`:""}<span class="tag ${feeCls}">${FEES[x.f]}</span><span class="tag t-io">${io}</span></div>
@@ -1822,7 +1860,7 @@ function render(more){
   const back = state.tab==="pl" && state.plCat ? `<button class="back" id="back" type="button">← 回到分類</button>　` : "";
   const catName = state.tab==="pl" && state.plCat && state.plCat!=="*" ? `「${state.plCat}」` : "";
   $("rcount").innerHTML = `${back}${catName}找到 ${list.length} ${lbl}`;
-  if(state.tab==="co") $("rcount").innerHTML += `<span style="font-size:13px;color:var(--ink2);margin-left:8px">圖書館・親子館・科學館・運動中心辦的，多數免費</span>`;
+  if(state.tab==="co") $("rcount").innerHTML += `<span style="font-size:13px;color:var(--ink2);margin-left:8px">圖書館・親子館・科學館・運動中心辦的${KM_INFO?`｜北部場次每天更新，資料整理自 <a href="https://kidsmap.tw/" target="_blank" rel="noopener">北台灣親子地圖</a>`:""}</span>`;
   if(typeof watchRatings==="function") watchRatings();
   updCounts();
 }
@@ -2062,6 +2100,7 @@ if("serviceWorker" in navigator && !inFrame && location.protocol==="https:"){
 }
 buildFilters(); render();
 loadStats();
+loadKidsmap();
 setInterval(()=>{ if(!document.hidden) loadStats(); },60000);
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden) loadStats(); });
 </script>

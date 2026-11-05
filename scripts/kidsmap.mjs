@@ -62,8 +62,7 @@ for (const x of raw.courses || []) {
     t: KIND[x.kind] || (x.src === "ntsec" ? "科學館" : "親子館"),
     c: city(x.city), d: x.dist || "", v: x.venue || "", s, e,
     sub: (x.type || "").slice(0, 20), a, ses: sesText, cap,
-    reg: (x.cond || "請看活動頁").slice(0, 120), l: x.url, r: x.url, note, f,
-    km: 1
+    reg: (x.cond || "請看活動頁").slice(0, 120), l: x.url, note, f
   });
 }
 out.sort((p, q) => p.s.localeCompare(q.s));
