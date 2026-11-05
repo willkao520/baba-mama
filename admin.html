@@ -60,6 +60,9 @@ async function loadStats(){
   while(true){ const {data,error}=await sb.from("analytics").select("ts,type,label,item,extra,sid,dev").gte("ts",since).order("ts",{ascending:false}).range(from,from+999); if(error) return $("list").textContent="讀取失敗："+error.message; rows=rows.concat(data); if(data.length<1000||rows.length>=50000) break; from+=1000; }
   const cnt=(arr,f)=>{const m=new Map(); arr.forEach(r=>{const k=f(r); if(k) m.set(k,(m.get(k)||0)+1)}); return [...m].sort((a,b)=>b[1]-a[1]);};
   const by=t=>rows.filter(r=>r.type===t);
+  let votes=[]; try{ const rs=await fetch(CFG.SUPABASE_URL+"/rest/v1/item_stats?select=item_key,up,down,comments&or=(up.gt.0,down.gt.0)",{headers:{apikey:CFG.SUPABASE_KEY,Authorization:"Bearer "+CFG.SUPABASE_KEY}}); votes=await rs.json(); }catch(e){}
+  const vname=k=>{const p=String(k).split("|"); return p[1]||k;};
+  const vrows=(votes||[]).map(v=>[`${vname(v.item_key)}　👍${v.up}　👎${v.down}`, (+v.up)-(+v.down)]).sort((a,b)=>b[1]-a[1]);
   const uniq=(arr,f)=>new Set(arr.map(f)).size;
   const searches=by("search"); const lastQ=new Map(); searches.forEach(r=>{const k=r.sid+"|"+r.label; if(!lastQ.has(k)) lastQ.set(k,r)});
   const sq=[...lastQ.values()];
@@ -81,7 +84,7 @@ async function loadStats(){
   ${tbl("縣市篩選",cnt(by("filter").filter(r=>r.item==="county"&&r.extra&&r.extra.on),r=>r.label))}
   ${tbl("年齡篩選",cnt(by("filter").filter(r=>r.item==="age"&&r.extra&&r.extra.on),r=>r.label))}
   ${tbl("類型／費用／時間篩選",cnt(by("filter").filter(r=>["type","fee","when","io"].includes(r.item)&&r.extra&&r.extra.on),r=>r.label))}
-  ${tbl("讚／倒讚",cnt(by("vote"),r=>(r.item==="up"?"👍 ":"👎 ")+r.label))}
+  ${tbl("目前讚／倒讚（和網頁上一樣，數字=讚減倒讚）",vrows,"分")}
   ${tbl("打開留言",cnt(by("comment_open"),r=>r.label))}
   ${tbl("從哪裡來",cnt(by("visit"),r=>r.label))}
   ${tbl("使用方式",cnt(by("visit"),r=>r.item+((r.extra&&r.extra.w<700)?"・手機":"・電腦"))) }
