@@ -171,6 +171,10 @@ details summary{cursor:pointer;color:var(--ink)}
 .cmdel{border:0;background:none;color:#b4553a;font-size:12px;text-decoration:underline;cursor:pointer;padding:0 4px}
 .subbar{background:#fff;border:2px solid var(--ink,#3a2e28);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
 .subbar .frow{margin:0}
+.segbar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seg{border:2.5px solid #3a2e28;border-radius:14px;background:#fff;padding:12px 6px;font:inherit;font-weight:700;font-size:16px;color:#3a2e28;box-shadow:3px 3px 0 #3a2e28;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.seg small{font-weight:400;font-size:12px;color:#7a6a60}
+.seg[aria-pressed="true"]{background:#f1b33b}
 </style>
 </head>
 <body>
@@ -1780,7 +1784,7 @@ function match(x){
   if(state.counties.size && !state.counties.has(x.c)) return false;
   if(state.tab==="pl" && x.kind==="pl" && state.plCat && x.t!==state.plCat) return false;
   if(x.kind==="co" && state.cc && state.cc!=="*" && x.cc!==state.cc) return false;
-  if(x.kind==="co" && state.cc && state.cs && x.cs!==state.cs) return false;
+  if(x.kind==="co" && state.cc && state.cs && state.cs!=="*" && x.cs!==state.cs) return false;
   if(x.kind==="co" && state.cc && state.fx && (state.fx==="fixed")!==x.fx) return false;
   if(x.kind==="co" && state.ck){ const d=x.sub==="官方活動總表"; if(state.ck==="s"&&d) return false; if(state.ck==="d"&&!d) return false; }
   if(state.dist && x.d!==state.dist) return false;
@@ -1890,6 +1894,19 @@ function render(more){
     $("rcount").innerHTML = `先選一種想參加的活動 <span style="font-size:14px;color:var(--ink2)">（共 ${base.length} 個公辦親子活動）</span>`;
     updCounts(); return;
   }
+  if(state.tab==="co" && state.cc && state.cc!=="*" && !state.cs && !state.q){
+    const base = liveCourses.filter(match);
+    const subs=[...(SUBC[state.cc]||[]).map(z=>z[0]),"其他"].map(k=>[k,base.filter(x=>x.cs===k)]).filter(z=>z[1].length);
+    if(subs.length<=1){ state.cs="*"; }
+    else{
+      g.className="cats";
+      const ic=CC_ICON[state.cc]||ICON["*"];
+      g.innerHTML = subs.map(([k,arr],i)=>{const nf=arr.filter(x=>x.fx).length; return `<button class="cat" data-cs="${k}" type="button"><span class="blob" style="background:${TAPE[(i+1)%TAPE.length]}"></span><span class="ic">${ic}</span><span class="cn">${k==="其他"?"其他"+state.cc.split("・")[0]:k}</span><span class="cc">${arr.length} 個${nf?`・固定 ${nf}`:""}</span></button>`}).join("")
+        + `<button class="cat" data-cs="*" type="button"><span class="blob" style="background:#ddd"></span><span class="ic">${ICON["*"]}</span><span class="cn">全部${state.cc}</span><span class="cc">${base.length} 個・不細分全部看</span></button>`;
+      $("rcount").innerHTML = `<button class="back" id="back" type="button">← 回到分類</button>　「${state.cc}」再選一種 <span style="font-size:14px;color:var(--ink2)">（共 ${base.length} 個）</span>`;
+      updCounts(); return;
+    }
+  }
   if(state.tab==="pl" && !state.plCat && !state.q){
     const base = PLACES.filter(match);
     g.className="cats";
@@ -1904,18 +1921,16 @@ function render(more){
   const shown = list.slice(0,state.limit);
   let subBar="";
   if(state.tab==="co" && state.cc){
-    const base=src.filter(x=>{ const a=state.cs, b=state.fx; state.cs=""; state.fx=""; const r=match(x); state.cs=a; state.fx=b; return r; });
-    const baseF=base.filter(x=>!state.fx||(state.fx==="fixed")===x.fx), baseS=base.filter(x=>!state.cs||x.cs===state.cs);
-    const nF=baseS.filter(x=>x.fx).length, nO=baseS.length-nF;
-    const subs=state.cc!=="*"?[...(SUBC[state.cc]||[]).map(z=>z[0]),"其他"].map(k=>[k,baseF.filter(x=>x.cs===k).length]).filter(z=>z[1]):[];
-    const ch=(attr,val,label,n,on)=>`<button type="button" class="chip wk" data-${attr}="${val}" aria-pressed="${on}">${label} ${n}</button>`;
-    subBar=`<div class="subbar" style="grid-column:1/-1"><div class="frow"><span class="flabel">頻率</span>${ch("fx","fixed","固定活動（常態、每週都有）",nF,state.fx==="fixed")}${ch("fx","once","單場・短期活動",nO,state.fx==="once")}</div>${subs.length>1?`<div class="frow"><span class="flabel">細項</span>${subs.map(([k,n])=>ch("cs",k,k,n,state.cs===k)).join("")}</div>`:""}</div>`;
+    const base=src.filter(x=>{ const b=state.fx; state.fx=""; const r=match(x); state.fx=b; return r; });
+    const nF=base.filter(x=>x.fx).length, nO=base.length-nF;
+    const sg=(v,label,n)=>`<button type="button" class="seg" data-fx="${v}" aria-pressed="${state.fx===v}">${label}<small>${n} 個</small></button>`;
+    subBar=`<div class="segbar" style="grid-column:1/-1">${sg("","全部",base.length)}${sg("fixed","固定活動",nF)}${sg("once","單場・短期",nO)}</div>`;
   }
   g.innerHTML = subBar + (list.length ? shown.map(card).join("") + (list.length>shown.length?`<button class="more" id="more" type="button" style="grid-column:1/-1">再看 ${Math.min(60,list.length-shown.length)} 個（還有 ${list.length-shown.length} 個）</button>`:"") :
     `<div class="empty" style="grid-column:1/-1"><div class="hand">${state.tab==="fv"&&!src.length?"還沒有收藏喔":"找不到符合的，換個條件試試看"}</div><p>${state.tab==="fv"&&!src.length?"在卡片右上角按愛心，就會存在這裡（只存在這台裝置）。":"可以少選幾個條件，或改搜尋其他關鍵字。"}</p></div>`);
   const lbl = state.tab==="co"?"個公辦親子活動":state.tab==="ev"?"個活動":state.tab==="pk"?"座公園":state.tab==="pl"?"個景點":"個收藏";
-  const back = (state.tab==="pl" && state.plCat)||(state.tab==="co" && state.cc) ? `<button class="back" id="back" type="button">← 回到分類</button>　` : "";
-  const catName = state.tab==="pl" && state.plCat && state.plCat!=="*" ? `「${state.plCat}」` : state.tab==="co" && state.cc && state.cc!=="*" ? `「${state.cc}」` : "";
+  const back = (state.tab==="pl" && state.plCat) ? `<button class="back" id="back" type="button">← 回到分類</button>　` : (state.tab==="co" && state.cc) ? `<button class="back" id="back" type="button">← ${state.cc!=="*"&&state.cs?"回到「"+state.cc+"」":"回到分類"}</button>　` : "";
+  const catName = state.tab==="pl" && state.plCat && state.plCat!=="*" ? `「${state.plCat}」` : state.tab==="co" && state.cc && state.cc!=="*" ? `「${state.cc}${state.cs&&state.cs!=="*"?"・"+state.cs:""}」` : "";
   $("rcount").innerHTML = `${back}${catName}找到 ${list.length} ${lbl}`;
   if(typeof watchRatings==="function") watchRatings();
   updCounts();
@@ -2103,7 +2118,7 @@ $("rp-form").addEventListener("submit",()=>track("report",$("rp-item").value,$("
 track("visit",document.referrer?new URL(document.referrer).hostname:"直接開啟",(window.matchMedia("(display-mode: standalone)").matches?"桌面App":"瀏覽器"),{w:innerWidth});
 
 /* ---------- 事件 ---------- */
-document.querySelector(".resultbar").addEventListener("click",e=>{ if(e.target.id==="back"){ state.plCat=""; state.cc=""; state.cs=""; state.fx=""; render(); } });
+document.querySelector(".resultbar").addEventListener("click",e=>{ if(e.target.id==="back"){ const multi=state.tab==="co"&&state.cc&&state.cc!=="*"&&new Set(liveCourses.filter(x=>x.cc===state.cc).map(x=>x.cs)).size>1; if(multi && state.cs){ state.cs=""; state.fx=""; } else { state.plCat=""; state.cc=""; state.cs=""; state.fx=""; } render(); } });
 $("q").addEventListener("input",e=>{state.q=e.target.value.trim();render()});
 $("sel-region").addEventListener("change",e=>{state.region=e.target.value;state.counties.clear();state.dist="";fillCounties();render()});
 $("btn-county").addEventListener("click",()=>{const pop=$("cpop");pop.hidden=!pop.hidden;$("btn-county").setAttribute("aria-expanded",!pop.hidden);});
@@ -2111,9 +2126,9 @@ $("cpop-ok").addEventListener("click",()=>{$("cpop").hidden=true;$("btn-county")
 $("cpop-clear").addEventListener("click",()=>{state.counties.clear();state.dist="";fillCounties();render();});
 $("sel-dist").addEventListener("change",e=>{state.dist=e.target.value;render()});
 $("grid").addEventListener("click",e=>{
-  const c=e.target.closest(".cat"); if(c){ if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); window.scrollTo({top:$("grid").offsetTop-120,behavior:"smooth"}); return; }
+  const c=e.target.closest(".cat"); if(c){ if(c.dataset.cs){ state.cs=c.dataset.cs; state.fx=""; track("cat",state.cc+"/"+c.dataset.cs,"co"); } else if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); window.scrollTo({top:$("grid").offsetTop-120,behavior:"smooth"}); return; }
   if(e.target.id==="more"){ state.limit+=60; render(true); return; }
-  const sb=e.target.closest(".subbar .chip"); if(sb){ if(sb.dataset.fx) state.fx=state.fx===sb.dataset.fx?"":sb.dataset.fx; if(sb.dataset.cs) state.cs=state.cs===sb.dataset.cs?"":sb.dataset.cs; track("filter",sb.textContent,"co_sub",{on:true}); render(); return; }
+  const sb=e.target.closest(".segbar .seg"); if(sb){ state.fx=sb.dataset.fx; track("filter",sb.firstChild.textContent,"co_fx",{on:true}); render(); return; }
   const rb=e.target.closest(".rb"); if(rb){ if(rb.dataset.cm!==undefined) openComments(rb.dataset.cm,rb.dataset.name); else if(BE) vote(rb.dataset.k,+rb.dataset.v); return; }
   const b=e.target.closest(".fav"); if(!b) return;
   const k=b.dataset.k; favs.has(k)?favs.delete(k):favs.add(k); saveFavs(); render(true);
