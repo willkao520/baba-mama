@@ -168,6 +168,7 @@ a.where .go{color:var(--sky);font-weight:700;margin-left:6px} .lnk{display:flex;
 details summary{cursor:pointer;color:var(--ink)}
 .srcs{columns:2 260px;margin:8px 0 0;padding-left:18px}
 .srcs li{break-inside:avoid;margin-bottom:3px}
+.cmdel{border:0;background:none;color:#b4553a;font-size:12px;text-decoration:underline;cursor:pointer;padding:0 4px}
 </style>
 </head>
 <body>
@@ -1899,6 +1900,7 @@ async function vote(k,v){
   catch(e){ console.warn(e); alert("按讚沒有送出，請稍後再試"); }
 }
 let cmKey="", cmName="";
+let myCm={}; try{ myCm=JSON.parse(localStorage.getItem("bm-mycm")||"{}")||{}; }catch(e){}
 const fmtT=s=>{const d=new Date(s);return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`};
 async function openComments(k,name){
   cmKey=k; cmName=name; $("cm-t").textContent=name; $("cm-msg").textContent="";
@@ -1908,8 +1910,8 @@ async function openComments(k,name){
   $("cm-form").querySelector("[type=submit]").disabled=false;
   $("cm-sub").textContent="其他爸媽的心得，請友善留言 🙂"; $("cm-list").innerHTML='<div class="msg">載入中⋯</div>';
   try{
-    const rows=await api("comments?select=nickname,body,created_at&item_key=eq."+encodeURIComponent(k)+"&order=created_at.desc&limit=100");
-    $("cm-list").innerHTML = rows&&rows.length ? rows.map(r=>`<div class="cmi"><span class="who">${esc(r.nickname)}</span><span class="t">${fmtT(r.created_at)}</span><div>${esc(r.body)}</div></div>`).join("") : '<div class="msg">還沒有人留言，當第一個吧！</div>';
+    const rows=await api("comments?select=id,nickname,body,created_at&item_key=eq."+encodeURIComponent(k)+"&order=created_at.desc&limit=100");
+    $("cm-list").innerHTML = rows&&rows.length ? rows.map(r=>`<div class="cmi"><span class="who">${esc(r.nickname)}</span><span class="t">${fmtT(r.created_at)}</span>${myCm[r.id]?` <button type="button" class="cmdel" data-cid="${r.id}">刪除</button>`:""}<div>${esc(r.body)}</div></div>`).join("") : '<div class="msg">還沒有人留言，當第一個吧！</div>';
   }catch(e){ $("cm-list").innerHTML='<div class="msg">留言讀取失敗，請稍後再試。</div>'; }
 }
 $("cm-form").addEventListener("submit",async e=>{
@@ -1918,10 +1920,25 @@ $("cm-form").addEventListener("submit",async e=>{
   try{localStorage.setItem("bm-nick",nick)}catch(e){}
   $("cm-msg").textContent="送出中⋯";
   try{
-    await api("comments",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({item_key:cmKey,item_name:cmName,nickname:nick,body,device_id:DEV})});
+    const tok=(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now().toString(36)+Math.random().toString(36).slice(2));
+    const row={item_key:cmKey,item_name:cmName,nickname:nick,body,device_id:DEV};
+    let res; try{ res=await api("comments?select=id",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify({...row,del_token:tok})}); }
+    catch(e1){ res=null; await api("comments",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify(row)}); }
+    if(res&&res[0]&&res[0].id){ myCm[res[0].id]=tok; try{localStorage.setItem("bm-mycm",JSON.stringify(myCm))}catch(e){} }
     $("cm-body").value=""; $("cm-msg").textContent="已送出，謝謝分享！";
     const st=STATS[cmKey]||(STATS[cmKey]={up:0,down:0,comments:0}); st.comments++; render(true); openComments(cmKey,cmName);
   }catch(err){ $("cm-msg").textContent="送出失敗，請稍後再試。"; }
+});
+$("cm-list").addEventListener("click",async e=>{
+  const b=e.target.closest(".cmdel"); if(!b) return;
+  if(!confirm("確定刪除你的這則留言？")) return;
+  const id=+b.dataset.cid;
+  try{
+    const ok=await api("rpc/delete_my_comment",{method:"POST",body:JSON.stringify({cid:id,tok:myCm[id]})});
+    if(ok===false) throw new Error("not found");
+    delete myCm[id]; try{localStorage.setItem("bm-mycm",JSON.stringify(myCm))}catch(e){}
+    const st=STATS[cmKey]; if(st&&st.comments>0) st.comments--; render(true); openComments(cmKey,cmName);
+  }catch(err){ alert("刪除失敗，請稍後再試。"); }
 });
 $("cm-close").onclick=()=>$("cm").classList.remove("show");
 $("cm").addEventListener("click",e=>{if(e.target.id==="cm")$("cm").classList.remove("show")});

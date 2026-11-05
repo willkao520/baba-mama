@@ -136,3 +136,17 @@ drop policy if exists comments_owner_delete on comments;
 create policy comments_owner_read   on comments for select to authenticated using (is_owner());
 create policy comments_owner_update on comments for update to authenticated using (is_owner()) with check (is_owner());
 create policy comments_owner_delete on comments for delete to authenticated using (is_owner());
+
+-- ===== 留言者自己刪除（第四段）=====
+alter table comments add column if not exists del_token text;
+revoke select on comments from anon;
+grant select (id, item_key, item_name, nickname, body, hidden, created_at) on comments to anon;
+create or replace function delete_my_comment(cid bigint, tok text) returns boolean
+language plpgsql security definer set search_path = public as $$
+begin
+  if tok is null or length(tok) < 10 then return false; end if;
+  delete from comments where id = cid and del_token = tok;
+  return found;
+end $$;
+revoke all on function delete_my_comment(bigint, text) from public;
+grant execute on function delete_my_comment(bigint, text) to anon, authenticated;
