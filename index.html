@@ -169,6 +169,8 @@ details summary{cursor:pointer;color:var(--ink)}
 .srcs{columns:2 260px;margin:8px 0 0;padding-left:18px}
 .srcs li{break-inside:avoid;margin-bottom:3px}
 .cmdel{border:0;background:none;color:#b4553a;font-size:12px;text-decoration:underline;cursor:pointer;padding:0 4px}
+.subbar{background:#fff;border:2px solid var(--ink,#3a2e28);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.subbar .frow{margin:0}
 </style>
 </head>
 <body>
@@ -1637,14 +1639,33 @@ const CC=[
 ];
 const CC_NAMES=["遊戲・探索","說故事・閱讀","游泳・玩水","運動・體能","音樂・律動","藝術・手作","科學・自然","親子廚房","戲劇・電影・表演","語言・學習","嬰幼兒・感官","講座・育兒","展覽・導覽"];
 function coCat(x){ const h=(x.n||"")+" "+(x.sub||"")+" "+(x.ty||""); for(const [k,re] of CC) if(re.test(h)) return k; return ({"親子館":"遊戲・探索","圖書館":"說故事・閱讀","運動中心":"運動・體能","科學館":"科學・自然","博物館":"展覽・導覽","表演場館":"戲劇・電影・表演"})[x.t]||"遊戲・探索"; }
-COURSES.forEach(x=>{x.cc=coCat(x)});
+
+const SUBC={
+ "遊戲・探索":[["自由入館",/自由|入館|空間|遊戲區|遊戲室|參觀/],["主題・節慶活動",/節慶|主題|特色|限定|聖誕|耶誕|跨年|萬聖/],["親子遊戲",/遊戲|共玩|探索|玩/]],
+ "說故事・閱讀":[["嬰幼兒故事",/寶寶|嬰|0-3|0～3|幼幼/],["外語・母語故事",/英|美語|台語|客語|日語|雙語|原住民/],["繪本說故事",/故事|繪本/],["閱讀・讀書會",/閱讀|讀書|讀經|書/]],
+ "游泳・玩水":[["幼兒・親子游泳",/幼兒|寶寶|親子|幼/],["兒童游泳",/./]],
+ "運動・體能":[["球類",/球/],["舞蹈・芭蕾",/舞|芭蕾/],["武術・防身",/武|跆拳|空手|柔道|搏擊|防身|擊/],["體操・體適能",/體操|體能|體適能|感統|感覺統合|平衡|大肌肉|瑜珈/],["滑步・輪鞋",/滑步|直排|輪|滑板|平衡車/]],
+ "音樂・律動":[["奧福音樂",/奧福/],["律動",/律動|節奏|舞/],["親子音樂",/./]],
+ "藝術・手作":[["拼豆・積木",/拼豆|積木|樂高|LASY|磁力片/],["捏塑・陶藝",/捏|陶|黏土|塑|史萊姆/],["美術・繪畫",/美術|繪|塗鴉|畫|蠟筆|彩/],["手作・DIY",/./]],
+ "科學・自然":[["程式・科技",/程式|Roblox|AI|機器人|科技|電/],["自然・生態",/昆蟲|生態|植物|自然|種植|蟲|海洋|恐龍|地質/],["科學實驗",/./]],
+ "親子廚房":[["寶寶副食品",/副食品|寶寶|手指食/],["烘焙・點心",/烘焙|點心|餅|蛋糕|麵包/],["料理",/./]],
+ "戲劇・電影・表演":[["電影",/電影|影展|影片/],["兒童劇・偶戲",/劇|偶/],["音樂會・表演",/./]],
+ "語言・學習":[["英語",/英|美語|ABC|字母/],["台語・客語",/台語|客語|母語/],["蒙特梭利・其他",/./]],
+ "嬰幼兒・感官":[["抓週",/抓週|抓周/],["寶寶感官",/./]],
+ "講座・育兒":[["育兒指導",/育兒|副食品|發展|照顧/],["親職講座",/講座|演講|研習|親職|分享/],["諮詢・支持團體",/./]],
+ "展覽・導覽":[["導覽",/導覽/],["展覽",/./]]
+};
+function coSub(x){ const L=SUBC[x.cc]; if(!L) return ""; const h=(x.n||"")+" "+(x.sub||""); for(const [k,re] of L) if(re.test(h)) return k; return "其他"; }
+function coFixed(x){ if(x.sub==="官方活動總表") return true; const m=/等 (\d+) 場/.exec(x.ses||""); if(m&&+m[1]>=4) return true; if(((x.ses||"").match(/、/g)||[]).length>=3) return true; if(/每週|每月|每日|每天|每周|開放時間內|常態/.test((x.ses||"")+(x.n||""))) return true; if(!x.e) return true; return (P(x.e)-P(x.s))/864e5>=21; }
+function tagCo(x){ x.cc=coCat(x); x.cs=coSub(x); x.fx=coFixed(x); }
+COURSES.forEach(tagCo);
 let KM_INFO=null;
 async function loadKidsmap(){
   try{
     const r=await fetch("kidsmap.json",{cache:"no-cache"}); if(!r.ok) return;
     const j=await r.json(); const items=(j.items||[]); if(!items.length) return;
     KM_INFO=j;
-    items.forEach(o=>{ const x=CO(o.n,o.t,o.c,o.d,o.v,o.s,o.e,o.sub,o.a,o.ses,o.cap,o.reg,o.l,o.r||o.l,o.note,o.f); x.km=1; x.cc=coCat(x); x.S=P(x.s); x.E=x.e?P(x.e):null; COURSES.push(x); });
+    items.forEach(o=>{ const x=CO(o.n,o.t,o.c,o.d,o.v,o.s,o.e,o.sub,o.a,o.ses,o.cap,o.reg,o.l,o.r||o.l,o.note,o.f); x.km=1; x.S=P(x.s); tagCo(x); x.E=x.e?P(x.e):null; COURSES.push(x); });
     liveCourses = COURSES.filter(e=>!e.E||e.E>=today).sort((a,b)=>((a.sub==="官方活動總表")-(b.sub==="官方活動總表"))||((a.S>today)-(b.S>today))||(a.S-b.S));
     $("cnt-co") && ($("cnt-co").textContent=liveCourses.length);
     if(state.tab==="co"){ buildFilters(); } render(true);
@@ -1658,7 +1679,7 @@ let favs = new Set();
 try{ favs = new Set(JSON.parse(localStorage.getItem("bm-favs")||"[]")); }catch(e){}
 const saveFavs=()=>{try{localStorage.setItem("bm-favs",JSON.stringify([...favs]))}catch(e){}};
 
-const state = {tab:"ev", q:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), cc:"", dist:"", plCat:"", limit:60, ck:""};
+const state = {tab:"ev", q:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), cc:"", cs:"", fx:"", dist:"", plCat:"", limit:60, ck:""};
 try{ JSON.parse(localStorage.getItem("bm-counties")||"[]").forEach(c=>state.counties.add(c)); }catch(e){}
 
 /* ---------- 週末計算 ---------- */
@@ -1759,6 +1780,8 @@ function match(x){
   if(state.counties.size && !state.counties.has(x.c)) return false;
   if(state.tab==="pl" && x.kind==="pl" && state.plCat && x.t!==state.plCat) return false;
   if(x.kind==="co" && state.cc && state.cc!=="*" && x.cc!==state.cc) return false;
+  if(x.kind==="co" && state.cc && state.cs && x.cs!==state.cs) return false;
+  if(x.kind==="co" && state.cc && state.fx && (state.fx==="fixed")!==x.fx) return false;
   if(x.kind==="co" && state.ck){ const d=x.sub==="官方活動總表"; if(state.ck==="s"&&d) return false; if(state.ck==="d"&&!d) return false; }
   if(state.dist && x.d!==state.dist) return false;
   if((x.kind==="ev"||x.kind==="co") && state.when){
@@ -1802,7 +1825,7 @@ function card(x,i){
     <span class="tape" style="background:${TAPE[i%TAPE.length]}"></span>
     <button class="fav" data-k="${esc(k)}" aria-label="${on?"取消收藏":"收藏"}" aria-pressed="${on}">${heart(on)}</button>
     ${ICON[x.t]?`<span class="pic" aria-hidden="true">${ICON[x.t]}</span>`:""}<h3>${esc(x.n)}</h3>
-    ${dateLine}${x.kind==="co"?`<div class="cinfo"><div><b>場館</b>${esc(x.v)}</div><div><b>場次</b>${esc(x.ses)}</div><div><b>分類</b>${esc(x.cc||"")}</div><div><b>名額</b>${esc(x.cap)}${x.r?`<span class="live">${x.km?"（每天凌晨更新，以報名頁即時顯示為準）":"（剩餘名額以報名頁即時顯示為準）"}</span>`:""}</div><div><b>報名</b>${esc(x.reg)}</div></div>`:""}
+    ${dateLine}${x.kind==="co"?`<div class="cinfo"><div><b>場館</b>${esc(x.v)}</div><div><b>場次</b>${esc(x.ses)}</div><div><b>分類</b>${esc(x.cc||"")}${x.cs&&x.cs!=="其他"?"・"+esc(x.cs):""}${x.fx?"（固定活動）":""}</div><div><b>名額</b>${esc(x.cap)}${x.r?`<span class="live">${x.km?"（每天凌晨更新，以報名頁即時顯示為準）":"（剩餘名額以報名頁即時顯示為準）"}</span>`:""}</div><div><b>報名</b>${esc(x.reg)}</div></div>`:""}
     <a class="where" href="${mapUrl}" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟 ${esc(x.n)}"><svg width="12" height="14" viewBox="0 0 12 14" style="vertical-align:-1px;margin-right:3px"><path d="M6 13s4.6-4.3 4.6-7.6A4.6 4.6 0 0 0 1.4 5.4C1.4 8.7 6 13 6 13z" fill="#e4664a" stroke="#3a2e28" stroke-width="1.2"/><circle cx="6" cy="5.4" r="1.6" fill="#fff"/></svg>${esc(x.c)}${x.d?"・"+esc(x.d):""}<span class="go">地圖・導航 ↗</span></a>
     ${x.kind!=="ev"&&GKEY?`<div class="gslot" data-q="${esc(gq(x))}">${gHtml(gq(x))}</div>`:""}
     <div class="tags">${ages}<span class="tag t-type">${esc(x.t)}</span>${x.sub?`<span class="tag t-type">${esc(x.sub)}</span>`:""}<span class="tag ${feeCls}">${FEES[x.f]}</span><span class="tag t-io">${io}</span></div>
@@ -1879,8 +1902,17 @@ function render(more){
   const src = state.tab==="fv" ? ALLITEMS().filter(x=>favs.has(key(x))) : srcOf(state.tab);
   const list = src.filter(match);
   const shown = list.slice(0,state.limit);
-  g.innerHTML = list.length ? shown.map(card).join("") + (list.length>shown.length?`<button class="more" id="more" type="button" style="grid-column:1/-1">再看 ${Math.min(60,list.length-shown.length)} 個（還有 ${list.length-shown.length} 個）</button>`:"") :
-    `<div class="empty" style="grid-column:1/-1"><div class="hand">${state.tab==="fv"&&!src.length?"還沒有收藏喔":"找不到符合的，換個條件試試看"}</div><p>${state.tab==="fv"&&!src.length?"在卡片右上角按愛心，就會存在這裡（只存在這台裝置）。":"可以少選幾個條件，或改搜尋其他關鍵字。"}</p></div>`;
+  let subBar="";
+  if(state.tab==="co" && state.cc){
+    const base=src.filter(x=>{ const a=state.cs, b=state.fx; state.cs=""; state.fx=""; const r=match(x); state.cs=a; state.fx=b; return r; });
+    const baseF=base.filter(x=>!state.fx||(state.fx==="fixed")===x.fx), baseS=base.filter(x=>!state.cs||x.cs===state.cs);
+    const nF=baseS.filter(x=>x.fx).length, nO=baseS.length-nF;
+    const subs=state.cc!=="*"?[...(SUBC[state.cc]||[]).map(z=>z[0]),"其他"].map(k=>[k,baseF.filter(x=>x.cs===k).length]).filter(z=>z[1]):[];
+    const ch=(attr,val,label,n,on)=>`<button type="button" class="chip wk" data-${attr}="${val}" aria-pressed="${on}">${label} ${n}</button>`;
+    subBar=`<div class="subbar" style="grid-column:1/-1"><div class="frow"><span class="flabel">頻率</span>${ch("fx","fixed","固定活動（常態、每週都有）",nF,state.fx==="fixed")}${ch("fx","once","單場・短期活動",nO,state.fx==="once")}</div>${subs.length>1?`<div class="frow"><span class="flabel">細項</span>${subs.map(([k,n])=>ch("cs",k,k,n,state.cs===k)).join("")}</div>`:""}</div>`;
+  }
+  g.innerHTML = subBar + (list.length ? shown.map(card).join("") + (list.length>shown.length?`<button class="more" id="more" type="button" style="grid-column:1/-1">再看 ${Math.min(60,list.length-shown.length)} 個（還有 ${list.length-shown.length} 個）</button>`:"") :
+    `<div class="empty" style="grid-column:1/-1"><div class="hand">${state.tab==="fv"&&!src.length?"還沒有收藏喔":"找不到符合的，換個條件試試看"}</div><p>${state.tab==="fv"&&!src.length?"在卡片右上角按愛心，就會存在這裡（只存在這台裝置）。":"可以少選幾個條件，或改搜尋其他關鍵字。"}</p></div>`);
   const lbl = state.tab==="co"?"個公辦親子活動":state.tab==="ev"?"個活動":state.tab==="pk"?"座公園":state.tab==="pl"?"個景點":"個收藏";
   const back = (state.tab==="pl" && state.plCat)||(state.tab==="co" && state.cc) ? `<button class="back" id="back" type="button">← 回到分類</button>　` : "";
   const catName = state.tab==="pl" && state.plCat && state.plCat!=="*" ? `「${state.plCat}」` : state.tab==="co" && state.cc && state.cc!=="*" ? `「${state.cc}」` : "";
@@ -2071,7 +2103,7 @@ $("rp-form").addEventListener("submit",()=>track("report",$("rp-item").value,$("
 track("visit",document.referrer?new URL(document.referrer).hostname:"直接開啟",(window.matchMedia("(display-mode: standalone)").matches?"桌面App":"瀏覽器"),{w:innerWidth});
 
 /* ---------- 事件 ---------- */
-document.querySelector(".resultbar").addEventListener("click",e=>{ if(e.target.id==="back"){ state.plCat=""; state.cc=""; render(); } });
+document.querySelector(".resultbar").addEventListener("click",e=>{ if(e.target.id==="back"){ state.plCat=""; state.cc=""; state.cs=""; state.fx=""; render(); } });
 $("q").addEventListener("input",e=>{state.q=e.target.value.trim();render()});
 $("sel-region").addEventListener("change",e=>{state.region=e.target.value;state.counties.clear();state.dist="";fillCounties();render()});
 $("btn-county").addEventListener("click",()=>{const pop=$("cpop");pop.hidden=!pop.hidden;$("btn-county").setAttribute("aria-expanded",!pop.hidden);});
@@ -2079,8 +2111,9 @@ $("cpop-ok").addEventListener("click",()=>{$("cpop").hidden=true;$("btn-county")
 $("cpop-clear").addEventListener("click",()=>{state.counties.clear();state.dist="";fillCounties();render();});
 $("sel-dist").addEventListener("change",e=>{state.dist=e.target.value;render()});
 $("grid").addEventListener("click",e=>{
-  const c=e.target.closest(".cat"); if(c){ if(c.dataset.cc){ state.cc=c.dataset.cc; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); window.scrollTo({top:$("grid").offsetTop-120,behavior:"smooth"}); return; }
+  const c=e.target.closest(".cat"); if(c){ if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); window.scrollTo({top:$("grid").offsetTop-120,behavior:"smooth"}); return; }
   if(e.target.id==="more"){ state.limit+=60; render(true); return; }
+  const sb=e.target.closest(".subbar .chip"); if(sb){ if(sb.dataset.fx) state.fx=state.fx===sb.dataset.fx?"":sb.dataset.fx; if(sb.dataset.cs) state.cs=state.cs===sb.dataset.cs?"":sb.dataset.cs; track("filter",sb.textContent,"co_sub",{on:true}); render(); return; }
   const rb=e.target.closest(".rb"); if(rb){ if(rb.dataset.cm!==undefined) openComments(rb.dataset.cm,rb.dataset.name); else if(BE) vote(rb.dataset.k,+rb.dataset.v); return; }
   const b=e.target.closest(".fav"); if(!b) return;
   const k=b.dataset.k; favs.has(k)?favs.delete(k):favs.add(k); saveFavs(); render(true);
@@ -2089,12 +2122,12 @@ function setTab(t){
   state.tab=t;
   [["ev","tab-ev"],["pk","tab-pk"],["pl","tab-pl"],["co","tab-co"],["fv","tab-fv"]].forEach(([k,id])=>$(id).setAttribute("aria-selected",k===t));
   if(t!=="ev"&&t!=="fv") state.when="";
-  state.plCat=""; state.cc="";
+  state.plCat=""; state.cc=""; state.cs=""; state.fx="";
   buildFilters(); render();
 }
 $("tab-ev").onclick=()=>setTab("ev"); $("tab-pk").onclick=()=>setTab("pk"); $("tab-pl").onclick=()=>setTab("pl"); $("tab-fv").onclick=()=>setTab("fv"); $("tab-co").onclick=()=>setTab("co");
 $("clear").onclick=()=>{
-  Object.assign(state,{q:"",when:"",io:"",region:"",dist:"",plCat:"",ck:"",cc:""}); state.counties.clear();
+  Object.assign(state,{q:"",when:"",io:"",region:"",dist:"",plCat:"",ck:"",cc:"",cs:"",fx:""}); state.counties.clear();
   state.ages.clear();state.types.clear();state.fees.clear();
   $("q").value="";$("sel-region").value="";buildFilters();render();
 };

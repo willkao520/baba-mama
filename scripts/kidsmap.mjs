@@ -56,7 +56,7 @@ for (const x of raw.courses || []) {
     else if (nb.st === "onsite") cap = "現場參加，額滿為止";
   }
   const f = x.fee === 0 ? "free" : x.fee > 0 ? "paid" : /免費/.test(x.feeText || "") ? "free" : "check";
-  const note = [x.ageText && x.ageText.length < 40 ? "對象：" + x.ageText : "", x.feeText ? "費用：" + x.feeText : "", x.place && x.place !== x.venue && x.place.length < 40 ? "地點：" + x.place : "", x.teacher && x.teacher !== x.venue && x.teacher.length < 20 ? "帶領：" + x.teacher : ""].filter(Boolean).join("　");
+  const note = [x.ageText && x.ageText.length < 40 ? "對象：" + x.ageText : "", x.feeText ? "費用：" + x.feeText : "", x.place && x.place !== x.venue && x.place.length < 40 ? "地點：" + x.place : "", x.teacher && x.teacher !== x.venue && !/^[-—\s]*$/.test(x.teacher) && x.teacher.length < 20 ? "帶領：" + x.teacher : ""].filter(Boolean).join("　");
   out.push({
     n: x.name.replace(/【請於活動開始前.*?】/g, "").trim().slice(0, 80),
     t: KIND[x.kind] || (x.src === "ntsec" ? "科學館" : "親子館"),
