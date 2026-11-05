@@ -206,6 +206,17 @@ details summary{cursor:pointer;color:var(--ink)}
 }
 
 .memo{font-size:12px;color:var(--ink2);margin-left:4px}
+
+.home{grid-template-columns:repeat(2,1fr)!important;gap:16px}
+.home .cat{padding:22px 12px 18px}
+.home .cat .ic{width:130px;height:98px}
+.home .cat .cn{font-size:24px;margin-top:6px}
+.home .cat .cc{font-size:14px}
+.home .cat .num{display:inline-block;background:var(--ink);color:#fff;border-radius:12px;padding:1px 10px;font-size:14px;margin-top:6px}
+.homefav{grid-column:1/-1;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.homefav button{font:inherit;font-size:16px;border:2px solid var(--ink);border-radius:999px;background:#fff;padding:8px 18px;cursor:pointer;box-shadow:2px 3px 0 var(--ink)}
+body.at-home .panel,body.at-home .resultbar{display:none}
+@media (max-width:700px){ .tab#tab-fv{display:none} .home{gap:12px} .home .cat .ic{width:100px;height:76px} .home .cat .cn{font-size:20px} }
 </style>
 </head>
 <body>
@@ -220,7 +231,8 @@ details summary{cursor:pointer;color:var(--ink)}
 </header>
 
 <div class="tabs" role="tablist">
-  <button class="tab" role="tab" id="tab-ev" aria-selected="true"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6h14v13H5z" fill="none"/><path d="M5 10h14M9 4v4M15 4v4" /><circle cx="12" cy="15" r="1.6" fill="currentColor"/></svg><span class="tl">最近活動</span><span class="ts">最近活動</span><span class="cnt" id="cnt-ev"></span></button>
+  <button class="tab" role="tab" id="tab-home" aria-selected="true"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></svg><span class="tl">首頁</span><span class="ts">首頁</span></button>
+  <button class="tab" role="tab" id="tab-ev" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6h14v13H5z" fill="none"/><path d="M5 10h14M9 4v4M15 4v4" /><circle cx="12" cy="15" r="1.6" fill="currentColor"/></svg><span class="tl">最近活動</span><span class="ts">最近活動</span><span class="cnt" id="cnt-ev"></span></button>
   <button class="tab" role="tab" id="tab-pk" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V8h5v12M6 11h5M6 15h5M11 8c4 0 6 4 8 12" fill="none"/></svg><span class="tl">共融公園</span><span class="ts">共融公園</span><span class="cnt" id="cnt-pk"></span></button>
   <button class="tab" role="tab" id="tab-pl" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6-5.6 6-10.2A6 6 0 0 0 6 10.8C6 15.4 12 21 12 21z" fill="none"/><circle cx="12" cy="10.5" r="2.2"/></svg><span class="tl">隨時可去的景點</span><span class="ts">景點</span><span class="cnt" id="cnt-pl"></span></button>
   <button class="tab" role="tab" id="tab-co" aria-selected="false" title="圖書館・親子館・科學館・運動中心辦的活動"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l8-5 8 5M6 10v8M10 10v8M14 10v8M18 10v8M4 20h16" fill="none"/></svg><span class="tl">公辦親子活動</span><span class="ts">公辦活動</span><span class="cnt" id="cnt-co"></span></button>
@@ -1715,7 +1727,7 @@ let favs = new Set();
 try{ favs = new Set(JSON.parse(localStorage.getItem("bm-favs")||"[]")); }catch(e){}
 const saveFavs=()=>{try{localStorage.setItem("bm-favs",JSON.stringify([...favs]))}catch(e){}};
 
-const state = {tab:"ev", q:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), evCat:"", cc:"", cs:"", fx:"", dist:"", plCat:"", limit:60, ck:""};
+const state = {tab:"home", q:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), evCat:"", cc:"", cs:"", fx:"", dist:"", plCat:"", limit:60, ck:""};
 try{ JSON.parse(localStorage.getItem("bm-counties")||"[]").forEach(c=>state.counties.add(c)); }catch(e){}
 try{ JSON.parse(localStorage.getItem("bm-ages")||"[]").forEach(a=>state.ages.add(a)); }catch(e){}
 
@@ -1926,6 +1938,18 @@ const CAT_DESC={"博物館・美術館":"看展、恐龍、藝術","科學・教
 function render(more){
   if(!more) state.limit=60;
   const g=$("grid");
+  document.body.classList.toggle("at-home",state.tab==="home");
+  if(state.tab==="home"){
+    g.className="cats home";
+    const wk=(()=>{const [a,b]=weekendRange(); return liveEvents.filter(x=>overlaps(x,a,b)).length;})();
+    const T=[["ev","最近活動",liveEvents.length,"兒童劇、展覽、節慶、市集",EV_ICON["市集・嘉年華"]],
+             ["pk","共融公園",PARKS.length,"共融遊戲場、特色溜滑梯",ICON["共融遊戲場"]],
+             ["pl","隨時可去的景點",PLACES.length,"博物館、樂園、動物園、農場",ICON["主題樂園"]],
+             ["co","公辦親子活動",liveCourses.length,"親子館、圖書館、運動中心",ICON["圖書館"]]];
+    g.innerHTML = T.map(([k,n,c,d,ic],i)=>`<button class="cat" data-go="${k}" type="button"><span class="blob" style="background:${TAPE[i%TAPE.length]}"></span><span class="ic">${ic}</span><span class="cn">${n}</span><span class="num">${c} 個</span><span class="cc">${d}</span></button>`).join("")
+      + `<div class="homefav"><button type="button" data-go="ev" data-when="weekend">📅 這個週末有 ${wk} 個活動</button><button type="button" data-go="fv">❤️ 我的收藏 ${ALLITEMS().filter(x=>favs.has(key(x))).length}</button></div>`;
+    updCounts(); return;
+  }
   if(state.tab==="ev" && !state.evCat && !state.q){
     const base = liveEvents.filter(match);
     g.className="cats";
@@ -2177,7 +2201,7 @@ document.querySelector(".panel").addEventListener("click",e=>{
 $("install").addEventListener("click",()=>track("install","",""));
 $("sg-form").addEventListener("submit",()=>track("suggest",$("sg-name").value,$("sg-kind").value));
 $("rp-form").addEventListener("submit",()=>track("report",$("rp-item").value,$("rp-kind").value));
-["tab-ev","tab-pk","tab-pl","tab-co","tab-fv"].forEach(id=>$(id).addEventListener("click",()=>track("tab",id.replace("tab-",""),"")));
+["tab-home","tab-ev","tab-pk","tab-pl","tab-co","tab-fv"].forEach(id=>$(id).addEventListener("click",()=>track("tab",id.replace("tab-",""),"")));
 track("visit",document.referrer?new URL(document.referrer).hostname:"直接開啟",(window.matchMedia("(display-mode: standalone)").matches?"桌面App":"瀏覽器"),{w:innerWidth});
 
 /* ---------- 事件 ---------- */
@@ -2189,6 +2213,7 @@ $("cpop-ok").addEventListener("click",()=>{$("cpop").hidden=true;$("btn-county")
 $("cpop-clear").addEventListener("click",()=>{state.counties.clear();state.dist="";fillCounties();render();});
 $("sel-dist").addEventListener("change",e=>{state.dist=e.target.value;render()});
 $("grid").addEventListener("click",e=>{
+  const go=e.target.closest("[data-go]"); if(go){ if(go.dataset.when) state.when=go.dataset.when; track("home",go.dataset.go,go.dataset.when||""); setTab(go.dataset.go); if(go.dataset.when) { buildFilters(); render(); } window.scrollTo({top:0,behavior:"smooth"}); return; }
   const c=e.target.closest(".cat"); if(c){ if(c.dataset.ev){ state.evCat=c.dataset.ev; track("cat",c.dataset.ev,"ev"); } else if(c.dataset.cs){ state.cs=c.dataset.cs; state.fx=""; track("cat",state.cc+"/"+c.dataset.cs,"co"); } else if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); window.scrollTo({top:$("grid").offsetTop-120,behavior:"smooth"}); return; }
   if(e.target.id==="more"){ state.limit+=60; render(true); return; }
   const sb=e.target.closest(".segbar .seg"); if(sb){ state.fx=sb.dataset.fx; track("filter",sb.firstChild.textContent,"co_fx",{on:true}); render(); return; }
@@ -2199,12 +2224,12 @@ $("grid").addEventListener("click",e=>{
 });
 function setTab(t){
   state.tab=t;
-  [["ev","tab-ev"],["pk","tab-pk"],["pl","tab-pl"],["co","tab-co"],["fv","tab-fv"]].forEach(([k,id])=>$(id).setAttribute("aria-selected",k===t));
+  [["home","tab-home"],["ev","tab-ev"],["pk","tab-pk"],["pl","tab-pl"],["co","tab-co"],["fv","tab-fv"]].forEach(([k,id])=>$(id).setAttribute("aria-selected",k===t));
   if(t!=="ev"&&t!=="fv") state.when="";
   state.plCat=""; state.cc=""; state.cs=""; state.fx=""; state.evCat="";
   buildFilters(); render();
 }
-$("tab-ev").onclick=()=>setTab("ev"); $("tab-pk").onclick=()=>setTab("pk"); $("tab-pl").onclick=()=>setTab("pl"); $("tab-fv").onclick=()=>setTab("fv"); $("tab-co").onclick=()=>setTab("co");
+$("tab-home").onclick=()=>{ setTab("home"); window.scrollTo({top:0,behavior:"smooth"}); }; $("tab-ev").onclick=()=>setTab("ev"); $("tab-pk").onclick=()=>setTab("pk"); $("tab-pl").onclick=()=>setTab("pl"); $("tab-fv").onclick=()=>setTab("fv"); $("tab-co").onclick=()=>setTab("co");
 $("clear").onclick=()=>{
   Object.assign(state,{q:"",when:"",io:"",region:"",dist:"",plCat:"",ck:"",cc:"",cs:"",fx:"",evCat:""}); state.counties.clear();
   state.ages.clear();state.types.clear();state.fees.clear(); try{localStorage.removeItem("bm-ages")}catch(e){}
@@ -2242,7 +2267,8 @@ if("serviceWorker" in navigator && !inFrame && location.protocol==="https:"){
 }
 (function applyParams(){ try{
   const u=new URLSearchParams(location.search);
-  const t=u.get("tab"); if(t&&["ev","pk","pl","co","fv"].includes(t)){ state.tab=t; [["ev","tab-ev"],["pk","tab-pk"],["pl","tab-pl"],["co","tab-co"],["fv","tab-fv"]].forEach(([k,id])=>$(id).setAttribute("aria-selected",k===t)); }
+  const t=u.get("tab"); if(t&&["ev","pk","pl","co","fv"].includes(t)){ state.tab=t; [["home","tab-home"],["ev","tab-ev"],["pk","tab-pk"],["pl","tab-pl"],["co","tab-co"],["fv","tab-fv"]].forEach(([k,id])=>$(id).setAttribute("aria-selected",k===t)); }
+  else if(u.get("c")||u.get("q")){ state.tab="ev"; $("tab-home").setAttribute("aria-selected","false"); $("tab-ev").setAttribute("aria-selected","true"); }
   const q=u.get("q"); if(q){ state.q=q; $("q").value=q; }
   const c=u.get("c"); if(c){ state.counties.clear(); c.split(",").forEach(x=>state.counties.add(x.replace(/^台/,"臺"))); }
   const cat=u.get("cat"); if(cat){ if(state.tab==="pl") state.plCat=cat; if(state.tab==="ev") state.evCat=cat; if(state.tab==="co") state.cc=cat; }
