@@ -2071,7 +2071,12 @@ function fmtW(d){ return `${d.getMonth()+1}/${d.getDate()}（${WDN[d.getDay()]}�
 async function shareItem(k){
   const x=ALLITEMS().find(i=>key(i)===k); if(!x) return;
   const url=SITE+"?i="+sid(x);
-  let when=""; if((x.kind==="ev"||x.kind==="co")&&x.S){ when = x.E&&x.E.getTime()!==x.S.getTime() ? `${fmtW(x.S)} – ${fmtW(x.E)}` : fmtW(x.S); }
+  let when=""; if((x.kind==="ev"||x.kind==="co")&&x.S){
+    const long = !x.E || (x.E-x.S)/864e5>60;
+    const yearEnd = !x.E || (x.E.getMonth()===11 && x.E.getDate()===31);
+    if(long && !yearEnd){ when = (x.S<=today ? "即日起" : fmtW(x.S)) + " – " + fmtW(x.E); }
+    else if(long){ when = /每週|每周|每天|每日|每月|週[一二三四五六日]|周[一二三四五六日]|常態/.test(x.n) ? "" : "常態活動（詳見說明）"; }
+    else when = x.E&&x.E.getTime()!==x.S.getTime() ? `${fmtW(x.S)} – ${fmtW(x.E)}` : fmtW(x.S); }
   const place = x.v ? `${x.v}（${x.c}${x.d||""}）` : `${x.c}${x.d?"・"+x.d:""}`;
   const age = x.a&&x.a.length&&x.a.length<4 ? x.a.map(a=>AGE_SHORT[a]).join("・") : "全年齡";
   const fee = FEES[x.f]||"";
