@@ -4,7 +4,7 @@ on:
     - cron: "5 16 * * *"   # 台灣時間每天 00:05
   workflow_dispatch:
   push:
-    paths: ["scripts/kidsmap.mjs", ".github/workflows/kidsmap.yml"]
+    paths: ["scripts/kidsmap.mjs", "scripts/seo.py", ".github/workflows/kidsmap.yml"]
 permissions:
   contents: write
 jobs:
@@ -15,9 +15,13 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - run: node scripts/kidsmap.mjs https://kidsmap.tw/data.json kidsmap.json
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install playwright && python -m playwright install --with-deps chromium
+      - run: python scripts/seo.py
       - name: Commit
         run: |
           git config user.name "kidsmap-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add kidsmap.json
-          git diff --cached --quiet || (git commit -m "每日更新 kidsmap 公辦親子活動" && git push)
+          git add kidsmap.json tw sitemap.xml robots.txt
+          git diff --cached --quiet || (git commit -m "每日更新公辦親子活動與地區頁" && git push)

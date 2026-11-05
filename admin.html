@@ -77,7 +77,7 @@ async function loadStats(){
   const daily=cnt(by("visit"),r=>r.ts.slice(0,10)).sort((a,b)=>a[0]<b[0]?-1:1);
   const TABN={co:"公辦親子活動",ev:"最近活動",pk:"共融公園",pl:"隨時可去的景點",fv:"我的收藏"};
   $("list").innerHTML=`<p>期間：<select id="days">${[1,7,30,90].map(d=>`<option value="${d}" ${d===days?"selected":""}>最近 ${d} 天</option>`).join("")}</select>　<span class="meta">共 ${rows.length} 筆紀錄</span></p>
-  <div class="kpi"><div>訪問次數<b>${by("visit").length}</b></div><div>不重複裝置<b>${uniq(rows,r=>r.dev)}</b></div><div>搜尋次數<b>${sq.length}</b></div><div>開地圖導航<b>${by("map").length}</b></div><div>點官網<b>${by("link").length}</b></div><div>收藏<b>${by("fav").length}</b></div><div>推薦／回報<b>${by("suggest").length} / ${by("report").length}</b></div><div>加到桌面<b>${by("install").length}</b></div></div>
+  <div class="kpi"><div>訪問次數<b>${by("visit").length}</b></div><div>不重複裝置<b>${uniq(rows,r=>r.dev)}</b></div><div>搜尋次數<b>${sq.length}</b></div><div>開地圖導航<b>${by("map").length}</b></div><div>點官網<b>${by("link").length}</b></div><div>收藏<b>${by("fav").length}</b></div><div>分享<b>${by("share").length}</b></div><div>推薦／回報<b>${by("suggest").length} / ${by("report").length}</b></div><div>加到桌面<b>${by("install").length}</b></div></div>
   <div class="grid2" style="margin-top:14px">
   ${tbl("每天訪問次數",daily.reverse())}
   ${tbl("熱門搜尋關鍵字",cnt(sq,r=>r.label))}
@@ -92,6 +92,7 @@ async function loadStats(){
   ${tbl("類型／費用／時間篩選",cnt(by("filter").filter(r=>["type","fee","when","io"].includes(r.item)&&r.extra&&r.extra.on),r=>r.label))}
   ${tbl("目前讚／倒讚（和網頁上一樣，數字=讚減倒讚）",vrows,"分")}
   ${tbl("打開留言",cnt(by("comment_open"),r=>r.label))}
+  ${tbl("最多人分享",cnt(by("share"),r=>r.label))}
   ${tbl("從哪裡來",cnt(by("visit"),r=>r.label))}
   ${tbl("使用方式",cnt(by("visit"),r=>r.item+((r.extra&&r.extra.w<700)?"・手機":"・電腦"))) }
   </div>`;

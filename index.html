@@ -3,7 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>爸~媽!!假日要去哪裡玩</title>
+<title>爸~媽!!假日要去哪裡玩｜全台親子活動、共融公園、親子景點</title>
+<meta name="description" content="全台 0 歲到國小六年級的親子活動、共融公園、博物館、農場、親子館與公辦親子課程，依年齡、縣市、室內外篩選，點一下就開 Google 地圖導航。免費使用。">
+<link rel="canonical" href="https://babamama-wherewego.netlify.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="爸~媽!!假日要去哪裡玩">
+<meta property="og:title" content="爸~媽!!假日要去哪裡玩｜全台親子活動・共融公園・親子景點">
+<meta property="og:description" content="這個週末帶小孩去哪？全台親子活動、共融公園、景點和公辦親子課程一次找，依年齡和縣市篩選，點一下開地圖導航。">
+<meta property="og:url" content="https://babamama-wherewego.netlify.app/">
+<meta property="og:image" content="https://babamama-wherewego.netlify.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f1b33b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -175,6 +187,25 @@ details summary{cursor:pointer;color:var(--ink)}
 .seg{border:2.5px solid #3a2e28;border-radius:14px;background:#fff;padding:12px 6px;font:inherit;font-weight:700;font-size:16px;color:#3a2e28;box-shadow:3px 3px 0 #3a2e28;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
 .seg small{font-weight:400;font-size:12px;color:#7a6a60}
 .seg[aria-pressed="true"]{background:#f1b33b}
+
+.tab .ti,.tab .ts{display:none}
+@media (max-width:700px){
+  body{padding-bottom:calc(74px + env(safe-area-inset-bottom))}
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:60;margin:0;display:grid;grid-template-columns:repeat(5,1fr);gap:0;
+    background:#fffaf0;border-top:2.5px solid var(--ink);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 12px rgba(58,46,40,.08)}
+  .tab{font-size:12px;border:0;box-shadow:none;background:none;padding:4px 0 2px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;line-height:1.2}
+  .tab:hover{transform:none}
+  .tab .ti{display:block;width:26px;height:26px}
+  .tab .tl{display:none}.tab .ts{display:block}
+  .tab[aria-selected="true"]{background:var(--sun)}
+  .tab .cnt{position:absolute;top:0;right:8%;font-size:10px;padding:0 5px;margin:0}
+  /* 6 篩選收合 */
+  .panel:not(.open) .frow,.panel:not(.open) .cpop{display:none}
+  .toggle{display:block!important;width:100%;margin:10px 0 8px;padding:9px 12px;border:2px solid var(--ink);border-radius:12px;background:#fff;font-size:16px;text-align:left}
+  .toggle .fc{display:inline-block;background:var(--tomato);color:#fff;border-radius:10px;padding:0 8px;margin-left:6px;font-size:13px}
+}
+
+.memo{font-size:12px;color:var(--ink2);margin-left:4px}
 </style>
 </head>
 <body>
@@ -189,11 +220,11 @@ details summary{cursor:pointer;color:var(--ink)}
 </header>
 
 <div class="tabs" role="tablist">
-  <button class="tab" role="tab" id="tab-ev" aria-selected="true">最近活動<span class="cnt" id="cnt-ev"></span></button>
-  <button class="tab" role="tab" id="tab-pk" aria-selected="false">共融公園<span class="cnt" id="cnt-pk"></span></button>
-  <button class="tab" role="tab" id="tab-pl" aria-selected="false">隨時可去的景點<span class="cnt" id="cnt-pl"></span></button>
-  <button class="tab" role="tab" id="tab-co" aria-selected="false" title="圖書館・親子館・科學館・運動中心辦的活動">公辦親子活動<span class="cnt" id="cnt-co"></span></button>
-  <button class="tab" role="tab" id="tab-fv" aria-selected="false">我的收藏<span class="cnt" id="cnt-fv"></span></button>
+  <button class="tab" role="tab" id="tab-ev" aria-selected="true"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6h14v13H5z" fill="none"/><path d="M5 10h14M9 4v4M15 4v4" /><circle cx="12" cy="15" r="1.6" fill="currentColor"/></svg><span class="tl">最近活動</span><span class="ts">最近活動</span><span class="cnt" id="cnt-ev"></span></button>
+  <button class="tab" role="tab" id="tab-pk" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V8h5v12M6 11h5M6 15h5M11 8c4 0 6 4 8 12" fill="none"/></svg><span class="tl">共融公園</span><span class="ts">共融公園</span><span class="cnt" id="cnt-pk"></span></button>
+  <button class="tab" role="tab" id="tab-pl" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6-5.6 6-10.2A6 6 0 0 0 6 10.8C6 15.4 12 21 12 21z" fill="none"/><circle cx="12" cy="10.5" r="2.2"/></svg><span class="tl">隨時可去的景點</span><span class="ts">景點</span><span class="cnt" id="cnt-pl"></span></button>
+  <button class="tab" role="tab" id="tab-co" aria-selected="false" title="圖書館・親子館・科學館・運動中心辦的活動"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l8-5 8 5M6 10v8M10 10v8M14 10v8M18 10v8M4 20h16" fill="none"/></svg><span class="tl">公辦親子活動</span><span class="ts">公辦活動</span><span class="cnt" id="cnt-co"></span></button>
+  <button class="tab" role="tab" id="tab-fv" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="none"/></svg><span class="tl">我的收藏</span><span class="ts">收藏</span><span class="cnt" id="cnt-fv"></span></button>
 </div>
 
 <section class="panel" aria-label="搜尋與篩選">
@@ -229,6 +260,7 @@ details summary{cursor:pointer;color:var(--ink)}
 
 <div class="notice">
   <b>小提醒：</b>活動與公園資料整理於 2026 年 11 月 5 日，來源是各縣市政府、場館與主辦單位的公開資訊（北部公辦親子活動參考 <a href="https://kidsmap.tw/" target="_blank" rel="noopener">北台灣親子地圖</a> 整理，每天更新）。活動可能因天氣或主辦單位異動，<b>出發前請點卡片上的連結，再到官方粉專或官網確認</b>。「待確認」代表公開資訊沒寫清楚費用。為了改善內容，我們會匿名記錄搜尋關鍵字與點擊（不含個人資料）。已經結束的活動會自動隱藏。<br><b>共融公園收錄範圍：</b>臺北市依市府開放資料「共融式遊戲場」（含校園）、新北市依「來新北玩公園」網站、臺中市依《臺中美樂地指引手冊》逐區全收；其他縣市收錄市府公告與媒體報導過的特色、共融公園，持續補充中。少了你家附近的？歡迎用「回報問題」告訴我們。
+  <p style="font-size:13px;margin-top:8px">依地區瀏覽：<a href="tw/index.html">全台各縣市親子景點・共融公園索引</a></p>
   <details style="margin-top:8px"><summary>連結說明</summary><p style="margin:6px 0 0">點卡片任何地方（或藍色的「地圖・導航」）都會打開 Google 地圖。「官網」「官方粉專」「官方IG」「售票頁」都是主辦單位自己的網站；少數活動主辦單位沒有專屬網頁，會標「主辦單位新聞稿」或「新聞報導」。找不到官方頁面的，會顯示灰色的「搜尋官網」，點了會直接幫你搜尋。每張卡片也都有「地圖」可以直接導航。</p></details>
 </div>
 </div>
@@ -1685,6 +1717,7 @@ const saveFavs=()=>{try{localStorage.setItem("bm-favs",JSON.stringify([...favs])
 
 const state = {tab:"ev", q:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), evCat:"", cc:"", cs:"", fx:"", dist:"", plCat:"", limit:60, ck:""};
 try{ JSON.parse(localStorage.getItem("bm-counties")||"[]").forEach(c=>state.counties.add(c)); }catch(e){}
+try{ JSON.parse(localStorage.getItem("bm-ages")||"[]").forEach(a=>state.ages.add(a)); }catch(e){}
 
 /* ---------- 週末計算 ---------- */
 function weekendRange(){
@@ -1712,6 +1745,7 @@ function single(prop,val,row,b){
   if(state[prop]) b.setAttribute("aria-pressed","true");
   render();
 }
+function memoAge(){ const r=$("row-age"); r.querySelectorAll(".memo").forEach(m=>m.remove()); if(state.ages.size){ const m=document.createElement("span"); m.className="memo"; m.textContent="（已記住你家小孩年齡，下次打開自動套用）"; r.appendChild(m);} }
 function buildFilters(){
   ["row-when","row-age","row-type","row-fee","row-io"].forEach(r=>{$(r).querySelectorAll(".chip").forEach(c=>c.remove())});
   const whenRow=$("row-when");
@@ -1722,7 +1756,9 @@ function buildFilters(){
   $("row-ck").querySelectorAll(".chip").forEach(c=>c.remove());
   $("row-ck").style.display = state.tab==="co" ? "" : "none";
   [["s","有日期的場次"],["d","各縣市官方活動總表"]].forEach(([k,l])=>chip("row-ck",l,"wk",b=>single("ck",k,"row-ck",b),state.ck===k));
-  AGES.forEach(a=>chip("row-age",a.label,"age",b=>multi(state.ages,a.k,b),state.ages.has(a.k)));
+  $("row-age").querySelectorAll(".memo").forEach(m=>m.remove());
+  AGES.forEach(a=>chip("row-age",a.label,"age",b=>{multi(state.ages,a.k,b); try{localStorage.setItem("bm-ages",JSON.stringify([...state.ages]))}catch(e){} memoAge();},state.ages.has(a.k)));
+  memoAge();
   const src = srcOf(state.tab);
   $("row-type").style.display = (state.tab==="pl"||state.tab==="ev") ? "none" : "";
   const types=[...new Set(src.map(x=>x.t))];
@@ -1948,6 +1984,7 @@ function render(more){
   updCounts();
 }
 function updCounts(){
+  if(typeof updToggle==="function") try{updToggle()}catch(e){}
   $("cnt-ev").textContent=liveEvents.length; $("cnt-co").textContent=liveCourses.length; $("cnt-pk").textContent=PARKS.length; $("cnt-pl").textContent=PLACES.length;
   $("cnt-fv").textContent=ALLITEMS().filter(x=>favs.has(key(x))).length;
 }
@@ -2000,11 +2037,25 @@ async function api(path,opt={}){
 }
 const TH = d=>`<svg viewBox="0 0 24 24" style="${d?"transform:rotate(180deg)":""}"><path d="M7 10v10H4V10zM7 10l4-7c2 0 3 1 2.6 3L13 9h6c1.2 0 2 1 1.8 2.2l-1.4 7C19.2 19.3 18.4 20 17.3 20H7" fill="none" stroke="#3a2e28" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
 const BUB = `<svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="#3a2e28" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+const SHR=`<svg viewBox="0 0 24 24"><circle cx="18" cy="5.5" r="2.5" fill="none" stroke="#3a2e28" stroke-width="1.8"/><circle cx="6" cy="12" r="2.5" fill="none" stroke="#3a2e28" stroke-width="1.8"/><circle cx="18" cy="18.5" r="2.5" fill="none" stroke="#3a2e28" stroke-width="1.8"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1" stroke="#3a2e28" stroke-width="1.8"/></svg>`;
+const SITE="https://babamama-wherewego.netlify.app/";
+function fmtD(x){ if(!x.s) return ""; const f=d=>`${d.getMonth()+1}/${d.getDate()}`; return x.E&&x.E.getTime()!==x.S.getTime()?`${f(x.S)}–${f(x.E)}`:f(x.S); }
+async function shareItem(k){
+  const x=ALLITEMS().find(i=>key(i)===k); if(!x) return;
+  const url=SITE+"?tab="+state.tab+"&q="+encodeURIComponent(x.n);
+  const when=(x.kind==="ev"||x.kind==="co")?fmtD(x):"";
+  const map="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent((x.v||x.n)+" "+x.c+(x.d||""));
+  const text=`${x.n}\n${when?"📅 "+when+"　":""}📍 ${x.c}${x.d?"・"+x.d:""}\n地圖：${map}\n`;
+  track("share",x.n,state.tab);
+  if(navigator.share){ try{ await navigator.share({title:x.n,text,url}); return; }catch(e){ if(e&&e.name==="AbortError") return; } }
+  window.open("https://line.me/R/share?text="+encodeURIComponent(text+"\n更多："+url),"_blank","noopener");
+}
 function reactRow(x){
   const k=key(x), st=STATS[k]||{up:0,down:0,comments:0}, mv=myVotes[k]||0, dis=BE?"":"disabled title=\"留言與讚尚未開通\"";
   return `<button class="rb up" type="button" data-v="1" data-k="${esc(k)}" aria-pressed="${mv===1}" aria-label="讚" ${dis}>${TH(0)}${st.up}</button>`+
          `<button class="rb dn" type="button" data-v="-1" data-k="${esc(k)}" aria-pressed="${mv===-1}" aria-label="倒讚" ${dis}>${TH(1)}${st.down}</button>`+
-         `<button class="rb cm" type="button" data-cm="${esc(k)}" data-name="${esc(x.n)}">${BUB}留言 ${st.comments||0}</button>`;
+         `<button class="rb cm" type="button" data-cm="${esc(k)}" data-name="${esc(x.n)}">${BUB}留言 ${st.comments||0}</button>`+
+         `<button class="rb sh" type="button" data-share="${esc(k)}" aria-label="分享給家人">${SHR}分享</button>`;
 }
 async function loadStats(){
   if(!BE) return;
@@ -2141,7 +2192,8 @@ $("grid").addEventListener("click",e=>{
   const c=e.target.closest(".cat"); if(c){ if(c.dataset.ev){ state.evCat=c.dataset.ev; track("cat",c.dataset.ev,"ev"); } else if(c.dataset.cs){ state.cs=c.dataset.cs; state.fx=""; track("cat",state.cc+"/"+c.dataset.cs,"co"); } else if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); window.scrollTo({top:$("grid").offsetTop-120,behavior:"smooth"}); return; }
   if(e.target.id==="more"){ state.limit+=60; render(true); return; }
   const sb=e.target.closest(".segbar .seg"); if(sb){ state.fx=sb.dataset.fx; track("filter",sb.firstChild.textContent,"co_fx",{on:true}); render(); return; }
-  const rb=e.target.closest(".rb"); if(rb){ if(rb.dataset.cm!==undefined) openComments(rb.dataset.cm,rb.dataset.name); else if(BE) vote(rb.dataset.k,+rb.dataset.v); return; }
+  const rb=e.target.closest(".rb"); if(rb&&rb.dataset.share){ shareItem(rb.dataset.share); return; }
+  if(rb){ if(rb.dataset.cm!==undefined) openComments(rb.dataset.cm,rb.dataset.name); else if(BE) vote(rb.dataset.k,+rb.dataset.v); return; }
   const b=e.target.closest(".fav"); if(!b) return;
   const k=b.dataset.k; favs.has(k)?favs.delete(k):favs.add(k); saveFavs(); render(true);
 });
@@ -2155,11 +2207,17 @@ function setTab(t){
 $("tab-ev").onclick=()=>setTab("ev"); $("tab-pk").onclick=()=>setTab("pk"); $("tab-pl").onclick=()=>setTab("pl"); $("tab-fv").onclick=()=>setTab("fv"); $("tab-co").onclick=()=>setTab("co");
 $("clear").onclick=()=>{
   Object.assign(state,{q:"",when:"",io:"",region:"",dist:"",plCat:"",ck:"",cc:"",cs:"",fx:"",evCat:""}); state.counties.clear();
-  state.ages.clear();state.types.clear();state.fees.clear();
+  state.ages.clear();state.types.clear();state.fees.clear(); try{localStorage.removeItem("bm-ages")}catch(e){}
   $("q").value="";$("sel-region").value="";buildFilters();render();
 };
 
-$("toggle").onclick=()=>{const pn=document.querySelector(".panel");const o=pn.classList.toggle("open");$("toggle").setAttribute("aria-expanded",o);$("toggle").textContent=o?"－ 收起篩選":"＋ 更多篩選（類型、費用、室內外）";};
+const isMobile=()=>window.matchMedia("(max-width:700px)").matches;
+function activeN(){ return (state.when?1:0)+state.ages.size+state.types.size+state.fees.size+(state.io?1:0)+(state.region?1:0)+state.counties.size+(state.dist?1:0)+(state.ck?1:0); }
+function updToggle(){ const o=document.querySelector(".panel").classList.contains("open"); const n=activeN();
+  if(isMobile()) $("toggle").innerHTML = o?"－ 收起篩選":`⚙ 篩選（年齡、時間、地區…）${n?`<span class="fc">已選 ${n}</span>`:""}`;
+  else $("toggle").textContent = o?"－ 收起篩選":"＋ 更多篩選（類型、費用、室內外）"; }
+$("toggle").onclick=()=>{const pn=document.querySelector(".panel");const o=pn.classList.toggle("open");$("toggle").setAttribute("aria-expanded",o);updToggle();};
+window.addEventListener("resize",updToggle);
 
 /* ---------- 加到桌面 ---------- */
 let deferredInstall=null;
@@ -2182,6 +2240,13 @@ $("dlg").addEventListener("click",e=>{if(e.target.id==="dlg")$("dlg").classList.
 if("serviceWorker" in navigator && !inFrame && location.protocol==="https:"){
   try{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){}
 }
+(function applyParams(){ try{
+  const u=new URLSearchParams(location.search);
+  const t=u.get("tab"); if(t&&["ev","pk","pl","co","fv"].includes(t)){ state.tab=t; [["ev","tab-ev"],["pk","tab-pk"],["pl","tab-pl"],["co","tab-co"],["fv","tab-fv"]].forEach(([k,id])=>$(id).setAttribute("aria-selected",k===t)); }
+  const q=u.get("q"); if(q){ state.q=q; $("q").value=q; }
+  const c=u.get("c"); if(c){ state.counties.clear(); c.split(",").forEach(x=>state.counties.add(x.replace(/^台/,"臺"))); }
+  const cat=u.get("cat"); if(cat){ if(state.tab==="pl") state.plCat=cat; if(state.tab==="ev") state.evCat=cat; if(state.tab==="co") state.cc=cat; }
+}catch(e){} })();
 buildFilters(); render();
 loadStats();
 loadKidsmap();
