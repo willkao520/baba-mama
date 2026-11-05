@@ -20,6 +20,6 @@
 - 搜尋各縣市接下來 60 天的親子活動、兒童劇、展覽、節慶、市集，補上新的。
 - 讀 Supabase `suggestions` 裡 status=approved 的推薦（用 index.html 裡的 SUPABASE_URL、SUPABASE_KEY，GET /rest/v1/suggestions?status=eq.approved），查證後加入對應陣列；已處理的 id 記在 `processed-suggestions.json`，不要重複加。
 
-## 每月 30 日（共融公園、景點）
+## 每月 1 日（共融公園、景點）
 - 共融公園：重新看臺北市開放資料「臺北市共融式遊戲場資訊」、新北「來新北玩公園」(ntparks.tw)、臺中美樂地、各縣市工務局新聞稿，補上新啟用的。
 - 景點：補上新開幕的親子景點，移除確定歇業的。
