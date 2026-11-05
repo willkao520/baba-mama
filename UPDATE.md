@@ -1,7 +1,7 @@
 # 自動更新說明（給排程執行的 Claude 看）
 
 網站：爸~媽!!假日要去哪裡玩。所有資料都在 `index.html` 的陣列裡：
-- `EVENTS`、`SHOWS`：最近有辦的活動（欄位 n 名稱、c 縣市、d 區、s 開始 YYYY-MM-DD、e 結束或 null、t 類型、f 費用 free/paid/deal/check、a 年齡、io in/out/both、note、l [連結種類, 官方網址]）
+- `EVENTS`、`SHOWS`：最近活動（欄位 n 名稱、c 縣市、d 區、s 開始 YYYY-MM-DD、e 結束或 null、t 類型、f 費用 free/paid/deal/check、a 年齡、io in/out/both、note、l [連結種類, 官方網址]）
 - `PARKS`：共融公園，用 `PK(名稱,縣市,區,說明,年齡,類型)`
 - `PLACES` / `PLACES_MORE` / 後面的 `PLACES.push(...)`：景點，用 `PL(名稱,縣市,區,分類代碼,費用代碼,室內外代碼,說明,年齡)`
 

@@ -75,7 +75,7 @@ async function loadStats(){
   const zero=cnt(sq.filter(r=>r.extra&&(r.extra.all??r.extra.n)===0),r=>r.label);
   const tbl=(title,list,unit="次",cls="")=>{const max=list[0]?list[0][1]:1; return `<div class="card"><h3 style="margin:0 0 6px">${title}</h3>${list.length?`<table>${list.slice(0,30).map(([k,v])=>`<tr><td class="${cls}">${esc(k)}<div class="bar" style="width:${Math.max(4,v/max*100)}%"></div></td><td class="n">${v} ${unit}</td></tr>`).join("")}</table>`:'<div class="meta">還沒有資料</div>'}</div>`;};
   const daily=cnt(by("visit"),r=>r.ts.slice(0,10)).sort((a,b)=>a[0]<b[0]?-1:1);
-  const TABN={co:"公辦親子活動",ev:"最近有辦的活動",pk:"共融公園",pl:"隨時可去的景點",fv:"我的收藏"};
+  const TABN={co:"公辦親子活動",ev:"最近活動",pk:"共融公園",pl:"隨時可去的景點",fv:"我的收藏"};
   $("list").innerHTML=`<p>期間：<select id="days">${[1,7,30,90].map(d=>`<option value="${d}" ${d===days?"selected":""}>最近 ${d} 天</option>`).join("")}</select>　<span class="meta">共 ${rows.length} 筆紀錄</span></p>
   <div class="kpi"><div>訪問次數<b>${by("visit").length}</b></div><div>不重複裝置<b>${uniq(rows,r=>r.dev)}</b></div><div>搜尋次數<b>${sq.length}</b></div><div>開地圖導航<b>${by("map").length}</b></div><div>點官網<b>${by("link").length}</b></div><div>收藏<b>${by("fav").length}</b></div><div>推薦／回報<b>${by("suggest").length} / ${by("report").length}</b></div><div>加到桌面<b>${by("install").length}</b></div></div>
   <div class="grid2" style="margin-top:14px">
