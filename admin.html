@@ -45,7 +45,7 @@ async function load(){
   if(tab==="comments"){
     const {data,error}=await sb.from("comments").select("*").order("created_at",{ascending:false}).limit(300);
     if(error) return $("list").textContent="讀取失敗："+error.message+"（請先在 Supabase 跑一次「留言管理權限」那段 SQL）";
-    $("list").innerHTML=data.length?data.map(r=>`<div class="card" style="${r.hidden?"opacity:.5":""}"><b>${esc(r.item_name||r.item_key)}</b>　${esc(r.nickname)}${r.hidden?"　<span class=meta>（已隱藏）</span>":""}<div>${esc(r.body)}</div><div class="meta">${new Date(r.created_at).toLocaleString()}</div><button data-cm="${r.id}" data-hide="${!r.hidden}">${r.hidden?"恢復顯示":"隱藏"}</button> <button class="no" data-cmdel="${r.id}">永久刪除</button></div>`).join(""):"還沒有留言";
+    $("list").innerHTML=data.length?data.map(r=>`<div class="card" style="${r.hidden?"opacity:.5":""}"><b>${esc(r.item_name||r.item_key)}</b>　${esc(r.nickname)}${r.hidden?"　<span class=meta>（已隱藏）</span>":""}<div>${esc(r.body)}</div><div class="meta">${new Date(r.created_at).toLocaleString()}</div><button data-cm="${r.id}" data-hide="${!r.hidden}">${r.hidden?"恢復顯示":"隱藏"}</button> <button class="no" data-cmdel="${r.id}">永久刪除</button></div>`).join(""):"這裡是空的。如果網站上明明有人留言，代表 Supabase 的「留言管理權限」SQL 還沒跑（或沒跑成功），跑完重新整理就會出現。";
     return;
   }
   if(tab==="reports"){
