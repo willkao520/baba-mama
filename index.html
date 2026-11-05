@@ -1871,7 +1871,7 @@ const gObs = ("IntersectionObserver" in window) ? new IntersectionObserver(es=>{
 function watchRatings(){ if(!GKEY||!gObs) return; document.querySelectorAll(".gslot").forEach(el=>{ if(GR[el.dataset.q]===undefined) gObs.observe(el); }); }
 
 /* ---------- 留言・讚・回報（Supabase） ---------- */
-const CFG = { SUPABASE_URL: "", SUPABASE_KEY: "" }; // ← 開通後填入（見「發佈與開通步驟」）
+const CFG = { SUPABASE_URL: "https://jmjpmmaiukjfprknznzn.supabase.co", SUPABASE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptanBtbWFpdWtqZnBya256bnpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM4NjIxNDUsImV4cCI6MjEwOTQzODE0NX0.y1GPSCTCD4ED10kQTHi-ebnf4jEjzy_ErWxT38aRzBQ" }; // ← 開通後填入（見「發佈與開通步驟」）
 const BE = !!(CFG.SUPABASE_URL && CFG.SUPABASE_KEY);
 let DEV=""; try{ DEV=localStorage.getItem("bm-dev")||""; if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now()); localStorage.setItem("bm-dev",DEV);} }catch(e){ DEV="nostore-"+Math.random(); }
 let myVotes={}; try{ myVotes=JSON.parse(localStorage.getItem("bm-votes")||"{}"); }catch(e){}
