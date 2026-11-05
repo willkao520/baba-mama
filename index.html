@@ -1683,7 +1683,7 @@ let favs = new Set();
 try{ favs = new Set(JSON.parse(localStorage.getItem("bm-favs")||"[]")); }catch(e){}
 const saveFavs=()=>{try{localStorage.setItem("bm-favs",JSON.stringify([...favs]))}catch(e){}};
 
-const state = {tab:"ev", q:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), cc:"", cs:"", fx:"", dist:"", plCat:"", limit:60, ck:""};
+const state = {tab:"ev", q:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), evCat:"", cc:"", cs:"", fx:"", dist:"", plCat:"", limit:60, ck:""};
 try{ JSON.parse(localStorage.getItem("bm-counties")||"[]").forEach(c=>state.counties.add(c)); }catch(e){}
 
 /* ---------- 週末計算 ---------- */
@@ -1724,7 +1724,7 @@ function buildFilters(){
   [["s","有日期的場次"],["d","各縣市官方活動總表"]].forEach(([k,l])=>chip("row-ck",l,"wk",b=>single("ck",k,"row-ck",b),state.ck===k));
   AGES.forEach(a=>chip("row-age",a.label,"age",b=>multi(state.ages,a.k,b),state.ages.has(a.k)));
   const src = srcOf(state.tab);
-  $("row-type").style.display = state.tab==="pl" ? "none" : "";
+  $("row-type").style.display = (state.tab==="pl"||state.tab==="ev") ? "none" : "";
   const types=[...new Set(src.map(x=>x.t))];
   [...state.types].forEach(t=>{if(!types.includes(t))state.types.delete(t)});
   types.forEach(t=>chip("row-type",t,"",b=>multi(state.types,t,b),state.types.has(t)));
@@ -1783,6 +1783,7 @@ function match(x){
   if(state.region && !state.counties.size && REGION[x.c]!==state.region) return false;
   if(state.counties.size && !state.counties.has(x.c)) return false;
   if(state.tab==="pl" && x.kind==="pl" && state.plCat && x.t!==state.plCat) return false;
+  if(state.tab==="ev" && x.kind==="ev" && state.evCat && state.evCat!=="*" && x.t!==state.evCat) return false;
   if(x.kind==="co" && state.cc && state.cc!=="*" && x.cc!==state.cc) return false;
   if(x.kind==="co" && state.cc && state.cs && state.cs!=="*" && x.cs!==state.cs) return false;
   if(x.kind==="co" && state.cc && state.fx && (state.fx==="fixed")!==x.fx) return false;
@@ -1881,11 +1882,22 @@ const CC_ICON={
 "其他":ICON["*"]
 };
 const CC_DESC={"遊戲・探索":"親子館自由玩、親子遊戲","說故事・閱讀":"繪本、說故事、圖書館","游泳・玩水":"兒童游泳課","運動・體能":"球類、舞蹈、體操、武術","音樂・律動":"親子音樂、奧福、律動","藝術・手作":"美術、捏塑、拼豆、DIY","科學・自然":"實驗、昆蟲、程式","親子廚房":"烘焙、料理、副食品","戲劇・電影・表演":"兒童劇、親子電影院","語言・學習":"美語、台語、蒙特梭利","嬰幼兒・感官":"寶寶活動、抓週、五感","講座・育兒":"給爸媽的講座、諮詢","展覽・導覽":"兒童展、館內導覽","其他":"其他親子活動"};
+const EV_ORDER=["兒童劇・音樂會","展覽","科學體驗","節慶燈飾","市集・嘉年華","戶外・自然","樂園優惠"];
+const EV_DESC={"兒童劇・音樂會":"兒童劇、親子音樂會","展覽":"特展、主題展","科學體驗":"科學節、館內活動","節慶燈飾":"耶誕城、燈節","市集・嘉年華":"市集、園遊會、嘉年華","戶外・自然":"花季、步道、戶外活動","樂園優惠":"遊樂園限時優惠"};
+const EV_ICON={"兒童劇・音樂會":CC_ICON["戲劇・電影・表演"],"展覽":ICON["博物館・美術館"],"科學體驗":ICON["科學・教育館"],"節慶燈飾":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="26" ry="4" fill="#eadfcf"/><path d="M48 10l20 26H56l16 18H24l16-18H28z" fill="#8cc58f" stroke="#3a2e28" stroke-width="2.4" stroke-linejoin="round"/><path d="M44 54h8v8h-8z" fill="#c98a5a" stroke="#3a2e28" stroke-width="2.4"/><path d="M48 2l2.5 5 5.5.8-4 3.8 1 5.4-5-2.6-5 2.6 1-5.4-4-3.8 5.5-.8z" fill="#f1b33b" stroke="#3a2e28" stroke-width="2"/><circle cx="42" cy="30" r="3" fill="#e4664a"/><circle cx="56" cy="42" r="3" fill="#8bb9e3"/><circle cx="38" cy="46" r="3" fill="#ee8fa6"/></svg>`,"市集・嘉年華":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="36" ry="4" fill="#eadfcf"/><path d="M14 30L48 8l34 22z" fill="#e4664a" stroke="#3a2e28" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 30c0 6 8 6 8 0c0 6 9 6 9 0c0 6 8 6 8 0c0 6 9 6 9 0c0 6 8 6 8 0c0 6 9 6 9 0c0 6 8 6 8 0" fill="#fff" stroke="#3a2e28" stroke-width="2.4"/><path d="M20 36v26M76 36v26M20 50h56" stroke="#3a2e28" stroke-width="2.4"/><rect x="30" y="50" width="12" height="8" fill="#f1b33b" stroke="#3a2e28" stroke-width="2"/><rect x="54" y="50" width="12" height="8" fill="#8bb9e3" stroke="#3a2e28" stroke-width="2"/></svg>`,"戶外・自然":ICON["森林・自然"],"樂園優惠":ICON["主題樂園"]};
 const CAT_ORDER=["博物館・美術館","科學・教育館","主題樂園","動物園・水族館","農場・牧場","觀光工廠","文化・鐵道園區","室內遊戲・親子館","森林・自然"];
 const CAT_DESC={"博物館・美術館":"看展、恐龍、藝術","科學・教育館":"動手玩科學","主題樂園":"遊樂設施、樂園","動物園・水族館":"看動物、看魚","農場・牧場":"餵動物、採果、草地","觀光工廠":"參觀工廠、DIY","文化・鐵道園區":"老街、火車、園區","室內遊戲・親子館":"下雨天也能去","森林・自然":"步道、海邊、森林"};
 function render(more){
   if(!more) state.limit=60;
   const g=$("grid");
+  if(state.tab==="ev" && !state.evCat && !state.q){
+    const base = liveEvents.filter(match);
+    g.className="cats";
+    g.innerHTML = EV_ORDER.map((c,i)=>{const n=base.filter(x=>x.t===c).length; return n?`<button class="cat" data-ev="${c}" type="button"><span class="blob" style="background:${TAPE[i%TAPE.length]}"></span><span class="ic">${EV_ICON[c]||ICON["*"]}</span><span class="cn">${c}</span><span class="cc">${n} 個・${EV_DESC[c]||""}</span></button>`:""}).join("")
+      + `<button class="cat" data-ev="*" type="button"><span class="blob" style="background:#ddd"></span><span class="ic">${ICON["*"]}</span><span class="cn">全部活動</span><span class="cc">${base.length} 個・不分類全部看</span></button>`;
+    $("rcount").innerHTML = `先選一種活動 <span style="font-size:14px;color:var(--ink2)">（共 ${base.length} 個${state.when?"，已套用時間篩選":""}）</span>`;
+    updCounts(); return;
+  }
   if(state.tab==="co" && !state.cc && !state.q){
     const base = liveCourses.filter(match);
     g.className="cats";
@@ -1929,8 +1941,8 @@ function render(more){
   g.innerHTML = subBar + (list.length ? shown.map(card).join("") + (list.length>shown.length?`<button class="more" id="more" type="button" style="grid-column:1/-1">再看 ${Math.min(60,list.length-shown.length)} 個（還有 ${list.length-shown.length} 個）</button>`:"") :
     `<div class="empty" style="grid-column:1/-1"><div class="hand">${state.tab==="fv"&&!src.length?"還沒有收藏喔":"找不到符合的，換個條件試試看"}</div><p>${state.tab==="fv"&&!src.length?"在卡片右上角按愛心，就會存在這裡（只存在這台裝置）。":"可以少選幾個條件，或改搜尋其他關鍵字。"}</p></div>`);
   const lbl = state.tab==="co"?"個公辦親子活動":state.tab==="ev"?"個活動":state.tab==="pk"?"座公園":state.tab==="pl"?"個景點":"個收藏";
-  const back = (state.tab==="pl" && state.plCat) ? `<button class="back" id="back" type="button">← 回到分類</button>　` : (state.tab==="co" && state.cc) ? `<button class="back" id="back" type="button">← ${state.cc!=="*"&&state.cs?"回到「"+state.cc+"」":"回到分類"}</button>　` : "";
-  const catName = state.tab==="pl" && state.plCat && state.plCat!=="*" ? `「${state.plCat}」` : state.tab==="co" && state.cc && state.cc!=="*" ? `「${state.cc}${state.cs&&state.cs!=="*"?"・"+state.cs:""}」` : "";
+  const back = (state.tab==="pl" && state.plCat)||(state.tab==="ev" && state.evCat) ? `<button class="back" id="back" type="button">← 回到分類</button>　` : (state.tab==="co" && state.cc) ? `<button class="back" id="back" type="button">← ${state.cc!=="*"&&state.cs?"回到「"+state.cc+"」":"回到分類"}</button>　` : "";
+  const catName = state.tab==="pl" && state.plCat && state.plCat!=="*" ? `「${state.plCat}」` : state.tab==="ev" && state.evCat && state.evCat!=="*" ? `「${state.evCat}」` : state.tab==="co" && state.cc && state.cc!=="*" ? `「${state.cc}${state.cs&&state.cs!=="*"?"・"+state.cs:""}」` : "";
   $("rcount").innerHTML = `${back}${catName}找到 ${list.length} ${lbl}`;
   if(typeof watchRatings==="function") watchRatings();
   updCounts();
@@ -2118,7 +2130,7 @@ $("rp-form").addEventListener("submit",()=>track("report",$("rp-item").value,$("
 track("visit",document.referrer?new URL(document.referrer).hostname:"直接開啟",(window.matchMedia("(display-mode: standalone)").matches?"桌面App":"瀏覽器"),{w:innerWidth});
 
 /* ---------- 事件 ---------- */
-document.querySelector(".resultbar").addEventListener("click",e=>{ if(e.target.id==="back"){ const multi=state.tab==="co"&&state.cc&&state.cc!=="*"&&new Set(liveCourses.filter(x=>x.cc===state.cc).map(x=>x.cs)).size>1; if(multi && state.cs){ state.cs=""; state.fx=""; } else { state.plCat=""; state.cc=""; state.cs=""; state.fx=""; } render(); } });
+document.querySelector(".resultbar").addEventListener("click",e=>{ if(e.target.id==="back"){ const multi=state.tab==="co"&&state.cc&&state.cc!=="*"&&new Set(liveCourses.filter(x=>x.cc===state.cc).map(x=>x.cs)).size>1; if(multi && state.cs){ state.cs=""; state.fx=""; } else { state.plCat=""; state.cc=""; state.cs=""; state.fx=""; state.evCat=""; } render(); } });
 $("q").addEventListener("input",e=>{state.q=e.target.value.trim();render()});
 $("sel-region").addEventListener("change",e=>{state.region=e.target.value;state.counties.clear();state.dist="";fillCounties();render()});
 $("btn-county").addEventListener("click",()=>{const pop=$("cpop");pop.hidden=!pop.hidden;$("btn-county").setAttribute("aria-expanded",!pop.hidden);});
@@ -2126,7 +2138,7 @@ $("cpop-ok").addEventListener("click",()=>{$("cpop").hidden=true;$("btn-county")
 $("cpop-clear").addEventListener("click",()=>{state.counties.clear();state.dist="";fillCounties();render();});
 $("sel-dist").addEventListener("change",e=>{state.dist=e.target.value;render()});
 $("grid").addEventListener("click",e=>{
-  const c=e.target.closest(".cat"); if(c){ if(c.dataset.cs){ state.cs=c.dataset.cs; state.fx=""; track("cat",state.cc+"/"+c.dataset.cs,"co"); } else if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); window.scrollTo({top:$("grid").offsetTop-120,behavior:"smooth"}); return; }
+  const c=e.target.closest(".cat"); if(c){ if(c.dataset.ev){ state.evCat=c.dataset.ev; track("cat",c.dataset.ev,"ev"); } else if(c.dataset.cs){ state.cs=c.dataset.cs; state.fx=""; track("cat",state.cc+"/"+c.dataset.cs,"co"); } else if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); window.scrollTo({top:$("grid").offsetTop-120,behavior:"smooth"}); return; }
   if(e.target.id==="more"){ state.limit+=60; render(true); return; }
   const sb=e.target.closest(".segbar .seg"); if(sb){ state.fx=sb.dataset.fx; track("filter",sb.firstChild.textContent,"co_fx",{on:true}); render(); return; }
   const rb=e.target.closest(".rb"); if(rb){ if(rb.dataset.cm!==undefined) openComments(rb.dataset.cm,rb.dataset.name); else if(BE) vote(rb.dataset.k,+rb.dataset.v); return; }
@@ -2137,12 +2149,12 @@ function setTab(t){
   state.tab=t;
   [["ev","tab-ev"],["pk","tab-pk"],["pl","tab-pl"],["co","tab-co"],["fv","tab-fv"]].forEach(([k,id])=>$(id).setAttribute("aria-selected",k===t));
   if(t!=="ev"&&t!=="fv") state.when="";
-  state.plCat=""; state.cc=""; state.cs=""; state.fx="";
+  state.plCat=""; state.cc=""; state.cs=""; state.fx=""; state.evCat="";
   buildFilters(); render();
 }
 $("tab-ev").onclick=()=>setTab("ev"); $("tab-pk").onclick=()=>setTab("pk"); $("tab-pl").onclick=()=>setTab("pl"); $("tab-fv").onclick=()=>setTab("fv"); $("tab-co").onclick=()=>setTab("co");
 $("clear").onclick=()=>{
-  Object.assign(state,{q:"",when:"",io:"",region:"",dist:"",plCat:"",ck:"",cc:"",cs:"",fx:""}); state.counties.clear();
+  Object.assign(state,{q:"",when:"",io:"",region:"",dist:"",plCat:"",ck:"",cc:"",cs:"",fx:"",evCat:""}); state.counties.clear();
   state.ages.clear();state.types.clear();state.fees.clear();
   $("q").value="";$("sel-region").value="";buildFilters();render();
 };
