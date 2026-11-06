@@ -2619,7 +2619,7 @@ $("install").addEventListener("click",()=>track("install","",""));
 $("sg-form").addEventListener("submit",()=>track("suggest",$("sg-name").value,$("sg-kind").value));
 $("rp-form").addEventListener("submit",()=>track("report",$("rp-item").value,$("rp-kind").value));
 ["tab-home","tab-ev","tab-pk","tab-pl","tab-co","tab-fv"].forEach(id=>$(id).addEventListener("click",()=>track("tab",id.replace("tab-",""),"")));
-track("visit",document.referrer?new URL(document.referrer).hostname:"直接開啟",(window.matchMedia("(display-mode: standalone)").matches?"桌面App":"瀏覽器"),{w:innerWidth});
+track("visit",document.referrer?new URL(document.referrer).hostname:"直接開啟",((window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true)?"桌面App":"瀏覽器"),{w:innerWidth});
 
 /* ---------- 事件 ---------- */
 document.querySelector(".resultbar").addEventListener("click",e=>{ if(e.target.id==="back"){ const multi=state.tab==="co"&&state.cc&&state.cc!=="*"&&new Set(liveCourses.filter(x=>x.cc===state.cc).map(x=>x.cs)).size>1; if(multi && state.cs){ state.cs=""; state.fx=""; } else { state.plCat=""; state.cc=""; state.cs=""; state.fx=""; state.evCat=""; } render(); toResults(); } });
@@ -2669,7 +2669,7 @@ const inFrame = (()=>{try{return window.self!==window.top}catch(e){return true}}
 const isStandalone = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone===true;
 if(isStandalone) $("install").style.display="none";
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;});
-window.addEventListener("appinstalled",()=>{$("install").style.display="none";});
+window.addEventListener("appinstalled",()=>{$("install").style.display="none"; track("installed","Android","");});
 $("install").addEventListener("click",async()=>{
   if(deferredInstall){ deferredInstall.prompt(); try{await deferredInstall.userChoice;}catch(e){} deferredInstall=null; return; }
   const ua=navigator.userAgent; const ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&"ontouchend" in document); const and=/Android/.test(ua);
