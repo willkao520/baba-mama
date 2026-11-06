@@ -1,0 +1,13 @@
+# 網站已搬到 Cloudflare Pages（https://baba-mama.pages.dev）。
+# 這個檔案只給舊的 Netlify 網址用：把所有舊網址 301 轉到新網址。Cloudflare Pages 不會讀這個檔案。
+
+[build]
+  publish = "."
+  # 只有這個檔案有改才在 Netlify 部署，其他每日更新一律跳過，避免再扣 Netlify 額度
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- netlify.toml"
+
+[[redirects]]
+  from = "/*"
+  to = "https://baba-mama.pages.dev/:splat"
+  status = 301
+  force = true
