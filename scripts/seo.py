@@ -10,7 +10,7 @@ OUT = os.path.join(ROOT, "tw")
 SLUG = {"基隆市":"keelung","臺北市":"taipei","新北市":"new-taipei","桃園市":"taoyuan","新竹市":"hsinchu-city","新竹縣":"hsinchu-county","宜蘭縣":"yilan",
  "苗栗縣":"miaoli","臺中市":"taichung","彰化縣":"changhua","南投縣":"nantou","雲林縣":"yunlin","嘉義市":"chiayi-city","嘉義縣":"chiayi-county",
  "臺南市":"tainan","高雄市":"kaohsiung","屏東縣":"pingtung","花蓮縣":"hualien","臺東縣":"taitung","澎湖縣":"penghu","金門縣":"kinmen","連江縣":"matsu"}
-CSLUG = {"博物館・美術館":"museum","科學・教育館":"science","主題樂園":"theme-park","動物園・水族館":"zoo","農場・牧場":"farm","觀光工廠":"factory",
+CSLUG = {"博物館・美術館":"museum","科學・教育館":"science","主題樂園":"theme-park","動物園・水族館":"zoo","農場・牧場":"farm","採果・釣魚":"picking","觀光工廠":"factory",
  "文化・鐵道園區":"culture","室內遊戲・親子館":"indoor","森林・自然":"nature"}
 AGE = {"baby":"0–3歲","pre":"4–6歲","low":"小一～小三","high":"小四～小六"}
 FEE = {"free":"免費","paid":"付費","deal":"門票優惠","check":"費用待確認"}
