@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>爸~媽!!假日要去哪裡玩｜全台親子活動、共融公園、親子景點</title>
-<meta name="description" content="全台 0 歲到國小六年級的親子活動、共融公園、博物館、農場、親子館與公辦親子課程，依年齡、縣市、室內外篩選，點一下就開 Google 地圖導航。免費使用。">
+<meta name="description" content="全台 0 歲到國小六年級的親子活動、共融公園、博物館、農場、親子館與親子課程報名資訊，依年齡、縣市、室內外篩選，點一下就開 Google 地圖導航。免費使用。">
 <link rel="canonical" href="https://baba-mama.pages.dev/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="爸~媽!!假日要去哪裡玩">
 <meta property="og:title" content="爸~媽!!假日要去哪裡玩｜全台親子活動・共融公園・親子景點">
-<meta property="og:description" content="這個週末帶小孩去哪？全台親子活動、共融公園、景點和公辦親子課程一次找，依年齡和縣市篩選，點一下開地圖導航。">
+<meta property="og:description" content="這個週末帶小孩去哪？全台親子活動、共融公園、景點和親子課程報名一次找，依年齡和縣市篩選，點一下開地圖導航。">
 <meta property="og:url" content="https://baba-mama.pages.dev/">
 <meta property="og:image" content="https://baba-mama.pages.dev/og.png">
 <meta property="og:image:width" content="1200">
@@ -278,7 +278,7 @@ body.at-home .panel,body.at-home .resultbar,body.at-home .actv,body.at-home .sor
   <button class="tab" role="tab" id="tab-ev" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6h14v13H5z" fill="none"/><path d="M5 10h14M9 4v4M15 4v4" /><circle cx="12" cy="15" r="1.6" fill="currentColor"/></svg><span class="tl">最近活動</span><span class="ts">最近活動</span><span class="cnt" id="cnt-ev"></span></button>
   <button class="tab" role="tab" id="tab-pk" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V8h5v12M6 11h5M6 15h5M11 8c4 0 6 4 8 12" fill="none"/></svg><span class="tl">共融公園</span><span class="ts">共融公園</span><span class="cnt" id="cnt-pk"></span></button>
   <button class="tab" role="tab" id="tab-pl" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6-5.6 6-10.2A6 6 0 0 0 6 10.8C6 15.4 12 21 12 21z" fill="none"/><circle cx="12" cy="10.5" r="2.2"/></svg><span class="tl">隨時可去的景點</span><span class="ts">景點</span><span class="cnt" id="cnt-pl"></span></button>
-  <button class="tab" role="tab" id="tab-co" aria-selected="false" title="圖書館・親子館・科學館・運動中心辦的活動"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l8-5 8 5M6 10v8M10 10v8M14 10v8M18 10v8M4 20h16" fill="none"/></svg><span class="tl">公辦親子活動</span><span class="ts">公辦活動</span><span class="cnt" id="cnt-co"></span></button>
+  <button class="tab" role="tab" id="tab-co" aria-selected="false" title="要先報名的親子課程與場次（圖書館、親子館、科學館、運動中心等）"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l8-5 8 5M6 10v8M10 10v8M14 10v8M18 10v8M4 20h16" fill="none"/></svg><span class="tl">親子課程・報名</span><span class="ts">課程報名</span><span class="cnt" id="cnt-co"></span></button>
   <button class="tab" role="tab" id="tab-fv" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="none"/></svg><span class="tl">我的收藏</span><span class="ts">收藏</span><span class="cnt" id="cnt-fv"></span></button>
 </div>
 
@@ -323,7 +323,7 @@ body.at-home .panel,body.at-home .resultbar,body.at-home .actv,body.at-home .sor
 <div class="grid" id="grid"></div>
 
 <div class="notice">
-  <b>小提醒：</b>活動與公園資料整理於 2026 年 11 月 7 日，來源是各縣市政府、場館與主辦單位的公開資訊（北部公辦親子活動參考 <a href="https://kidsmap.tw/" target="_blank" rel="noopener">北台灣親子地圖</a> 整理，每天更新）。活動可能因天氣或主辦單位異動，<b>出發前請點卡片上的連結，再到官方粉專或官網確認</b>。「待確認」代表公開資訊沒寫清楚費用。為了改善內容，我們會匿名記錄搜尋關鍵字與點擊（不含個人資料）。已經結束的活動會自動隱藏。<br><b>共融公園收錄範圍：</b>臺北市依市府開放資料「共融式遊戲場」（含校園）、新北市依「來新北玩公園」網站、臺中市依《臺中美樂地指引手冊》逐區全收；其他縣市收錄市府公告與媒體報導過的特色、共融公園，持續補充中。少了你家附近的？歡迎用「回報問題」告訴我們。
+  <b>小提醒：</b>活動與公園資料整理於 2026 年 11 月 7 日，來源是各縣市政府、場館與主辦單位的公開資訊（北部親子課程參考 <a href="https://kidsmap.tw/" target="_blank" rel="noopener">北台灣親子地圖</a> 整理，每天更新）。活動可能因天氣或主辦單位異動，<b>出發前請點卡片上的連結，再到官方粉專或官網確認</b>。「待確認」代表公開資訊沒寫清楚費用。為了改善內容，我們會匿名記錄搜尋關鍵字與點擊（不含個人資料）。已經結束的活動會自動隱藏。<br><b>共融公園收錄範圍：</b>臺北市依市府開放資料「共融式遊戲場」（含校園）、新北市依「來新北玩公園」網站、臺中市依《臺中美樂地指引手冊》逐區全收；其他縣市收錄市府公告與媒體報導過的特色、共融公園，持續補充中。少了你家附近的？歡迎用「回報問題」告訴我們。
   <p style="font-size:13px;margin-top:8px">依地區瀏覽：<a href="tw/index.html">全台各縣市親子景點・共融公園索引</a></p>
   <details style="margin-top:8px"><summary>連結說明</summary><p style="margin:6px 0 0">點卡片任何地方（或藍色的「地圖・導航」）都會打開 Google 地圖。「官網」「官方粉專」「官方IG」「售票頁」都是主辦單位自己的網站；少數活動主辦單位沒有專屬網頁，會標「主辦單位新聞稿」或「新聞報導」。找不到官方頁面的，會顯示灰色的「搜尋官網」，點了會直接幫你搜尋。每張卡片也都有「地圖」可以直接導航。</p></details>
 </div>
@@ -351,7 +351,7 @@ body.at-home .panel,body.at-home .resultbar,body.at-home .actv,body.at-home .sor
     <h2 id="sg-t" class="hand">推薦漏掉的地方</h2>
     <div class="msg">知道哪裡好玩但這裡沒有？告訴我們！審核通過後會加進來。</div>
     <form id="sg-form">
-      <select class="fld" id="sg-kind"><option>活動</option><option>公辦親子活動</option><option>共融公園</option><option>景點</option></select>
+      <select class="fld" id="sg-kind"><option>活動</option><option value="公辦親子活動">親子課程・報名</option><option>共融公園</option><option>景點</option></select>
       <input class="fld" id="sg-name" maxlength="100" placeholder="名稱（例如：XX公園、XX親子展）" required>
       <div style="display:flex;gap:8px"><select class="fld" id="sg-county" required><option value="">縣市</option></select><input class="fld" id="sg-dist" maxlength="20" placeholder="鄉鎮區（選填）"></div>
       <input class="fld" id="sg-dates" maxlength="60" placeholder="活動日期（活動才需要，例如 12/1–12/31）">
@@ -435,10 +435,10 @@ const EVENTS = [
  {n:"德國聖誕市集（臺北場）",c:"臺北市",d:"中山區",s:"2026-12-11",e:"2026-12-13",t:"市集・嘉年華",f:"check",a:ALL,io:"out",note:"圓山花博公園長廊廣場（捷運圓山站1號出口）。",l:["site","https://taiwan.ahk.de/en/event-2026/2026-german-christmas-market-new-taipei-taipei-taoyuan"]},
  {n:"德國聖誕市集（桃園場）",c:"桃園市",d:"桃園區",s:"2026-12-18",e:"2026-12-20",t:"市集・嘉年華",f:"check",a:ALL,io:"out",note:"桃園藝文廣場。",l:["site","https://taiwan.ahk.de/en/event-2026/2026-german-christmas-market-new-taipei-taipei-taoyuan"]},
 
- {n:"臺灣科學節｜科學嘉年華（科教館）",c:"臺北市",d:"士林區",s:"2026-11-13",e:"2026-11-15",t:"科學體驗",f:"free",a:["pre","low","high"],io:"both",note:"臺北科學藝術園區＋科教館1F，約180個科學攤位、集章抽獎，09:30–16:30。",l:TSF,l:["site","https://tsf.moe.edu.tw/"]},
- {n:"臺灣科學節｜海科館科學市集＋實境解謎",c:"基隆市",d:"中正區",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"deal",a:["pre","low","high"],io:"both",note:"11/7、8、14、15有科普市集；學生憑證主題館、特展、智慧海洋館全票半價。",l:TSF,l:["site","https://tsf.moe.edu.tw/"]},
- {n:"臺灣科學節｜科博館「曬科學」與XR劇場",c:"臺中市",d:"北區",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"free",a:["pre","low","high"],io:"both",note:"11/7–8戶外科學展演；XR奇幻探索劇場11/8、14、15（活動免費，進館需購票）。",l:TSF,l:["site","https://tsf.moe.edu.tw/"]},
- {n:"臺灣科學節｜科工館免費活動",c:"高雄市",d:"三民區",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"free",a:["pre","low","high"],io:"in",note:"北館大廳，11/7、8、14、15舉辦。",l:TSF,l:["site","https://tsf.moe.edu.tw/"]},
+ {n:"臺灣科學節｜科教館科學嘉年華與科學劇場",c:"臺北市",d:"士林區",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"free",a:["pre","low","high"],io:"both",note:"11/13–15 科學嘉年華在臺北科學藝術園區＋科教館1F，約180個科學攤位、集章抽獎，09:30–16:30（11/13限團體，週末免報名）；11/14、15 15:00 免費舞台劇《尼古拉・特斯拉》。另有11/7 14:30 沉浸式大戲《永恆的傅科擺》（演出免費、需購票入館）、11/8 尬科學擂台賽決賽可現場觀賽。",l:["site","https://www.ntsec.gov.tw/article/detail.aspx?a=6108"]},
+ {n:"臺灣科學節｜海科館科學市集＋實境解謎",c:"基隆市",d:"中正區",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"deal",a:["pre","low","high"],io:"both",note:"11/7、8、14、15有科普市集；11/7 14:00 兒童京劇《尾大不掉的海馬捲捲》免費觀賞（主題館5F）；學生憑證主題館、特展、智慧海洋館全票半價。",l:["site","https://tsf.moe.edu.tw/"]},
+ {n:"臺灣科學節｜科博館「曬科學」與XR劇場",c:"臺中市",d:"北區",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"free",a:["pre","low","high"],io:"both",note:"11/7–8戶外科學展演；11/14–15橢圓形廣場科學節小市集；XR奇幻探索劇場11/8、14、15（活動免費，進館需購票）。",l:["site","https://tsf.moe.edu.tw/"]},
+ {n:"臺灣科學節｜科工館免費活動",c:"高雄市",d:"三民區",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"free",a:["pre","low","high"],io:"in",note:"北館大廳，11/7、8、14、15舉辦：能源互動實驗（水果、人體也能發電）、11/7–8 B1與4F科普市集、11/8 11:00 原住民弓琴的物理，都免報名。",l:["site","https://tsf.moe.edu.tw/"]},
  {n:"臺灣科學節｜海生館科學活動",c:"屏東縣",d:"車城鄉",s:"2026-11-07",e:"2026-11-15",t:"科學體驗",f:"paid",a:ALL,io:"in",note:"館內科學節活動免費參加，但要買入館門票。",l:TSF,l:["site","https://tsf.moe.edu.tw/"]},
  {n:"科博館 每週五下午免費參觀",c:"臺中市",d:"北區",s:"2026-01-01",e:"2026-12-31",t:"科學體驗",f:"free",a:ALL,io:"in",note:"每週五14:00–17:00展示廳免費，下雨天的好選擇。",l:["site","https://sciamb.nmns.edu.tw/40/"]},
 
@@ -486,6 +486,7 @@ const EVENTS = [
  {n:"《共下食个福》田野野餐×客家味緒闖關",c:"臺東縣",d:"關山鎮",s:"2026-11-07",e:"2026-11-07",t:"市集・嘉年華",f:"check",a:ALL,io:"out",note:"11/7 15:00–18:00在關山米國學校，客家美食、文化闖關加稻田野餐，歡迎全家參加。",l:["site","https://tour.taitung.gov.tw/zh-tw/event-calendar/details/6524"]},
  {n:"「童心同行 為愛築院」公益園遊會",c:"花蓮縣",d:"花蓮市",s:"2026-11-07",e:"2026-11-07",t:"市集・嘉年華",f:"check",a:ALL,io:"out",note:"11/7 10:00–14:00，日出大道F段（重慶市場旁廣場），園遊券每張100元，可參加摸彩。",l:["site","https://www.hccc.gov.tw/zh-tw/Activity/Detail/15732"]},
  {n:"層層有憶事｜卑南遺址公園免費入館＋市集",c:"臺東縣",d:"臺東市",s:"2026-11-14",e:"2026-11-14",t:"市集・嘉年華",f:"free",a:ALL,io:"both",note:"當天免費入館，12:00–16:30有二手市集、美食、音樂；14:00「考古小尖兵」手作（12歲以下，100元）要在11/10中午前線上報名。",l:["site","https://event.culture.tw/mocweb/reg/NMP/Detail.init.ctr?actId=60377"]},
+ {n:"高市圖台語兒童歌仔戲《哮天犬的限時任務》",c:"高雄市",d:"內門區",s:"2026-11-15",e:"2026-11-15",t:"兒童劇・音樂會",f:"free",a:["pre","low","high"],io:"out",note:"奇巧劇團在內門紫竹寺廟埕演出，18:30開演，免費現場觀賞；高市圖「培育台語家庭」系列。",l:["site","https://www.ksml.edu.tw/mainlibrary/calendar/Details.aspx?Parser=99%2C23%2C259%2C157%2C%2C%2C16468"]},
  {n:"小人國 11月身分證字母299元",c:"桃園市",d:"龍潭區",s:"2026-11-07",e:"2026-11-29",t:"樂園優惠",f:"deal",a:ALL,io:"out",note:"11/7、8、14、15限A/C/F開頭；11/21、22、28、29限H/J/O開頭，現場購票299元。",l:["site","https://www.woc.com.tw/"]},
  {n:"六福村 SNOOPY萬聖祭（日間）",c:"新竹縣",d:"關西鎮",s:"2026-09-12",e:"2026-11-22",t:"樂園優惠",f:"paid",a:["pre","low","high"],io:"out",note:"白天有SNOOPY南瓜園和14:00遊行；晚上的墓碑鎮比較恐怖，不建議帶小小孩。週五六日16:00後星光票499元。",l:["site","https://www.leofoo.com.tw/"]},
  {n:"西湖渡假村 12歲以下免費",c:"苗栗縣",d:"三義鄉",s:"2026-11-01",e:"2026-11-30",t:"樂園優惠",f:"deal",a:ALL,io:"out",note:"大人399元，12歲以下兒童由付費大人陪同免費。"},
@@ -2063,7 +2064,7 @@ liveEvents.sort((a,b)=>{
   return a.S-b.S;
 });
 const key = x => x.kind+"|"+x.n+(x.kind==="pk"?"|"+x.c+(x.d||""):x.kind==="co"?"|"+x.v:"");
-/* ---------- 公辦親子活動（圖書館・親子館・科學館・運動中心） ---------- */
+/* ---------- 親子課程・報名（要先報名、有名額的場次；圖書館・親子館・科學館・運動中心・警消等） ---------- */
 // CO(名稱, 場館類型, 縣市, 區, 場館(地圖用), 開始, 結束, 小分類, 年齡, 場次, 名額, 報名方式, 官網, 報名連結, 說明, 費用)
 const CO=(n,t,c,d,v,s,e,sub,a,ses,cap,reg,l,r,note,f)=>({n,t,c,d,v,s,e,sub,a:a||ALL,ses,cap,reg,l,r,note,f:f||"free",io:"in",kind:"co"});
 const BABY=["baby"], PRE=["baby","pre"], KID=["pre","low","high"], ELEM=["low","high"];
@@ -2097,18 +2098,8 @@ const COURSES=[
  CO("親子童樂會#3 黑夜探險隊出動","圖書館","臺中市","南屯區","臺中市立圖書館李科永紀念圖書分館","2026-11-22","2026-11-22","說故事",KID,"11/22（日）10:00–11:00","依館方公告","請看活動頁","https://www.library.taichung.gov.tw/active/index?Parser=99%2C3%2C39%2C27",null,"故事、變裝與關卡挑戰的親子活動。"),
  CO("英文繪本故事（兩隻小豬故事團）","圖書館","臺南市","六甲區","臺南市立圖書館六甲區圖書館","2026-11-08","2026-12-06","說故事",["pre","low"],"11/8（日）、12/6（日）10:00–11:00","免報名，現場參加","現場（開始後10分鐘停止入場）","https://www.tnpl.tn.edu.tw/n14700232070218304363/n1ContentKID",null,"「閱讀親子樂～趴趴GO」系列，可集閱讀點數。"),
  CO("志工媽媽繪本故事","圖書館","臺南市","六甲區","臺南市立圖書館六甲區圖書館","2026-11-22","2026-12-20","說故事",["pre","low"],"11/22（日）、12/20（日）10:00–10:30","免報名，現場參加","現場（開始後10分鐘停止入場）","https://www.tnpl.tn.edu.tw/n14700232070218304363/n1ContentKID",null,"志工媽媽說繪本故事，可集閱讀點數。"),
- CO("台語兒童歌仔戲：奇巧劇團《哮天犬的限時任務》","圖書館","高雄市","內門區","高雄市立圖書館（內門紫竹寺演出）","2026-11-15","2026-11-15","閱讀",KID,"11/15（日）18:30開演","依館方公告","現場觀賞","https://www.ksml.edu.tw/mainlibrary/calendar/Details.aspx?Parser=99%2C23%2C259%2C157%2C%2C%2C16468",null,"高市圖「培育台語家庭」系列，戶外廟埕演出。"),
  // 科學館
- CO("科學嘉年華（臺灣科學節）","科學館","臺北市","士林區","國立臺灣科學教育館","2026-11-13","2026-11-15","科學體驗",KID,"11/13（五）校園日限團體；11/14–11/15 一般民眾","現場參加","11/13 需20人以上團體報名；週末免報名","https://www.ntsec.gov.tw/article/detail.aspx?a=6108",null,"一樓廣場和臺北科學藝術園區的科學市集，11/13 憑活動識別免費看常設展。"),
- CO("舞台劇《尼古拉・特斯拉》","科學館","臺北市","士林區","國立臺灣科學教育館","2026-11-14","2026-11-15","科學劇場",ELEM,"11/14、11/15 15:00","依現場座位","免報名","https://www.ntsec.gov.tw/",null,"認識特斯拉和電的故事，演出免費。"),
- CO("沉浸式大戲《永恆的傅科擺》","科學館","臺北市","士林區","國立臺灣科學教育館","2026-11-07","2026-11-07","科學劇場",ELEM,"11/7（六）14:30–16:40","依現場","演出免費，需購票入館","https://www.ntsec.gov.tw/",null,"科教館70週年大戲，跟著演員在整棟館裡追劇。","deal"),
- CO("尬科學－科學演示擂台賽 決賽","科學館","臺北市","士林區","國立臺灣科學教育館","2026-11-08","2026-11-08","科學競賽",ELEM,"11/8（日）5樓極大極小展區","現場觀賽","免報名觀賽","https://www.ntsec.gov.tw/",null,"國小三年級以上學生的科學演示比賽，可以去看。"),
  CO("整點實驗課程／敲敲打打工作坊","科學館","臺北市","士林區","國立臺灣科學教育館","2026-11-01",null,"科學手作",ELEM,"每日整點，見科教館每日活動行事曆","滿10人開班；工作坊開始前15分鐘現場報名","線上報名或4F科學教室服務台","https://www.ntsec.gov.tw/",null,"STEAM、Maker 小課程；敲敲打打工作坊憑常設展門票免費。","deal"),
- CO("能源互動實驗：水果、人體也能發電","科學館","高雄市","三民區","國立科學工藝博物館","2026-11-07","2026-11-15","科學體驗",KID,"11/7–11/15；11/8 16:00–17:00 北館大廳場","現場參加","免報名","https://www.nstm.gov.tw/",null,"臺灣科學節活動，部分場次需購票入館。"),
- CO("原住民弓琴的物理","科學館","高雄市","三民區","國立科學工藝博物館","2026-11-08","2026-11-08","科學體驗",ELEM,"11/8（日）11:00–12:00 北館1樓大廳","現場參加","免報名","https://www.nstm.gov.tw/",null,"從弓琴認識振動和共鳴，可以實際玩。"),
- CO("科普市集","科學館","高雄市","三民區","國立科學工藝博物館","2026-11-07","2026-11-08","科學市集",KID,"11/7–11/8 B1、4F長廊","現場參加","免報名","https://www.nstm.gov.tw/",null,"親子動手玩科學攤位。"),
- CO("科學節小市集","科學館","臺中市","北區","國立自然科學博物館","2026-11-14","2026-11-15","科學市集",KID,"11/14–11/15 橢圓形廣場內外迴廊","現場參加","免報名","https://www.nmns.edu.tw/",null,"多樣感官體驗攤位。"),
- CO("兒童京劇《尾大不掉的海馬捲捲》","科學館","基隆市","中正區","國立海洋科技博物館","2026-11-07","2026-11-07","科學劇場",KID,"11/7（六）14:00–15:00 主題館5F階梯舞臺","依現場座位","免報名","https://www.nmmst.gov.tw/",null,"用京劇認識海洋污染，免費觀賞。"),
  // 運動中心
  CO("兒童體驗推廣課程（每學期免費1次）","運動中心","新竹縣","竹北市","竹北國民運動中心","2026-10-07",null,"運動體驗",ELEM,"報名後由中心電話通知上課時間","免費名額有限","線上表單報名","https://www.zbsports.com.tw/?p=14560","https://www.zbsports.com.tw/?p=14560","桌球、籃球、羽球、網球、兒童MV舞蹈、劍道任選，限新竹縣國小學童。"),
  CO("滑步車體驗區","運動中心","新北市","新莊區","新莊國民運動中心","2026-11-01",null,"運動體驗",PRE,"開放時間依中心公告","現場報名","一樓課務櫃台現場報名","https://www.xzsports.com.tw/",null,"小小孩的滑步車場地，另有初心體驗班。","check")
@@ -2360,7 +2351,7 @@ function card(x,i){
     <div class="tags"><span class="tag t-type">${esc(x.t)}</span>${x.sub?`<span class="tag t-type">${esc(x.sub)}</span>`:""}</div>
     <p class="note">${esc(x.note||"")}</p>
     <div class="react">${reactRow(x)}</div>
-    <div class="foot"><span class="lnk">${off}${evSearch}</span><span style="color:var(--ink2)">${x.kind==="ev"?"活動":x.kind==="co"?"公辦活動":x.kind==="pk"?"共融公園":"景點"}・點卡片看詳情</span></div>
+    <div class="foot"><span class="lnk">${off}${evSearch}</span><span style="color:var(--ink2)">${x.kind==="ev"?"活動":x.kind==="co"?"課程報名":x.kind==="pk"?"共融公園":"景點"}・點卡片看詳情</span></div>
   </article>`;
 }
 
@@ -2422,7 +2413,7 @@ function render(more){
     const T=[["ev","最近活動",liveEvents.length,"兒童劇、展覽、節慶、市集",EV_ICON["市集・嘉年華"]],
              ["pk","共融公園",PARKS.length,"共融遊戲場、特色溜滑梯",ICON["共融遊戲場"]],
              ["pl","隨時可去的景點",PLACES.length,"博物館、樂園、動物園、農場",ICON["主題樂園"]],
-             ["co","公辦親子活動",liveCourses.length,"親子館、圖書館、運動中心",ICON["圖書館"]]];
+             ["co","親子課程・報名",liveCourses.length,"要先報名：說故事、手作、體驗課",ICON["圖書館"]]];
     g.innerHTML = `<div class="wx" id="wx" style="grid-column:1/-1">${wxHtml()}</div><div class="scn">${SCN.map(([id,l],i)=>`<button type="button" data-scn="${id}" class="${id==="rain"?"r":""}">${l}</button>`).join("")}</div>` + T.map(([k,n,c,d,ic],i)=>`<button class="cat" data-go="${k}" type="button"><span class="blob" style="background:${TAPE[i%TAPE.length]}"></span><span class="ic">${ic}</span><span class="cn">${n}</span><span class="num">${c} 個</span><span class="cc">${d}</span></button>`).join("")
       + `<div class="homefav"><button type="button" data-go="ev" data-when="weekend">📅 這個週末有 ${wk} 個活動</button><button type="button" data-go="fv">❤️ 我的收藏 ${ALLITEMS().filter(x=>favs.has(key(x))).length}</button></div>`;
     updCounts(); loadWx(); return;
@@ -2440,7 +2431,7 @@ function render(more){
     g.className="cats";
     g.innerHTML = CC_NAMES.map((c,i)=>{const n=base.filter(x=>x.cc===c).length; return n?`<button class="cat" data-cc="${c}" type="button"><span class="blob" style="background:${TAPE[i%TAPE.length]}"></span><span class="ic">${CC_ICON[c]||ICON["*"]}</span><span class="cn">${c}</span><span class="cc">${n} 個・${CC_DESC[c]||""}</span></button>`:""}).join("")
       + `<button class="cat" data-cc="*" type="button"><span class="blob" style="background:#ddd"></span><span class="ic">${ICON["*"]}</span><span class="cn">全部活動</span><span class="cc">${base.length} 個・不分類全部看</span></button>`;
-    $("rcount").innerHTML = `先選一種想參加的活動 <span style="font-size:14px;color:var(--ink2)">（共 ${base.length} 個公辦親子活動）</span>`;
+    $("rcount").innerHTML = `先選一種想參加的活動 <span style="font-size:14px;color:var(--ink2)">（共 ${base.length} 個親子課程・報名場次）</span>`;
     updCounts(); return;
   }
   if(state.tab==="co" && state.cc && state.cc!=="*" && !state.cs && !state.q){
@@ -2479,7 +2470,7 @@ function render(more){
   }
   g.innerHTML = subBar + (list.length ? shown.map(card).join("") + (list.length>shown.length?`<button class="more" id="more" type="button" style="grid-column:1/-1">再看 ${Math.min(60,list.length-shown.length)} 個（還有 ${list.length-shown.length} 個）</button>`:"") :
     `<div class="empty" style="grid-column:1/-1"><div class="hand">${state.tab==="fv"&&!src.length?"還沒有收藏喔":"找不到符合的，換個條件試試看"}</div><p>${state.tab==="fv"&&!src.length?"在卡片右上角按愛心，就會存在這裡（只存在這台裝置）。":"可以少選幾個條件，或改搜尋其他關鍵字。"}</p></div>`);
-  const lbl = state.tab==="co"?"個公辦親子活動":state.tab==="ev"?"個活動":state.tab==="pk"?"座公園":state.tab==="pl"?"個景點":"個收藏";
+  const lbl = state.tab==="co"?"個親子課程・報名場次":state.tab==="ev"?"個活動":state.tab==="pk"?"座公園":state.tab==="pl"?"個景點":"個收藏";
   const back = (state.tab==="pl" && state.plCat)||(state.tab==="ev" && state.evCat) ? `<button class="back" id="back" type="button">← 回到分類</button>　` : (state.tab==="co" && state.cc) ? `<button class="back" id="back" type="button">← ${state.cc!=="*"&&state.cs?"回到「"+state.cc+"」":"回到分類"}</button>　` : "";
   const catName = state.tab==="pl" && state.plCat && state.plCat!=="*" ? `「${state.plCat}」` : state.tab==="ev" && state.evCat && state.evCat!=="*" ? `「${state.evCat}」` : state.tab==="co" && state.cc && state.cc!=="*" ? `「${state.cc}${state.cs&&state.cs!=="*"?"・"+state.cs:""}」` : "";
   $("rcount").innerHTML = `${back}${catName}找到 ${list.length} ${lbl}`;
