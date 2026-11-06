@@ -199,11 +199,23 @@ details summary{cursor:pointer;color:var(--ink)}
   .tab .tl{display:none}.tab .ts{display:block}
   .tab[aria-selected="true"]{background:var(--sun)}
   .tab .cnt{position:absolute;top:0;right:8%;font-size:10px;padding:0 5px;margin:0}
-  /* 6 篩選收合 */
-  .panel:not(.open) .frow,.panel:not(.open) .cpop{display:none}
-  .toggle{display:block!important;width:100%;margin:10px 0 8px;padding:9px 12px;border:2px solid var(--ink);border-radius:12px;background:#fff;font-size:16px;text-align:left}
-  .toggle .fc{display:inline-block;background:var(--tomato);color:#fff;border-radius:10px;padding:0 8px;margin-left:6px;font-size:13px}
+  .toggle{display:none!important}
+  .quick{display:flex;gap:6px;overflow-x:auto;white-space:nowrap;padding:8px 2px 4px;margin:0 -4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .quick::-webkit-scrollbar{display:none}
+  .quick button{flex:none;font:inherit;font-size:14.5px;border:2px solid var(--ink);border-radius:999px;background:#fff;padding:5px 12px;cursor:pointer;color:var(--ink)}
+  .quick button[aria-pressed="true"]{background:var(--sun)}
+  .morebtn{display:inline-flex!important;align-items:center;gap:6px;font:inherit;font-size:15px;border:2px solid var(--ink);border-radius:12px;background:#fff;padding:6px 12px;margin:6px 0 2px;cursor:pointer;color:var(--ink);box-shadow:2px 3px 0 var(--ink)}
+  .morebtn .fc{background:var(--tomato);color:#fff;border-radius:10px;padding:0 7px;font-size:12.5px}
+  .panel:not(.open) .fwrap{display:none}
+  .panel.open .fbg{display:block;position:fixed;inset:0;background:rgba(58,46,40,.45);z-index:190}
+  .panel.open .fwrap{position:fixed;left:0;right:0;bottom:0;z-index:195;background:#fffdf8;border:2.5px solid var(--ink);border-bottom:0;border-radius:20px 20px 0 0;max-height:85vh;overflow:auto;padding:12px 16px calc(14px + env(safe-area-inset-bottom));animation:sheetUp .22s ease-out}
+  .panel.open .frow.opt{display:flex}
+  .fhead{display:flex!important;justify-content:space-between;align-items:center;font-size:17px;margin-bottom:6px;position:sticky;top:-12px;background:#fffdf8;padding:4px 0;z-index:2}
+  .fhead .fx{width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:#fff;font-size:18px;margin-left:10px;cursor:pointer}
+  .fgo{display:block!important;width:100%;margin-top:12px;min-height:46px;font:inherit;font-size:17px;background:var(--sun);border:2px solid var(--ink);border-radius:12px;box-shadow:2px 3px 0 var(--ink);cursor:pointer;position:sticky;bottom:0}
+  body.at-home .quick,body.at-home .morebtn{display:none!important}
 }
+@media (min-width:701px){.quick,.morebtn,.fbg,.fhead,.fgo{display:none}}
 
 .memo{font-size:12px;color:var(--ink2);margin-left:4px}
 
@@ -275,6 +287,11 @@ body.at-home .panel,body.at-home .resultbar,body.at-home .actv,body.at-home .sor
     <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#3a2e28" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="#3a2e28" stroke-width="2.4" stroke-linecap="round"/></svg>
     <input id="q" type="search" placeholder="搜尋：恐龍、耶誕、板橋、動物園⋯" autocomplete="off">
   </label>
+  <div class="quick" id="quick" aria-label="常用篩選"></div>
+  <button class="morebtn" id="morebtn" type="button" aria-expanded="false"></button>
+  <div class="fbg" id="fbg"></div>
+  <div class="fwrap" id="fwrap">
+  <div class="fhead"><b>更多篩選</b><span><button type="button" class="clear" id="fclear">全部清除</button><button type="button" class="fx" id="fclose" aria-label="關閉">×</button></span></div>
   <div class="frow" id="row-when"><span class="flabel">時間</span></div>
   <div class="frow" id="row-cc"><span class="flabel">分類</span></div>
   <div class="frow" id="row-ck"><span class="flabel">顯示</span></div>
@@ -291,6 +308,8 @@ body.at-home .panel,body.at-home .resultbar,body.at-home .actv,body.at-home .sor
     <div class="cpop-h">縣市可以多選，例如住臺北的可以勾 臺北＋新北＋桃園（會記在這台裝置，下次打開不用再選）</div>
     <div id="cpop-body"></div>
     <div class="cpop-f"><button type="button" class="clear" id="cpop-clear">全部取消</button><button type="button" class="cbtn ok" id="cpop-ok">完成</button></div>
+  </div>
+  <button type="button" class="fgo" id="fgo">看結果</button>
   </div>
   <button class="toggle" id="toggle" type="button" aria-expanded="false">＋ 更多篩選（類型、費用、室內外）</button>
 </section>
@@ -2465,6 +2484,7 @@ function render(more){
 }
 function updCounts(){
   try{ renderActv(); }catch(e){}
+  try{ updQuick(); }catch(e){}
   if(typeof updToggle==="function") try{updToggle()}catch(e){}
   $("cnt-ev").textContent=liveEvents.length; $("cnt-co").textContent=liveCourses.length; $("cnt-pk").textContent=PARKS.length; $("cnt-pl").textContent=PLACES.length;
   $("cnt-fv").textContent=ALLITEMS().filter(x=>favs.has(key(x))).length;
@@ -2506,6 +2526,48 @@ const gObs = ("IntersectionObserver" in window) ? new IntersectionObserver(es=>{
 function watchRatings(){ if(!GKEY||!gObs) return; document.querySelectorAll(".gslot").forEach(el=>{ if(GR[el.dataset.q]===undefined) gObs.observe(el); }); }
 
 
+
+
+/* ---------- 手機兩層篩選 ---------- */
+function quickHtml(){
+  const t=state.tab, out=[];
+  const ch=(act,val,label,on)=>out.push(`<button type="button" data-qa="${act}" data-qv="${val}" aria-pressed="${on}">${label}</button>`);
+  const ages=()=>AGES.forEach(a=>ch("age",a.k,a.label.replace(/（.*?）/,""),state.ages.has(a.k)));
+  const cty=()=>{ const cs=[...state.counties]; ch("county","",cs.length?(cs.length>2?cs.slice(0,2).join("＋")+"…":cs.join("＋"))+" ▾":"縣市 ▾",cs.length>0); };
+  if(t==="ev"){ ages(); ch("when","today","今天",state.when==="today"); ch("when","weekend","本週末",state.when==="weekend"); ch("when","next","下週末",state.when==="next"); cty(); }
+  else if(t==="pk"){ cty(); ch("dist","",(state.dist||"鄉鎮區")+" ▾",!!state.dist); }
+  else if(t==="pl"){ ages(); ch("io","in","室內（下雨OK）",state.io==="in"); ch("fee","free","免費",state.fees.has("free")); cty(); }
+  else if(t==="co"){ ages(); ch("when","weekend","本週末",state.when==="weekend"); ch("fee","free","免費",state.fees.has("free")); cty(); }
+  else { ages(); cty(); }
+  return out.join("");
+}
+function updQuick(){
+  const q=$("quick"); if(!q) return;
+  q.innerHTML=quickHtml();
+  const n=activeN();
+  $("morebtn").innerHTML=`⚙ 更多篩選${n?` <span class="fc">已選 ${n}</span>`:""}`;
+  const fg=$("fgo"); if(fg){ const c=srcOf(state.tab==="fv"?"all":state.tab).filter(x=>state.tab!=="fv"||favs.has(key(x))).filter(match).length; fg.textContent=`看 ${c} 個結果`; }
+}
+function openFilters(focusCounty){
+  const pn=document.querySelector(".panel"); pn.classList.add("open"); $("morebtn").setAttribute("aria-expanded","true"); document.body.style.overflow="hidden";
+  if(focusCounty){ $("cpop").hidden=false; $("btn-county").setAttribute("aria-expanded","true"); setTimeout(()=>$("btn-county").scrollIntoView({block:"center"}),50); }
+  track("more_filters",focusCounty?"county":"open",state.tab);
+}
+function closeFilters(){ document.querySelector(".panel").classList.remove("open"); $("morebtn").setAttribute("aria-expanded","false"); document.body.style.overflow=""; $("cpop").hidden=true; }
+$("morebtn").addEventListener("click",()=>openFilters(false));
+$("fbg").addEventListener("click",closeFilters); $("fclose").addEventListener("click",closeFilters);
+$("fgo").addEventListener("click",()=>{ closeFilters(); window.scrollTo({top:document.querySelector(".resultbar").offsetTop-10,behavior:"smooth"}); });
+$("fclear").addEventListener("click",()=>{ $("clear").click(); updQuick(); });
+$("quick").addEventListener("click",e=>{
+  const b=e.target.closest("[data-qa]"); if(!b) return; const a=b.dataset.qa, v=b.dataset.qv;
+  if(a==="county"||a==="dist"){ openFilters(a==="county"); if(a==="dist") setTimeout(()=>$("sel-dist").focus(),80); return; }
+  if(a==="age"){ state.ages.has(v)?state.ages.delete(v):state.ages.add(v); try{localStorage.setItem("bm-ages",JSON.stringify([...state.ages]))}catch(_){} }
+  else if(a==="when") state.when = state.when===v?"":v;
+  else if(a==="io") state.io = state.io===v?"":v;
+  else if(a==="fee"){ state.fees.has(v)?state.fees.delete(v):state.fees.add(v); }
+  track("quick",b.textContent,state.tab,{on:b.getAttribute("aria-pressed")!=="true"});
+  buildFilters(); render();
+});
 
 /* ---------- 情境快速入口 ---------- */
 const SCN=[["today","📅 今天"],["weekend","🎉 本週末"],["free","🆓 免費"],["rain","☔ 下雨天去哪"],["baby","👶 幼兒友善"],["out","🌳 戶外放電"]];
