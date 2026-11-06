@@ -2622,7 +2622,7 @@ $("rp-form").addEventListener("submit",()=>track("report",$("rp-item").value,$("
 track("visit",document.referrer?new URL(document.referrer).hostname:"直接開啟",(window.matchMedia("(display-mode: standalone)").matches?"桌面App":"瀏覽器"),{w:innerWidth});
 
 /* ---------- 事件 ---------- */
-document.querySelector(".resultbar").addEventListener("click",e=>{ if(e.target.id==="back"){ const multi=state.tab==="co"&&state.cc&&state.cc!=="*"&&new Set(liveCourses.filter(x=>x.cc===state.cc).map(x=>x.cs)).size>1; if(multi && state.cs){ state.cs=""; state.fx=""; } else { state.plCat=""; state.cc=""; state.cs=""; state.fx=""; state.evCat=""; } render(); } });
+document.querySelector(".resultbar").addEventListener("click",e=>{ if(e.target.id==="back"){ const multi=state.tab==="co"&&state.cc&&state.cc!=="*"&&new Set(liveCourses.filter(x=>x.cc===state.cc).map(x=>x.cs)).size>1; if(multi && state.cs){ state.cs=""; state.fx=""; } else { state.plCat=""; state.cc=""; state.cs=""; state.fx=""; state.evCat=""; } render(); toResults(); } });
 $("q").addEventListener("input",e=>{state.q=e.target.value.trim();render()});
 $("sel-region").addEventListener("change",e=>{state.region=e.target.value;state.counties.clear();state.dist="";fillCounties();render()});
 $("btn-county").addEventListener("click",()=>{const pop=$("cpop");pop.hidden=!pop.hidden;$("btn-county").setAttribute("aria-expanded",!pop.hidden);});
@@ -2631,7 +2631,7 @@ $("cpop-clear").addEventListener("click",()=>{state.counties.clear();state.dist=
 $("sel-dist").addEventListener("change",e=>{state.dist=e.target.value;render()});
 $("grid").addEventListener("click",e=>{
   const go=e.target.closest("[data-go]"); if(go){ if(go.dataset.when) state.when=go.dataset.when; track("home",go.dataset.go,go.dataset.when||""); setTab(go.dataset.go); if(go.dataset.when) { buildFilters(); render(); } window.scrollTo({top:0,behavior:"smooth"}); return; }
-  const c=e.target.closest(".cat"); if(c){ if(c.dataset.ev){ state.evCat=c.dataset.ev; track("cat",c.dataset.ev,"ev"); } else if(c.dataset.cs){ state.cs=c.dataset.cs; state.fx=""; track("cat",state.cc+"/"+c.dataset.cs,"co"); } else if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); window.scrollTo({top:$("grid").offsetTop-120,behavior:"smooth"}); return; }
+  const c=e.target.closest(".cat"); if(c){ if(c.dataset.ev){ state.evCat=c.dataset.ev; track("cat",c.dataset.ev,"ev"); } else if(c.dataset.cs){ state.cs=c.dataset.cs; state.fx=""; track("cat",state.cc+"/"+c.dataset.cs,"co"); } else if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); toResults(); return; }
   if(e.target.id==="more"){ state.limit+=60; render(true); return; }
   const sb=e.target.closest(".segbar .seg"); if(sb){ state.fx=sb.dataset.fx; track("filter",sb.firstChild.textContent,"co_fx",{on:true}); render(); return; }
   const rb=e.target.closest(".rb"); if(rb&&rb.dataset.share){ shareItem(rb.dataset.share); return; }
@@ -2645,8 +2645,10 @@ function setTab(t){
   if(t!=="ev"&&t!=="fv") state.when="";
   state.plCat=""; state.cc=""; state.cs=""; state.fx=""; state.evCat="";
   buildFilters(); render();
+  window.scrollTo({top:0,behavior:"smooth"});
 }
-$("tab-home").onclick=()=>{ setTab("home"); window.scrollTo({top:0,behavior:"smooth"}); }; $("tab-ev").onclick=()=>setTab("ev"); $("tab-pk").onclick=()=>setTab("pk"); $("tab-pl").onclick=()=>setTab("pl"); $("tab-fv").onclick=()=>setTab("fv"); $("tab-co").onclick=()=>setTab("co");
+function toResults(){ const r=document.querySelector(".resultbar"); if(r) window.scrollTo({top:Math.max(0,r.getBoundingClientRect().top+window.scrollY-12),behavior:"smooth"}); }
+$("tab-home").onclick=()=>setTab("home"); $("tab-ev").onclick=()=>setTab("ev"); $("tab-pk").onclick=()=>setTab("pk"); $("tab-pl").onclick=()=>setTab("pl"); $("tab-fv").onclick=()=>setTab("fv"); $("tab-co").onclick=()=>setTab("co");
 $("clear").onclick=()=>{
   Object.assign(state,{q:"",when:"",io:"",region:"",dist:"",plCat:"",ck:"",cc:"",cs:"",fx:"",evCat:""}); state.counties.clear();
   state.ages.clear();state.types.clear();state.fees.clear(); try{localStorage.removeItem("bm-ages")}catch(e){}
