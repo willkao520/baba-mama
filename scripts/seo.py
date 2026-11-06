@@ -5,7 +5,7 @@ from urllib.parse import quote
 from playwright.sync_api import sync_playwright
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SITE = "https://babamama-wherewego.netlify.app"
+SITE = "https://baba-mama.pages.dev"
 OUT = os.path.join(ROOT, "tw")
 SLUG = {"基隆市":"keelung","臺北市":"taipei","新北市":"new-taipei","桃園市":"taoyuan","新竹市":"hsinchu-city","新竹縣":"hsinchu-county","宜蘭縣":"yilan",
  "苗栗縣":"miaoli","臺中市":"taichung","彰化縣":"changhua","南投縣":"nantou","雲林縣":"yunlin","嘉義市":"chiayi-city","嘉義縣":"chiayi-county",

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
-Sitemap: https://babamama-wherewego.netlify.app/sitemap.xml
+Sitemap: https://baba-mama.pages.dev/sitemap.xml
