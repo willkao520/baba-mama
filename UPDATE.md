@@ -3,7 +3,7 @@
 網站：爸~媽!!假日要去哪裡玩。所有資料都在 `index.html` 的陣列裡：
 - `EVENTS`、`SHOWS`：最近活動（欄位 n 名稱、c 縣市、d 區、s 開始 YYYY-MM-DD、e 結束或 null、t 類型、f 費用 free/paid/deal/check、a 年齡、io in/out/both、note、l [連結種類, 官方網址]）
 - `PARKS`：共融公園，用 `PK(名稱,縣市,區,說明,年齡,類型)`
-- `PLACES` / `PLACES_MORE` / 後面的 `PLACES.push(...)`：景點，用 `PL(名稱,縣市,區,分類代碼,費用代碼,室內外代碼,說明,年齡)`
+- `PLACES` / `PLACES_MORE` / 後面的 `PLACES.push(...)`：景點，用 `PL(名稱,縣市,區,分類代碼,費用代碼,室內外代碼,說明,年齡)`；分類代碼 M博物館美術館 S科學教育館 T主題樂園 Z動物園水族館 F農場牧場 P採果釣魚（採草莓、橘子、番茄、挖地瓜、釣魚釣蝦摸蜆） K觀光工廠 C文化鐵道園區 I室內遊戲親子館 N森林自然
 
 ## 規則
 1. 只收 0 歲到國小六年級適合的。
@@ -27,3 +27,6 @@
 
 ## kidsmap.json（不用手動更新）
 北部公辦親子活動（新北、臺北、桃園、新竹、宜蘭、基隆）由 GitHub Actions `.github/workflows/kidsmap.yml` 每天台灣時間 00:05 自動從 https://kidsmap.tw/data.json 轉出，請不要手動編輯 kidsmap.json。每日更新時，COURSES 只需補中南部、東部與離島的場次。
+
+## 部署
+網站在 Cloudflare Pages（https://baba-mama.pages.dev），push 到 main 就自動上線。`netlify.toml` 只負責把舊 Netlify 網址轉到新網址，不要修改。
