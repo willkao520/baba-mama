@@ -102,7 +102,11 @@ select{font:inherit;font-size:14px;border:1.8px solid var(--ink);border-radius:1
 .card .pic svg{width:100%;height:100%}
 .cat .cc{font-size:13px;color:var(--ink2)}
 .cat .blob{position:absolute;right:10px;top:-10px;width:34px;height:20px;border-radius:4px;transform:rotate(6deg);opacity:.85}
-.back{font:inherit;font-size:15px;border:none;background:none;color:var(--tomato);cursor:pointer;padding:0;text-decoration:underline}
+.back{font:inherit;font-size:16px;font-weight:700;display:flex;align-items:center;gap:6px;width:fit-content;min-height:44px;margin:0 0 8px;padding:6px 16px;border:2px solid var(--ink);border-radius:999px;background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--line);cursor:pointer;text-decoration:none}
+.back:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}
+.backbar{position:fixed;left:0;right:0;top:0;z-index:55;display:none;align-items:center;justify-content:center;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;background:#fffaf0;border-bottom:2px solid var(--ink);box-shadow:0 4px 12px rgba(58,46,40,.12)}
+.backbar.show{display:flex}
+.backbar .back{margin:0;box-shadow:none;background:var(--sun)}
 .more{display:block;margin:22px auto 0;font:inherit;font-size:16px;border:2px solid var(--ink);border-radius:999px;background:#fff;padding:8px 26px;cursor:pointer;box-shadow:2px 3px 0 var(--ink)}
 .gstar{display:inline-flex;align-items:center;gap:4px;font-size:13px;margin-top:6px;color:var(--ink);text-decoration:none;position:relative;z-index:2}
 .gstar b{color:#e8a10c;letter-spacing:-1px}
@@ -314,6 +318,7 @@ body.at-home .panel,body.at-home .resultbar,body.at-home .actv,body.at-home .sor
   <button class="toggle" id="toggle" type="button" aria-expanded="false">＋ 更多篩選（類型、費用、室內外）</button>
 </section>
 
+<div class="backbar" id="backbar" aria-live="polite"></div>
 <div class="resultbar">
   <span class="hand" id="rcount"></span>
   <span><button class="lnkbtn" id="open-suggest" type="button">推薦漏掉的地方</button>　<button class="lnkbtn" id="open-report" type="button">回報問題</button>　<button class="clear" id="clear">清除所有篩選</button></span>
@@ -2443,7 +2448,7 @@ function render(more){
       const ic=CC_ICON[state.cc]||ICON["*"];
       g.innerHTML = subs.map(([k,arr],i)=>{const nf=arr.filter(x=>x.fx).length; return `<button class="cat" data-cs="${k}" type="button"><span class="blob" style="background:${TAPE[(i+1)%TAPE.length]}"></span><span class="ic">${ic}</span><span class="cn">${k==="其他"?"其他"+state.cc.split("・")[0]:k}</span><span class="cc">${arr.length} 個${nf?`・固定 ${nf}`:""}</span></button>`}).join("")
         + `<button class="cat" data-cs="*" type="button"><span class="blob" style="background:#ddd"></span><span class="ic">${ICON["*"]}</span><span class="cn">全部${state.cc}</span><span class="cc">${base.length} 個・不細分全部看</span></button>`;
-      $("rcount").innerHTML = `<button class="back" id="back" type="button">← 回到分類</button>　「${state.cc}」再選一種 <span style="font-size:14px;color:var(--ink2)">（共 ${base.length} 個）</span>`;
+      $("rcount").innerHTML = `<button class="back" id="back" type="button">← 回到分類</button>「${state.cc}」再選一種 <span style="font-size:14px;color:var(--ink2)">（共 ${base.length} 個）</span>`;
       updCounts(); return;
     }
   }
@@ -2471,13 +2476,14 @@ function render(more){
   g.innerHTML = subBar + (list.length ? shown.map(card).join("") + (list.length>shown.length?`<button class="more" id="more" type="button" style="grid-column:1/-1">再看 ${Math.min(60,list.length-shown.length)} 個（還有 ${list.length-shown.length} 個）</button>`:"") :
     `<div class="empty" style="grid-column:1/-1"><div class="hand">${state.tab==="fv"&&!src.length?"還沒有收藏喔":"找不到符合的，換個條件試試看"}</div><p>${state.tab==="fv"&&!src.length?"在卡片右上角按愛心，就會存在這裡（只存在這台裝置）。":"可以少選幾個條件，或改搜尋其他關鍵字。"}</p></div>`);
   const lbl = state.tab==="co"?"個親子課程・報名場次":state.tab==="ev"?"個活動":state.tab==="pk"?"座公園":state.tab==="pl"?"個景點":"個收藏";
-  const back = (state.tab==="pl" && state.plCat)||(state.tab==="ev" && state.evCat) ? `<button class="back" id="back" type="button">← 回到分類</button>　` : (state.tab==="co" && state.cc) ? `<button class="back" id="back" type="button">← ${state.cc!=="*"&&state.cs?"回到「"+state.cc+"」":"回到分類"}</button>　` : "";
+  const back = (state.tab==="pl" && state.plCat)||(state.tab==="ev" && state.evCat) ? `<button class="back" id="back" type="button">← 回到分類</button>` : (state.tab==="co" && state.cc) ? `<button class="back" id="back" type="button">← ${state.cc!=="*"&&state.cs?"回到「"+state.cc+"」":"回到分類"}</button>` : "";
   const catName = state.tab==="pl" && state.plCat && state.plCat!=="*" ? `「${state.plCat}」` : state.tab==="ev" && state.evCat && state.evCat!=="*" ? `「${state.evCat}」` : state.tab==="co" && state.cc && state.cc!=="*" ? `「${state.cc}${state.cs&&state.cs!=="*"?"・"+state.cs:""}」` : "";
   $("rcount").innerHTML = `${back}${catName}找到 ${list.length} ${lbl}`;
   if(typeof watchRatings==="function") watchRatings();
   updCounts();
 }
 function updCounts(){
+  try{ const bb=document.getElementById("backbar"); if(bb) bb.innerHTML=""; syncBackBar(); }catch(e){}
   try{ renderActv(); }catch(e){}
   try{ updQuick(); }catch(e){}
   if(typeof updToggle==="function") try{updToggle()}catch(e){}
@@ -2882,6 +2888,17 @@ function setTab(t){
   buildFilters(); render();
   window.scrollTo({top:0,behavior:"smooth"});
 }
+/* 往下滑時，原本的「回到…」按鈕捲出畫面後，頂端出現固定返回列 */
+function syncBackBar(){
+  const bar=document.getElementById("backbar"), b=document.getElementById("back");
+  if(!bar) return;
+  if(!b){ bar.classList.remove("show"); bar.innerHTML=""; return; }
+  const out=b.getBoundingClientRect().bottom<0;
+  if(out && !bar.firstChild){ bar.innerHTML=`<button class="back" id="back2" type="button">${b.textContent}</button>`; }
+  bar.classList.toggle("show",out);
+}
+window.addEventListener("scroll",syncBackBar,{passive:true});
+document.getElementById("backbar").addEventListener("click",e=>{ if(e.target.closest("#back2")){ const b=document.getElementById("back"); if(b) b.click(); } });
 function toResults(){ const r=document.querySelector(".resultbar"); if(r) window.scrollTo({top:Math.max(0,r.getBoundingClientRect().top+window.scrollY-12),behavior:"smooth"}); }
 $("tab-home").onclick=()=>setTab("home"); $("tab-ev").onclick=()=>setTab("ev"); $("tab-pk").onclick=()=>setTab("pk"); $("tab-pl").onclick=()=>setTab("pl"); $("tab-fv").onclick=()=>setTab("fv"); $("tab-co").onclick=()=>setTab("co");
 $("clear").onclick=()=>{
