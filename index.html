@@ -2557,11 +2557,11 @@ function quickHtml(){
   const ch=(act,val,label,on)=>out.push(`<button type="button" data-qa="${act}" data-qv="${val}" aria-pressed="${on}">${label}</button>`);
   const ages=()=>AGES.forEach(a=>ch("age",a.k,a.label.replace(/（.*?）/,""),state.ages.has(a.k)));
   const cty=()=>{ const cs=[...state.counties]; ch("county","",cs.length?(cs.length>2?cs.slice(0,2).join("＋")+"…":cs.join("＋"))+" ▾":"縣市 ▾",cs.length>0); };
-  if(t==="ev"){ ages(); ch("when","today","今天",state.when==="today"); ch("when","weekend","本週末",state.when==="weekend"); ch("when","next","下週末",state.when==="next"); ch("fee","free","免費",state.fees.has("free")); cty(); }
+  if(t==="ev"){ cty(); ch("when","today","今天",state.when==="today"); ch("when","weekend","本週末",state.when==="weekend"); ch("when","next","下週末",state.when==="next"); ch("fee","free","免費",state.fees.has("free")); ages(); }
   else if(t==="pk"){ cty(); ch("dist","",(state.dist||"鄉鎮區")+" ▾",!!state.dist); }
-  else if(t==="pl"){ ages(); ch("io","in","室內（下雨OK）",state.io==="in"); ch("fee","free","免費",state.fees.has("free")); cty(); }
-  else if(t==="co"){ ages(); ch("when","weekend","本週末",state.when==="weekend"); ch("fee","free","免費",state.fees.has("free")); cty(); }
-  else { ages(); cty(); }
+  else if(t==="pl"){ cty(); ch("io","in","室內（下雨OK）",state.io==="in"); ch("fee","free","免費",state.fees.has("free")); ages(); }
+  else if(t==="co"){ cty(); ch("when","weekend","本週末",state.when==="weekend"); ch("fee","free","免費",state.fees.has("free")); ages(); }
+  else { cty(); ages(); }
   return out.join("");
 }
 function updQuick(){
