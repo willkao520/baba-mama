@@ -204,6 +204,10 @@ details summary{cursor:pointer;color:var(--ink)}
   .tab[aria-selected="true"]{background:var(--sun)}
   .tab .cnt{position:absolute;top:0;right:8%;font-size:10px;padding:0 5px;margin:0}
   .toggle{display:none!important}
+  .wip{display:flex;align-items:center;gap:8px;margin:12px auto 0;max-width:520px;background:#fff6d6;border:2px dashed var(--ink);border-radius:14px;padding:8px 12px;font-size:14.5px;line-height:1.45;text-align:left}
+  .wip button.x{flex:none;font:inherit;border:none;background:none;font-size:18px;cursor:pointer;color:var(--ink2);padding:0 2px}
+  .tabnote{display:none;margin:8px 2px 0;font-size:14px;color:var(--ink2)}
+  .tabnote.show{display:block}
   .quick{display:flex;gap:6px;overflow-x:auto;white-space:nowrap;padding:8px 2px 4px;margin:0 -4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .quick::-webkit-scrollbar{display:none}
   .quick button{flex:none;font:inherit;font-size:14.5px;border:2px solid var(--ink);border-radius:999px;background:#fff;padding:5px 12px;cursor:pointer;color:var(--ink)}
@@ -275,6 +279,7 @@ body.at-home .panel,body.at-home .resultbar,body.at-home .actv,body.at-home .sor
   <h1 class="title">爸<span class="a">~</span>媽<span class="bang">!!</span><br><span class="b">假日要去哪裡玩</span></h1>
   <svg class="squiggle" viewBox="0 0 320 16" aria-hidden="true"><path d="M4 9 C 30 2, 50 15, 76 8 S 124 2, 150 9 S 200 15, 226 8 S 280 2, 316 9" fill="none" stroke="#e4664a" stroke-width="3.2" stroke-linecap="round"/></svg>
   <p class="sub">全台給 0 歲到國小六年級孩子的活動、共融公園和景點，點一下就開地圖導航</p>
+  <div class="wip" id="wip" hidden><span>🔧 持續優化、努力抓活動中！有漏掉的活動，歡迎到<button class="lnkbtn" id="wip-sg" type="button">推薦漏掉的地方</button>告訴我們</span><button class="x" id="wip-x" type="button" aria-label="關閉">✕</button></div>
 </header>
 
 <div class="tabs" role="tablist">
@@ -319,6 +324,7 @@ body.at-home .panel,body.at-home .resultbar,body.at-home .actv,body.at-home .sor
 </section>
 
 <div class="backbar" id="backbar" aria-live="polite"></div>
+<div class="tabnote" id="tabnote">活動持續更新中，沒看到想去的？<button class="lnkbtn" id="tn-sg" type="button">推薦漏掉的地方</button></div>
 <div class="resultbar">
   <span class="hand" id="rcount"></span>
   <span><button class="lnkbtn" id="open-suggest" type="button">推薦漏掉的地方</button>　<button class="lnkbtn" id="open-report" type="button">回報問題</button>　<button class="clear" id="clear">清除所有篩選</button></span>
@@ -2568,6 +2574,7 @@ function quickHtml(){
   return out.join("");
 }
 function updQuick(){
+  try{ $("tabnote").classList.toggle("show",state.tab==="ev"||state.tab==="co"); }catch(_){}
   const q=$("quick"); if(!q) return;
   q.innerHTML=quickHtml();
   const n=activeN();
@@ -2838,6 +2845,9 @@ $("rp-form").addEventListener("submit",async e=>{
 });
 
 $("sg-county").innerHTML='<option value="">縣市</option>'+COUNTY_ORDER.map(c=>`<option>${c}</option>`).join("");
+try{ const w=$("wip"); if(w && localStorage.getItem("bm-wip-x")!=="1") w.hidden=false;
+  $("wip-x").onclick=()=>{ w.hidden=true; try{localStorage.setItem("bm-wip-x","1")}catch(_){} };
+  $("wip-sg").onclick=()=>$("open-suggest").click(); $("tn-sg").onclick=()=>$("open-suggest").click(); }catch(_){ }
 $("open-suggest").onclick=()=>{ $("sg-msg").textContent=BE?"":"推薦功能還沒開通（網站管理者設定好資料庫後就能用）。"; $("sg").classList.add("show"); };
 $("sg-close").onclick=()=>$("sg").classList.remove("show");
 $("sg").addEventListener("click",e=>{if(e.target.id==="sg")$("sg").classList.remove("show")});
