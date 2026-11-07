@@ -205,6 +205,7 @@ details summary{cursor:pointer;color:var(--ink)}
   .tab .cnt{position:absolute;top:0;right:8%;font-size:10px;padding:0 5px;margin:0}
   .toggle{display:none!important}
   .wip{display:flex;align-items:center;gap:8px;margin:12px auto 0;max-width:520px;background:#fff6d6;border:2px dashed var(--ink);border-radius:14px;padding:8px 12px;font-size:14.5px;line-height:1.45;text-align:left}
+  .wip[hidden]{display:none}
   .wip button.x{flex:none;font:inherit;border:none;background:none;font-size:18px;cursor:pointer;color:var(--ink2);padding:0 2px}
   .tabnote{display:none;margin:8px 2px 0;font-size:14px;color:var(--ink2)}
   .tabnote.show{display:block}
@@ -2845,8 +2846,9 @@ $("rp-form").addEventListener("submit",async e=>{
 });
 
 $("sg-county").innerHTML='<option value="">縣市</option>'+COUNTY_ORDER.map(c=>`<option>${c}</option>`).join("");
-try{ const w=$("wip"); if(w && localStorage.getItem("bm-wip-x")!=="1") w.hidden=false;
-  $("wip-x").onclick=()=>{ w.hidden=true; try{localStorage.setItem("bm-wip-x","1")}catch(_){} };
+try{ const w=$("wip"), today=new Date().toLocaleDateString("sv",{timeZone:"Asia/Taipei"}); let seen=""; try{seen=localStorage.getItem("bm-wip-x")||""}catch(_){}
+  if(w && seen!==today) w.hidden=false;
+  $("wip-x").onclick=()=>{ w.hidden=true; try{localStorage.setItem("bm-wip-x",today)}catch(_){} };
   $("wip-sg").onclick=()=>$("open-suggest").click(); $("tn-sg").onclick=()=>$("open-suggest").click(); }catch(_){ }
 $("open-suggest").onclick=()=>{ $("sg-msg").textContent=BE?"":"推薦功能還沒開通（網站管理者設定好資料庫後就能用）。"; $("sg").classList.add("show"); };
 $("sg-close").onclick=()=>$("sg").classList.remove("show");
