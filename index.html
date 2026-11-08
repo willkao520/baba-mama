@@ -236,6 +236,7 @@ details summary{cursor:pointer;color:var(--ink)}
 .home .cat .num{display:inline-block;background:var(--ink);color:#fff;border-radius:12px;padding:1px 10px;font-size:14px;margin-top:6px}
 .hpick{grid-column:1/-1;border:2px solid var(--ink);border-radius:16px;background:#fff;padding:12px 14px;box-shadow:3px 4px 0 var(--ink)}
 .hpick-h{font-weight:700;font-size:17px;margin-bottom:6px}.hpick-h small{font-weight:400;color:var(--ink2);font-size:13px;margin-left:4px}
+.card.flash{animation:flash 2s ease}@keyframes flash{0%,40%{box-shadow:0 0 0 4px #f2b33d,3px 4px 0 var(--ink)}100%{}}
 .hpick-rg{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 6px}
 .hpick-rg button{font:inherit;font-size:13px;border:2px solid var(--ink);border-radius:999px;padding:3px 11px;background:#fff;cursor:pointer;color:var(--ink)}
 .hpick-rg button[aria-pressed="true"]{background:#f2b33d}
@@ -2280,7 +2281,7 @@ let favs = new Set();
 try{ favs = new Set(JSON.parse(localStorage.getItem("bm-favs")||"[]")); }catch(e){}
 const saveFavs=()=>{try{localStorage.setItem("bm-favs",JSON.stringify([...favs]))}catch(e){}};
 
-const state = {tab:"home", q:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), evCat:"", cc:"", cs:"", fx:"", sort:"", dist:"", plCat:"", limit:60, ck:""};
+const state = {tab:"home", q:"", rg:"", when:"", ages:new Set(), types:new Set(), fees:new Set(), io:"", region:"", counties:new Set(), evCat:"", cc:"", cs:"", fx:"", sort:"", dist:"", plCat:"", limit:60, ck:""};
 try{ JSON.parse(localStorage.getItem("bm-counties")||"[]").forEach(c=>state.counties.add(c)); }catch(e){}
 try{ JSON.parse(localStorage.getItem("bm-ages")||"[]").forEach(a=>state.ages.add(a)); }catch(e){}
 
@@ -2347,16 +2348,16 @@ function fillCounties(){
     const cs=avail.filter(c=>REGION[c]===g); if(!cs.length) return;
     const row=document.createElement("div"); row.className="cgrp"; row.id="cg-"+g;
     const t=document.createElement("b"); t.textContent=g; t.title="整區全選"; row.appendChild(t);
-    t.onclick=()=>{const all=cs.every(c=>state.counties.has(c)); cs.forEach(c=>all?state.counties.delete(c):state.counties.add(c)); fillCounties(); render();};
+    t.onclick=()=>{state.rg=""; const all=cs.every(c=>state.counties.has(c)); cs.forEach(c=>all?state.counties.delete(c):state.counties.add(c)); fillCounties(); render();};
     $("cpop-body").appendChild(row);
-    cs.forEach(c=>{ const n=src.filter(x=>x.c===c).length; chip(row.id,`${c} ${n}`,"cty",b=>{state.counties.has(c)?state.counties.delete(c):state.counties.add(c); b.setAttribute("aria-pressed",state.counties.has(c)); updCountyBtn(); fillDists(); render();},state.counties.has(c)); });
+    cs.forEach(c=>{ const n=src.filter(x=>x.c===c).length; chip(row.id,`${c} ${n}`,"cty",b=>{state.rg=""; state.counties.has(c)?state.counties.delete(c):state.counties.add(c); b.setAttribute("aria-pressed",state.counties.has(c)); updCountyBtn(); fillDists(); render();},state.counties.has(c)); });
   });
   updCountyBtn(); fillDists();
 }
 function updCountyBtn(){
   try{localStorage.setItem("bm-counties",JSON.stringify([...state.counties]))}catch(e){}
   const b=$("btn-county"), cs=[...state.counties];
-  b.textContent = cs.length===0 ? "所有縣市 ▾" : cs.length<=3 ? cs.join("＋")+" ▾" : `${cs.slice(0,2).join("＋")} 等${cs.length}個 ▾`;
+  b.textContent = state.rg ? state.rg+" ▾" : cs.length===0 ? "所有縣市 ▾" : cs.length<=3 ? cs.join("＋")+" ▾" : `${cs.slice(0,2).join("＋")} 等${cs.length}個 ▾`;
   b.classList.toggle("on",cs.length>0);
 }
 function fillDists(){
@@ -2405,8 +2406,9 @@ function match(x){
   if(state.types.size && !state.types.has(x.t)) return false;
   if(state.fees.size && !state.fees.has(x.f)) return false;
   if(state.io && !(x.io===state.io || x.io==="both")) return false;
-  if(state.region && !state.counties.size && REGION[x.c]!==state.region) return false;
-  if(state.counties.size && !state.counties.has(x.c)) return false;
+  if(state.region && !state.counties.size && !state.rg && REGION[x.c]!==state.region) return false;
+  if(state.rg){ const g=PICK_RG.find(r=>r[0]===state.rg); if(g && !g[1].includes(x.c)) return false; }
+  else if(state.counties.size && !state.counties.has(x.c)) return false;
   if(state.tab==="pl" && x.kind==="pl" && state.plCat && x.t!==state.plCat) return false;
   if(state.tab==="ev" && x.kind==="ev" && state.evCat && state.evCat!=="*" && x.t!==state.evCat) return false;
   if(x.kind==="co" && state.cc && state.cc!=="*" && x.cc!==state.cc) return false;
@@ -2454,7 +2456,7 @@ function card(x,i){
   const evSearch = x.kind==="ev" ? ` <a class="srch" href="https://www.google.com/search?q=${encodeURIComponent(x.n+" "+(x.s||"").slice(0,4))}" target="_blank" rel="noopener">搜尋這個活動 ↗</a>` : "";
   const off = x.kind==="co" ? `<a href="${x.l}" target="_blank" rel="noopener" class="${/google\.com\/search/.test(x.l)?"srch":""}">${/google\.com\/search/.test(x.l)?"搜尋官網":/yam\.com|parenting\.com/.test(x.l)?"相關報導":"官網"} ↗</a>${x.r?` <a class="regbtn" href="${x.r}" target="_blank" rel="noopener">報名・看剩餘名額 ↗</a>`:""}` : x.kind==="pk" ? "" : x.l ? `<a href="${x.l[1]}" target="_blank" rel="noopener">${LK[x.l[0]]} ↗</a>`
                   : `<a href="https://www.google.com/search?q=${encodeURIComponent(x.n+" 官網")}" target="_blank" rel="noopener" class="srch">搜尋官網 ↗</a>`;
-  return `<article class="card">
+  return `<article class="card" data-sid="${sid(x)}">
     <button class="stretch" type="button" data-open="${esc(k)}" aria-label="看 ${esc(x.n)} 的詳情"></button>
     <span class="tape" style="background:${TAPE[i%TAPE.length]}"></span>
     <button class="fav" data-k="${esc(k)}" aria-label="${on?"取消收藏":"收藏"}" aria-pressed="${on}">${heart(on)}</button>
@@ -2555,7 +2557,7 @@ function homePicks(){
   const md=d=>(d.getMonth()+1)+"/"+d.getDate();
   return `<div class="hpick"><div class="hpick-h">🎉 這個週末精選 <small>${md(a)}–${md(b)}</small></div>`
     + `<div class="hpick-rg">${avail.map(o=>`<button type="button" data-pickrg="${esc(o[0])}" aria-pressed="${o===cur}">${esc(o[0])}</button>`).join("")}</div>`
-    + list.map(x=>`<button type="button" class="hpick-i" data-pick="${sid(x)}"><b>${esc(x.n)}</b><span>${esc(x.c.replace(/[市縣]$/,""))}${x.d?"・"+esc(x.d):""}${x.f==="free"?' <em>免費</em>':''}</span></button>`).join("")
+    + list.map(x=>`<button type="button" class="hpick-i" data-pick="${sid(x)}" data-rg="${esc(cur[0])}"><b>${esc(x.n)}</b><span>${esc(x.c.replace(/[市縣]$/,""))}${x.d?"・"+esc(x.d):""}${x.f==="free"?' <em>免費</em>':''}</span></button>`).join("")
     + `<button type="button" class="hpick-more" data-go="ev" data-when="weekend" data-rg="${esc(cur[0])}">看${esc(cur[2])}這個週末全部 ${total} 個活動 →</button></div>`;
 }
 function render(more){
@@ -2777,7 +2779,7 @@ function renderActv(){
   state.ages.forEach(a=>c.push(["age",a,(AGES.find(z=>z.k===a)||{}).label||a]));
   state.fees.forEach(f=>c.push(["fee",f,FEES[f]]));
   if(state.io) c.push(["io","",state.io==="in"?"室內":state.io==="out"?"戶外":"室內外"]);
-  state.counties.forEach(k=>c.push(["county",k,k]));
+  if(state.rg) c.push(["rg","",state.rg]); else state.counties.forEach(k=>c.push(["county",k,k]));
   if(state.dist) c.push(["dist","",state.dist]);
   state.types.forEach(t=>c.push(["type",t,t]));
   if(state.q) c.push(["q","","搜尋：「"+state.q+"」"]);
@@ -2791,7 +2793,7 @@ document.addEventListener("click",e=>{
   if(r){ const k=r.dataset.rm, v=r.dataset.v;
     if(k==="when") state.when=""; else if(k==="age"){ state.ages.delete(v); try{localStorage.setItem("bm-ages",JSON.stringify([...state.ages]))}catch(_){} }
     else if(k==="fee") state.fees.delete(v); else if(k==="io") state.io=""; else if(k==="county"){ state.counties.delete(v); state.dist=""; try{localStorage.setItem("bm-counties",JSON.stringify([...state.counties]))}catch(_){} }
-    else if(k==="dist") state.dist=""; else if(k==="type") state.types.delete(v); else if(k==="q"){ state.q=""; $("q").value=""; }
+    else if(k==="dist") state.dist=""; else if(k==="type") state.types.delete(v); else if(k==="q"){ state.q=""; $("q").value=""; } else if(k==="rg"){ state.rg=""; }
     track("filter_rm",r.textContent,state.tab); buildFilters(); render(); return; }
   const so=e.target.closest("#sortbar [data-sort]");
   if(so){ state.sort=so.dataset.sort; track("sort",state.sort||"default",state.tab); render(); }
@@ -3036,8 +3038,12 @@ $("cpop-clear").addEventListener("click",()=>{state.counties.clear();state.dist=
 $("sel-dist").addEventListener("change",e=>{state.dist=e.target.value;render()});
 $("grid").addEventListener("click",e=>{
   const prg=e.target.closest("[data-pickrg]"); if(prg){ pickRg=prg.dataset.pickrg; try{localStorage.setItem("bm-pickrg",pickRg)}catch(_){} track("home","pickrg",pickRg); render(); return; }
-  const pk=e.target.closest("[data-pick]"); if(pk){ const x=ALLITEMS().find(i=>sid(i)===pk.dataset.pick); track("home","pick",x?x.n:""); if(openSid(pk.dataset.pick)){ buildFilters&&buildFilters(); window.scrollTo({top:0,behavior:"smooth"}); } return; }
-  const go=e.target.closest("[data-go]"); if(go){ if(go.dataset.when) state.when=go.dataset.when; track("home",go.dataset.go,go.dataset.when||""); setTab(go.dataset.go); if(go.dataset.rg){ state.q=go.dataset.rg; $("q").value=go.dataset.rg; state.evCat="*"; } if(go.dataset.when||go.dataset.rg) { buildFilters(); render(); } window.scrollTo({top:0,behavior:"smooth"}); return; }
+  const pk=e.target.closest("[data-pick]"); if(pk){ const id=pk.dataset.pick, rg=pk.dataset.rg||"", x=ALLITEMS().find(i=>sid(i)===id); track("home","pick",x?x.n:"");
+    setTab("ev"); state.rg=rg; state.when="weekend"; state.evCat="*"; state.q=""; $("q").value=""; buildFilters(); render();
+    const list=liveEvents.filter(match); const idx=list.indexOf(x); if(idx>=state.limit){ state.limit=idx+20; render(true); }
+    setTimeout(()=>{ const el=document.querySelector(`.card[data-sid="${id}"]`); if(el){ const y=el.getBoundingClientRect().top+window.scrollY-90; window.scrollTo({top:y,behavior:"smooth"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),2200); } },350);
+    return; }
+  const go=e.target.closest("[data-go]"); if(go){ if(go.dataset.when) state.when=go.dataset.when; track("home",go.dataset.go,go.dataset.when||""); setTab(go.dataset.go); if(go.dataset.rg){ state.rg=go.dataset.rg; state.evCat="*"; } if(go.dataset.when||go.dataset.rg) { buildFilters(); render(); } window.scrollTo({top:0,behavior:"smooth"}); return; }
   const c=e.target.closest(".cat"); if(c){ if(c.dataset.ev){ state.evCat=c.dataset.ev; track("cat",c.dataset.ev,"ev"); } else if(c.dataset.cs){ state.cs=c.dataset.cs; state.fx=""; track("cat",state.cc+"/"+c.dataset.cs,"co"); } else if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); toResults(); return; }
   if(e.target.id==="more"){ state.limit+=60; render(true); return; }
   const sb=e.target.closest(".segbar .seg"); if(sb){ state.fx=sb.dataset.fx; track("filter",sb.firstChild.textContent,"co_fx",{on:true}); render(); return; }
@@ -3050,7 +3056,7 @@ function setTab(t){
   state.tab=t;
   [["home","tab-home"],["ev","tab-ev"],["pk","tab-pk"],["pl","tab-pl"],["co","tab-co"],["fv","tab-fv"]].forEach(([k,id])=>$(id).setAttribute("aria-selected",k===t));
   if(t!=="ev"&&t!=="fv") state.when="";
-  state.plCat=""; state.cc=""; state.cs=""; state.fx=""; state.evCat=""; state.sort="";
+  state.plCat=""; state.cc=""; state.cs=""; state.fx=""; state.evCat=""; state.sort=""; state.rg="";
   buildFilters(); render();
   window.scrollTo({top:0,behavior:"smooth"});
 }
