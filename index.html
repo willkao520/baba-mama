@@ -21,7 +21,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="假日去哪玩">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -169,7 +171,7 @@ a.where .go{color:var(--sky);font-weight:700;margin-left:6px} .lnk{display:flex;
 .install{position:absolute;right:4px;top:-6px;font-family:"Huninn",sans-serif;font-size:15px;border:2px solid var(--ink);background:#fff;color:var(--ink);
   padding:6px 12px;border-radius:12px 14px 10px 14px;cursor:pointer;box-shadow:2px 3px 0 var(--ink);z-index:2}
 .install:hover{background:var(--sun)}
-@media (max-width:620px){.install{position:static;margin:0 auto 6px;display:block}}
+
 .dlg-bg{position:fixed;inset:0;background:rgba(58,46,40,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:300}
 .dlg-bg.show{display:flex}
 .dlg{background:var(--paper);border:2.5px solid var(--ink);border-radius:18px 22px 16px 20px;max-width:420px;width:100%;padding:18px 18px 14px;box-shadow:5px 6px 0 var(--ink);max-height:90vh;overflow:auto}
@@ -282,20 +284,41 @@ body.at-home .panel,body.at-home .resultbar,body.at-home .actv,body.at-home .sor
 .actv{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 6px;font-size:13.5px}
 .actv button{font:inherit;font-size:13.5px;background:#fff3d6;border:1.5px solid #e9cf8f;border-radius:999px;padding:2px 10px;cursor:pointer;color:var(--ink)}
 .sortbar{font-size:13.5px;margin:0 0 6px}.sortbar button{font:inherit;font-size:13.5px;border:0;background:none;padding:0 4px;cursor:pointer;color:var(--ink2)}.sortbar button[aria-pressed="true"]{color:var(--ink);font-weight:700;text-decoration:underline}
+
+.caps{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 6px;position:relative;z-index:2}
+.cap,.cap.install{position:static;font-family:inherit;font-size:15px;border:2px solid var(--ink);background:#fff;color:var(--ink);border-radius:999px;padding:5px 14px;cursor:pointer;box-shadow:2px 3px 0 var(--ink);display:inline-flex;align-items:center;gap:4px}
+.cap.tk{background:#fff3d6}
+.fvn:empty{display:none}.fvn{background:var(--tomato);color:#fff;border-radius:9px;font-size:11.5px;padding:0 6px;margin-left:3px;line-height:1.5}
+.title.logo{margin:0}.title.logo img{width:min(240px,58vw);height:auto;display:block;margin:2px auto 0}
+.topbar{position:fixed;left:0;right:0;top:0;z-index:70;display:flex;justify-content:space-between;align-items:center;gap:8px;background:#fffaf0;border-bottom:2.5px solid var(--ink);padding:calc(5px + env(safe-area-inset-top)) 12px 5px;box-shadow:0 4px 12px rgba(58,46,40,.08);transform:translateY(-110%);transition:transform .22s ease;visibility:hidden}
+.topbar.show{transform:none;visibility:visible}
+body.sheet-open .topbar{transform:translateY(-110%)}
+.tb-brand{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--ink);font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden}
+.tb-brand img{width:34px;height:34px;flex:none}.tb-brand span{color:#3f7fc4}
+.tb-btns{display:flex;gap:6px;flex:none}
+.tbb{position:relative;font:inherit;font-size:11px;line-height:1.15;border:1.5px solid var(--ink);border-radius:10px;background:#fff;padding:2px 7px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;align-items:center;min-width:44px}
+.tbb .i{font-size:16px}.tbb.tk{background:#fff3d6}
+.tbb .fvn{position:absolute;top:-7px;right:-7px;margin:0}
+body.installed .install,body.installed .tbb.inst{display:none!important}
+@media (max-width:380px){.tb-brand span{display:none}}
+@media (max-width:700px){.caps{gap:6px;flex-wrap:nowrap}.cap,.cap.install{font-size:13.5px;padding:4px 10px;white-space:nowrap}.title.logo img{width:min(200px,52vw)}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <button class="install" id="install" type="button">＋ 加到桌面</button>
+  <div class="caps"><button type="button" class="cap tk" data-ticket="cap">🎟️ 票券比價</button><button type="button" class="cap" data-fvgo="cap">❤️ 收藏<span class="fvn"></span></button><button class="cap install" id="install" type="button">＋ 加到桌面</button></div>
   <svg class="doodle d1" viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="12" fill="#f1b33b" stroke="#3a2e28" stroke-width="2"/><g stroke="#3a2e28" stroke-width="2.4" stroke-linecap="round"><path d="M30 6v8M30 46v8M6 30h8M46 30h8M13 13l6 6M41 41l6 6M47 13l-6 6M19 41l-6 6"/></g></svg>
   <svg class="doodle d2" viewBox="0 0 64 60" aria-hidden="true"><path d="M8 52 C10 30 20 18 32 10 C44 18 54 30 56 52 Z" fill="#ee8fa6" stroke="#3a2e28" stroke-width="2.2" stroke-linejoin="round"/><path d="M32 10 L32 4" stroke="#3a2e28" stroke-width="2.2" stroke-linecap="round"/><path d="M20 52v-10h8v10M36 40h8v6h-8z" fill="#fff" stroke="#3a2e28" stroke-width="2"/></svg>
-  <h1 class="title">爸<span class="a">~</span>媽<span class="bang">!!</span><br><span class="b">假日要去哪裡玩</span></h1>
-  <svg class="squiggle" viewBox="0 0 320 16" aria-hidden="true"><path d="M4 9 C 30 2, 50 15, 76 8 S 124 2, 150 9 S 200 15, 226 8 S 280 2, 316 9" fill="none" stroke="#e4664a" stroke-width="3.2" stroke-linecap="round"/></svg>
+  <h1 class="title logo"><a href="./" data-homego><img src="icons/logo-full.png" width="520" height="683" alt="爸~媽!!假日要去哪裡玩"></a></h1>
   <p class="sub">全台給 0 歲到國小六年級孩子的活動、共融公園和景點，點一下就開地圖導航</p>
   <div class="wip" id="wip" hidden><span>🔧 持續優化、努力抓活動中！有漏掉的活動，歡迎到<button class="lnkbtn" id="wip-sg" type="button">推薦漏掉的地方</button>告訴我們</span><button class="x" id="wip-x" type="button" aria-label="關閉">✕</button></div>
 </header>
 
+<div class="topbar" id="topbar" aria-hidden="true">
+  <a class="tb-brand" href="./" data-homego><img src="icons/logo-mark.png" width="34" height="34" alt="">爸~媽!! <span>假日去哪玩</span></a>
+  <span class="tb-btns"><button type="button" class="tbb tk" data-ticket="bar" aria-label="票券比價"><span class="i">🎟️</span>比價</button><button type="button" class="tbb" data-fvgo="bar" aria-label="我的收藏"><span class="i">❤️</span>收藏<span class="fvn"></span></button><button type="button" class="tbb inst" data-inst aria-label="加到桌面"><span class="i">📲</span>加桌面</button></span>
+</div>
 <div class="tabs" role="tablist">
   <button class="tab" role="tab" id="tab-home" aria-selected="true"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></svg><span class="tl">首頁</span><span class="ts">首頁</span></button>
   <button class="tab" role="tab" id="tab-ev" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6h14v13H5z" fill="none"/><path d="M5 10h14M9 4v4M15 4v4" /><circle cx="12" cy="15" r="1.6" fill="currentColor"/></svg><span class="tl">最近活動</span><span class="ts">最近活動</span><span class="cnt" id="cnt-ev"></span></button>
@@ -2627,8 +2650,7 @@ function render(more){
              ["pl","隨時可去的景點",PLACES.length,"博物館、樂園、動物園、農場",ICON["主題樂園"]],
              ["co","親子課程・報名",liveCourses.length,"要先報名：說故事、手作、體驗課",ICON["圖書館"]]];
     g.innerHTML = `<div class="wx" id="wx" style="grid-column:1/-1">${wxHtml()}</div>` + T.map(([k,n,c,d,ic],i)=>`<button class="cat" data-go="${k}" type="button"><span class="blob" style="background:${TAPE[i%TAPE.length]}"></span><span class="ic">${ic}</span><span class="cn">${n}</span><span class="num">${c} 個</span><span class="cc">${d}</span></button>`).join("")
-      + homePicks()
-      + `<div class="homefav"><button type="button" data-go="fv">❤️ 我的收藏 ${ALLITEMS().filter(x=>favs.has(key(x))).length}</button></div>`;
+      + homePicks();
     updCounts(); loadWx(); return;
   }
   if(state.tab==="ev" && !state.evCat && !state.q){
@@ -2693,6 +2715,7 @@ function render(more){
 function updCounts(){
   try{ const bb=document.getElementById("backbar"); if(bb) bb.innerHTML=""; syncBackBar(); }catch(e){}
   try{ renderActv(); }catch(e){}
+  try{ updFvn(); }catch(e){}
   try{ updQuick(); }catch(e){}
   if(typeof updToggle==="function") try{updToggle()}catch(e){}
   $("cnt-ev").textContent=liveEvents.length; $("cnt-co").textContent=liveCourses.length; $("cnt-pk").textContent=PARKS.length; $("cnt-pl").textContent=PLACES.length;
@@ -2737,6 +2760,33 @@ function watchRatings(){ if(!GKEY||!gObs) return; document.querySelectorAll(".gs
 
 
 
+/* ---------- 上方膠囊＋滑動後薄列、票券比價（建置中） ---------- */
+function updFvn(){ const n=favs.size; document.querySelectorAll(".fvn").forEach(e=>e.textContent=n?String(n):""); }
+(function(){
+  const hd=document.querySelector("header"), tb=$("topbar");
+  if("IntersectionObserver" in window){ new IntersectionObserver(es=>{ es.forEach(e=>{ const show=!e.isIntersecting; tb.classList.toggle("show",show); tb.setAttribute("aria-hidden",String(!show)); }); },{rootMargin:"-40px 0px 0px 0px"}).observe(hd.querySelector(".title")||hd); }
+})();
+function openTicket(src){
+  track("ticket_cs","",src);
+  const root=document.createElement("div"); root.className="sheet-bg"; root.id="tksheet";
+  root.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-label="票券比價" style="position:relative;text-align:center">
+    <div class="grab"></div><button class="x" type="button" aria-label="關閉">×</button>
+    <div style="font-size:46px;margin-top:6px">🎟️</div>
+    <h2 style="margin:4px 0 6px">票券比價 建置中 🚧</h2>
+    <p style="font-size:16px;line-height:1.7;color:var(--ink2);margin:0 0 14px">幫你比較官網、Klook、KKday、Trip.com<br>樂園・水族館門票哪裡買最便宜<br>敬請期待！</p>
+    <div class="acts" style="grid-template-columns:1fr"><button type="button" class="pri" data-close>← 回上一頁</button></div></div>`;
+  document.body.appendChild(root); document.body.style.overflow="hidden"; document.body.classList.add("sheet-open");
+  const close=()=>{ root.remove(); document.body.style.overflow=""; document.body.classList.remove("sheet-open"); document.removeEventListener("keydown",esck); };
+  const esck=ev=>{ if(ev.key==="Escape") close(); }; document.addEventListener("keydown",esck);
+  root.addEventListener("click",ev=>{ if(ev.target===root||ev.target.closest(".x,[data-close]")) close(); });
+}
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-ticket]"); if(t){ openTicket(t.dataset.ticket); return; }
+  const f=e.target.closest("[data-fvgo]"); if(f){ track("fav_open","",f.dataset.fvgo); setTab("fv"); window.scrollTo({top:0,behavior:"smooth"}); return; }
+  const i=e.target.closest("[data-inst]"); if(i){ $("install").click(); return; }
+  const h=e.target.closest("[data-homego]"); if(h){ e.preventDefault(); setTab("home"); window.scrollTo({top:0,behavior:"smooth"}); return; }
+});
+
 /* ---------- 手機兩層篩選 ---------- */
 function quickHtml(){
   const t=state.tab, out=[];
@@ -2759,11 +2809,11 @@ function updQuick(){
   const fg=$("fgo"); if(fg){ const c=srcOf(state.tab==="fv"?"all":state.tab).filter(x=>state.tab!=="fv"||favs.has(key(x))).filter(match).length; fg.textContent=`看 ${c} 個結果`; }
 }
 function openFilters(focusCounty){
-  const pn=document.querySelector(".panel"); pn.classList.add("open"); $("morebtn").setAttribute("aria-expanded","true"); document.body.style.overflow="hidden";
+  const pn=document.querySelector(".panel"); pn.classList.add("open"); document.body.classList.add("sheet-open"); $("morebtn").setAttribute("aria-expanded","true"); document.body.style.overflow="hidden";
   if(focusCounty){ $("cpop").hidden=false; $("btn-county").setAttribute("aria-expanded","true"); setTimeout(()=>$("btn-county").scrollIntoView({block:"center"}),50); }
   track("more_filters",focusCounty?"county":"open",state.tab);
 }
-function closeFilters(){ document.querySelector(".panel").classList.remove("open"); $("morebtn").setAttribute("aria-expanded","false"); document.body.style.overflow=""; $("cpop").hidden=true; }
+function closeFilters(){ document.querySelector(".panel").classList.remove("open"); document.body.classList.remove("sheet-open"); $("morebtn").setAttribute("aria-expanded","false"); document.body.style.overflow=""; $("cpop").hidden=true; }
 $("morebtn").addEventListener("click",()=>openFilters(false));
 $("fbg").addEventListener("click",closeFilters); $("fclose").addEventListener("click",closeFilters);
 $("fgo").addEventListener("click",()=>{ closeFilters(); window.scrollTo({top:document.querySelector(".resultbar").offsetTop-10,behavior:"smooth"}); });
@@ -2878,10 +2928,10 @@ function openDetail(k){
     <div class="react">${reactRow(x)}</div>
     <div class="acts"><a class="pri" href="${mapUrl}" target="_blank" rel="noopener" data-t="map">🧭 地圖導航</a>${off?`<a href="${esc(off)}" target="_blank" rel="noopener" data-t="link">🔗 ${offL}</a>`:`<a href="https://www.google.com/search?q=${encodeURIComponent(x.n+" 官網")}" target="_blank" rel="noopener" data-t="link">🔗 搜尋官網</a>`}<button type="button" data-share="${esc(k)}">📤 分享</button><button type="button" data-favk="${esc(k)}" aria-pressed="${on}">${on?"❤️ 已收藏":"🤍 收藏"}</button></div>
   </div>`;
-  document.body.appendChild(root); document.body.style.overflow="hidden";
+  document.body.appendChild(root); document.body.style.overflow="hidden"; document.body.classList.add("sheet-open");
   track("detail",x.n,state.tab);
   if(GKEY){ const q2=gq(x); if(GR[q2]===undefined) gFetch(q2); }
-  const close=()=>{ root.remove(); document.body.style.overflow=""; document.removeEventListener("keydown",esck); };
+  const close=()=>{ root.remove(); document.body.style.overflow=""; document.body.classList.remove("sheet-open"); document.removeEventListener("keydown",esck); };
   const esck=ev=>{ if(ev.key==="Escape") close(); };
   document.addEventListener("keydown",esck);
   root.addEventListener("click",ev=>{
@@ -3148,9 +3198,9 @@ window.addEventListener("resize",updToggle);
 let deferredInstall=null;
 const inFrame = (()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone===true;
-if(isStandalone) $("install").style.display="none";
+if(isStandalone) document.body.classList.add("installed");
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;});
-window.addEventListener("appinstalled",()=>{$("install").style.display="none"; track("installed","Android","");});
+window.addEventListener("appinstalled",()=>{document.body.classList.add("installed"); track("installed","Android","");});
 $("install").addEventListener("click",async()=>{
   if(deferredInstall){ deferredInstall.prompt(); try{await deferredInstall.userChoice;}catch(e){} deferredInstall=null; return; }
   const ua=navigator.userAgent; const ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&"ontouchend" in document); const and=/Android/.test(ua);

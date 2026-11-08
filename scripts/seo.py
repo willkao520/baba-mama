@@ -51,7 +51,7 @@ def item(x, kind):
 
 CSS = """body{margin:0;font-family:"Noto Sans TC",system-ui,sans-serif;background:#fbf6ec;color:#3a2e28;line-height:1.6}
 .w{max-width:900px;margin:0 auto;padding:18px 16px 60px}a{color:#2f6fb0}
-header a.home{font-weight:700;text-decoration:none;color:#3a2e28;font-size:18px}h1{font-size:26px;margin:14px 0 6px}
+header a.home{font-weight:700;text-decoration:none;color:#3a2e28;font-size:18px;display:inline-flex;align-items:center;gap:8px}h1{font-size:26px;margin:14px 0 6px}
 .lead{color:#6b5a50}.cta{display:inline-block;background:#f1b33b;border:2.5px solid #3a2e28;border-radius:14px;padding:10px 18px;color:#3a2e28;font-weight:700;text-decoration:none;box-shadow:3px 3px 0 #3a2e28;margin:10px 0}
 h2{margin:28px 0 8px;font-size:21px;border-bottom:2px dashed #d9c9b4;padding-bottom:4px}ul{list-style:none;padding:0;margin:0}
 li{background:#fff;border:2px solid #3a2e28;border-radius:14px;padding:10px 14px;margin:10px 0}li h3{margin:0 0 4px;font-size:17px}
@@ -64,8 +64,8 @@ def page(path, title, desc, body, crumbs=""):
 <title>{e(title)}</title><meta name="description" content="{e(desc)}"><link rel="canonical" href="{url}">
 <meta property="og:type" content="website"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/og.png"><meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/icons/icon-192.png"><style>{CSS}</style></head><body><div class="w">
-<header><a class="home" href="/">爸~媽!!假日要去哪裡玩</a>{crumbs}</header>{body}
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"><style>{CSS}</style></head><body><div class="w">
+<header><a class="home" href="/"><img src="/icons/logo-mark.png" width="40" height="40" alt="">爸~媽!!假日要去哪裡玩</a>{crumbs}</header>{body}
 <footer>資料整理自各縣市政府、場館與主辦單位公開資訊，出發前請再到官方網站確認。更新日期：{datetime.date.today().isoformat()}　<a href="/">回首頁用年齡、縣市篩選 →</a></footer>
 </div></body></html>"""
     os.makedirs(os.path.dirname(os.path.join(OUT, path)), exist_ok=True)
