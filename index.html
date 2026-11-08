@@ -2568,14 +2568,13 @@ function render(more){
   document.body.classList.toggle("at-home",state.tab==="home");
   if(state.tab==="home"){
     g.className="cats home";
-    const wk=(()=>{const [a,b]=weekendRange(); return liveEvents.filter(x=>overlaps(x,a,b)).length;})();
     const T=[["ev","最近活動",liveEvents.length,"煙火、市集、消防警察體驗、展覽",EV_ICON["市集・夜市"]],
              ["pk","共融公園",PARKS.length,"共融遊戲場、特色溜滑梯",ICON["共融遊戲場"]],
              ["pl","隨時可去的景點",PLACES.length,"博物館、樂園、動物園、農場",ICON["主題樂園"]],
              ["co","親子課程・報名",liveCourses.length,"要先報名：說故事、手作、體驗課",ICON["圖書館"]]];
-    g.innerHTML = `<div class="wx" id="wx" style="grid-column:1/-1">${wxHtml()}</div><div class="scn">${SCN.map(([id,l],i)=>`<button type="button" data-scn="${id}" class="${id==="rain"?"r":""}">${l}</button>`).join("")}</div>` + T.map(([k,n,c,d,ic],i)=>`<button class="cat" data-go="${k}" type="button"><span class="blob" style="background:${TAPE[i%TAPE.length]}"></span><span class="ic">${ic}</span><span class="cn">${n}</span><span class="num">${c} 個</span><span class="cc">${d}</span></button>`).join("")
+    g.innerHTML = `<div class="wx" id="wx" style="grid-column:1/-1">${wxHtml()}</div>` + T.map(([k,n,c,d,ic],i)=>`<button class="cat" data-go="${k}" type="button"><span class="blob" style="background:${TAPE[i%TAPE.length]}"></span><span class="ic">${ic}</span><span class="cn">${n}</span><span class="num">${c} 個</span><span class="cc">${d}</span></button>`).join("")
       + homePicks()
-      + `<div class="homefav"><button type="button" data-go="ev" data-when="weekend">📅 這個週末有 ${wk} 個活動</button><button type="button" data-go="fv">❤️ 我的收藏 ${ALLITEMS().filter(x=>favs.has(key(x))).length}</button></div>`;
+      + `<div class="homefav"><button type="button" data-go="fv">❤️ 我的收藏 ${ALLITEMS().filter(x=>favs.has(key(x))).length}</button></div>`;
     updCounts(); loadWx(); return;
   }
   if(state.tab==="ev" && !state.evCat && !state.q){
