@@ -237,6 +237,9 @@ details summary{cursor:pointer;color:var(--ink)}
 .hpick{grid-column:1/-1;border:2px solid var(--ink);border-radius:16px;background:#fff;padding:12px 14px;box-shadow:3px 4px 0 var(--ink)}
 .hpick-h{font-weight:700;font-size:17px;margin-bottom:6px}.hpick-h small{font-weight:400;color:var(--ink2);font-size:13px;margin-left:4px}
 .card.flash{animation:flash 2s ease}@keyframes flash{0%,40%{box-shadow:0 0 0 4px #f2b33d,3px 4px 0 var(--ink)}100%{}}
+.hpick-wk{display:flex;gap:0;margin:8px 0 2px;border:2px solid var(--ink);border-radius:12px;overflow:hidden}
+.hpick-wk button{flex:1;font:inherit;font-size:14px;font-weight:700;border:0;border-left:2px solid var(--ink);padding:6px 4px;background:#fff;cursor:pointer;color:var(--ink);white-space:nowrap}
+.hpick-wk button:first-child{border-left:0}.hpick-wk button[aria-pressed="true"]{background:#f2b33d}
 .hpick-rg{display:flex;gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:8px -2px 6px;padding:0 2px 2px}
 .hpick-rg::-webkit-scrollbar{display:none}
 .hpick-rg button{flex:none;white-space:nowrap;font:inherit;font-size:12.5px;border:2px solid var(--ink);border-radius:999px;padding:3px 7px;background:#fff;cursor:pointer;color:var(--ink)}
@@ -2466,6 +2469,7 @@ function match(x){
     if(state.when==="today"){ if(!overlaps(x,today,today)) return false; }
     if(state.when==="weekend"){const [a,b]=weekendRange(); if(!overlaps(x,a,b)) return false;}
     if(state.when==="next"){const [a,b]=weekendRange(); a.setDate(a.getDate()+7); b.setDate(b.getDate()+7); if(!overlaps(x,a,b)) return false;}
+    if(/^next\d$/.test(state.when)){const k=+state.when.slice(4); const [a,b]=weekendRange(); a.setDate(a.getDate()+7*k); b.setDate(b.getDate()+7*k); if(!overlaps(x,a,b)) return false;}
     if(state.when==="month"){const a=today,b=new Date(today.getFullYear(),today.getMonth()+1,0); if(!overlaps(x,a,b)) return false;}
     if(state.when==="soon"){ if(x.S<=today) return false; }
   }
@@ -2586,26 +2590,31 @@ const CAT_DESC={"博物館・美術館":"看展、恐龍、藝術","科學・教
 /* ---------- 首頁「這個週末精選」：固定五個地區可切換（記住選擇）；沒點過的人，選過縣市就預設該縣市所在地區，否則北北基；免費優先、快結束的優先 ---------- */
 const PICK_RG=[["北北基",["臺北市","新北市","基隆市"]],["桃竹苗",["桃園市","新竹市","新竹縣","苗栗縣"]],["中部",["臺中市","彰化縣","南投縣","雲林縣"]],["南部",["嘉義市","嘉義縣","臺南市","高雄市","屏東縣"]],["東部・離島",["宜蘭縣","花蓮縣","臺東縣","澎湖縣","金門縣","連江縣"]]];
 let pickRg=""; try{ pickRg=localStorage.getItem("bm-pickrg")||""; }catch(e){}
+let pickWk=-1;
 function homePicks(){
-  let [a,b]=weekendRange(); let nextWk=false;
-  const nw=new Date(); if(nw.getDay()===0 && nw.getHours()>=18){ a=new Date(a); b=new Date(b); a.setDate(a.getDate()+7); b.setDate(b.getDate()+7); nextWk=true; }
-  const wkEv=liveEvents.filter(x=>overlaps(x,a,b)&&!/每週[一二三四五]/.test(x.n)&&(!state.ages.size||x.a.some(k=>state.ages.has(k))));
-  const opts=[];
-  PICK_RG.forEach(([n,cs])=>opts.push([n,cs,n]));
-  const avail=opts.filter(o=>wkEv.some(x=>o[1].includes(x.c)));
+  const [a0,b0]=weekendRange(); const nw=new Date();
+  const base=(nw.getDay()===0 && nw.getHours()>=18)?1:0;
+  const md=d=>(d.getMonth()+1)+"/"+d.getDate();
+  const NM=["這個週末","下個週末","下下週末"];
+  const weeks=[0,1,2].map(i=>{const off=base+i, a=new Date(a0), b=new Date(b0); a.setDate(a.getDate()+7*off); b.setDate(b.getDate()+7*off);
+    const ev=liveEvents.filter(x=>overlaps(x,a,b)&&!/每週[一二三四五]/.test(x.n)&&(!state.ages.size||x.a.some(k=>state.ages.has(k))));
+    return {off,a,b,ev,name:NM[off]||(md(a)+"–"+md(b)+" 週末"),when:off===0?"weekend":off===1?"next":"next"+off};});
+  const opts=PICK_RG.map(([n,cs])=>[n,cs,n]);
+  const avail=opts.filter(o=>weeks.some(w=>w.ev.some(x=>o[1].includes(x.c))));
   if(!avail.length) return "";
   const mineRg=state.counties.size?PICK_RG.find(r=>r[1].includes([...state.counties][0])):null;
-  let cur=avail.find(o=>o[0]===pickRg)||(mineRg&&avail.find(o=>o[0]===mineRg[0]))||avail.find(o=>o[0]==="北北基")||avail[0];
-  let list=wkEv.filter(x=>cur[1].includes(x.c));
-  const total=list.length;
+  const cur=avail.find(o=>o[0]===pickRg)||(mineRg&&avail.find(o=>o[0]===mineRg[0]))||avail.find(o=>o[0]==="北北基")||avail[0];
+  const wks=weeks.map((w,i)=>({...w,i,list:w.ev.filter(x=>cur[1].includes(x.c))})).filter(w=>w.list.length);
+  const wk=wks.find(w=>w.i===pickWk)||wks[0];
+  let list=wk.list.slice(); const total=list.length;
   const rank=x=>(x.f==="free"?0:x.f==="deal"?1:2);
-  list.sort((p,q)=>rank(p)-rank(q)||((p.E||P("2099-01-01"))-(q.E||P("2099-01-01"))));
+  list.sort((p,q)=>(!p.E-!q.E)||rank(p)-rank(q)||((p.E||P("2099-01-01"))-(q.E||P("2099-01-01"))));
   list=list.slice(0,6);
-  const md=d=>(d.getMonth()+1)+"/"+d.getDate();
-  return `<div class="hpick"><div class="hpick-h">🎉 ${nextWk?"下個週末":"這個週末"}精選 <small>${md(a)}–${md(b)}</small></div>`
+  return `<div class="hpick"><div class="hpick-h">🎉 週末精選 <small>${md(wk.a)}–${md(wk.b)}</small></div>`
+    + `<div class="hpick-wk">${wks.map(w=>`<button type="button" data-pickwk="${w.i}" aria-pressed="${w===wk}">${esc(w.name)}</button>`).join("")}</div>`
     + `<div class="hpick-rg">${avail.map(o=>`<button type="button" data-pickrg="${esc(o[0])}" aria-pressed="${o===cur}">${esc(o[0])}</button>`).join("")}</div>`
-    + list.map(x=>`<button type="button" class="hpick-i" data-pick="${sid(x)}" data-rg="${esc(cur[0])}" data-when="${nextWk?"next":"weekend"}"><b>${esc(x.n)}</b><span>${esc(x.c.replace(/[市縣]$/,""))}${x.d?"・"+esc(x.d):""}${x.f==="free"?' <em>免費</em>':''}</span></button>`).join("")
-    + `<button type="button" class="hpick-more" data-go="ev" data-when="${nextWk?"next":"weekend"}" data-rg="${esc(cur[0])}">看${esc(cur[2])}${nextWk?"下個週末":"這個週末"}全部 ${total} 個活動 →</button></div>`;
+    + list.map(x=>`<button type="button" class="hpick-i" data-pick="${sid(x)}" data-rg="${esc(cur[0])}" data-when="${wk.when}"><b>${esc(x.n)}</b><span>${esc(x.c.replace(/[市縣]$/,""))}${x.d?"・"+esc(x.d):""}${x.f==="free"?' <em>免費</em>':''}</span></button>`).join("")
+    + `<button type="button" class="hpick-more" data-go="ev" data-when="${wk.when}" data-rg="${esc(cur[0])}">看${esc(cur[2])}${esc(wk.name)}全部 ${total} 個活動 →</button></div>`;
 }
 function render(more){
   if(!more) state.limit=60;
@@ -2820,7 +2829,7 @@ function hot(x){ const st=STATS[key(x)]; return st? (st.up-st.down)*3+(st.commen
 function renderActv(){
   const el=$("actv"), sb=$("sortbar"); if(!el) return;
   if(state.tab==="home"){ el.innerHTML=""; sb.innerHTML=""; return; }
-  const W={today:"今天",weekend:"這個週末",next:"下個週末",month:"這個月",soon:"即將開始"};
+  const W={today:"今天",weekend:"這個週末",next:"下個週末",next2:"下下週末",next3:"三週後的週末",month:"這個月",soon:"即將開始"};
   const c=[];
   if(state.when) c.push(["when","",W[state.when]]);
   state.ages.forEach(a=>c.push(["age",a,(AGES.find(z=>z.k===a)||{}).label||a]));
@@ -3084,6 +3093,7 @@ $("cpop-ok").addEventListener("click",()=>{$("cpop").hidden=true;$("btn-county")
 $("cpop-clear").addEventListener("click",()=>{state.counties.clear();state.dist="";fillCounties();render();});
 $("sel-dist").addEventListener("change",e=>{state.dist=e.target.value;render()});
 $("grid").addEventListener("click",e=>{
+  const pwk=e.target.closest("[data-pickwk]"); if(pwk){ pickWk=+pwk.dataset.pickwk; track("home","pickwk",pwk.textContent); render(); return; }
   const prg=e.target.closest("[data-pickrg]"); if(prg){ pickRg=prg.dataset.pickrg; try{localStorage.setItem("bm-pickrg",pickRg)}catch(_){} track("home","pickrg",pickRg); render(); return; }
   const pk=e.target.closest("[data-pick]"); if(pk){ const id=pk.dataset.pick, rg=pk.dataset.rg||"", x=ALLITEMS().find(i=>sid(i)===id); track("home","pick",x?x.n:"");
     setTab("ev"); state.rg=rg; state.when=pk.dataset.when||"weekend"; state.evCat="*"; state.q=""; $("q").value=""; buildFilters(); render();
