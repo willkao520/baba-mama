@@ -236,6 +236,9 @@ details summary{cursor:pointer;color:var(--ink)}
 .home .cat .num{display:inline-block;background:var(--ink);color:#fff;border-radius:12px;padding:1px 10px;font-size:14px;margin-top:6px}
 .hpick{grid-column:1/-1;border:2px solid var(--ink);border-radius:16px;background:#fff;padding:12px 14px;box-shadow:3px 4px 0 var(--ink)}
 .hpick-h{font-weight:700;font-size:17px;margin-bottom:6px}.hpick-h small{font-weight:400;color:var(--ink2);font-size:13px;margin-left:4px}
+.hpick-rg{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 6px}
+.hpick-rg button{font:inherit;font-size:13px;border:2px solid var(--ink);border-radius:999px;padding:3px 11px;background:#fff;cursor:pointer;color:var(--ink)}
+.hpick-rg button[aria-pressed="true"]{background:#f2b33d}
 .hpick-i{display:block;width:100%;text-align:left;font:inherit;background:none;border:0;border-top:1px dashed #d8cbb5;padding:8px 2px;cursor:pointer;color:inherit}
 .hpick-i b{display:block;font-size:15px;line-height:1.35}.hpick-i span{font-size:13px;color:var(--ink2)}.hpick-i em{font-style:normal;background:#e8f5e1;color:#2f6b1f;border-radius:6px;padding:0 6px;margin-left:4px}
 .hpick-more{font:inherit;font-size:14px;background:none;border:0;color:var(--ink);text-decoration:underline;cursor:pointer;padding:8px 2px 0}
@@ -2378,6 +2381,7 @@ function parseQ(q){
   const raw=q.toLowerCase().replace(/台/g,"臺").replace(/[ㄅ-ㄩˇˊˋ˙]/g," ").replace(/[，,、。；;／/]+/g," ");
   raw.split(/\s+/).filter(Boolean).forEach(t=>{
     let m;
+    const pg=typeof PICK_RG!=="undefined"&&PICK_RG.find(r=>r[0]===t); if(pg){ const cs=pg[1]; out.places.push(x=>cs.includes(x.c)); return; }
     if(Q_ALIAS[t]){ const cs=Q_ALIAS[t]; out.places.push(x=>cs.includes(x.c)); return; }
     if(Q_REGION[t]){ const r=Q_REGION[t]; out.places.push(x=>REGION[x.c]===r); return; }
     const cty=COUNTY_ORDER.filter(c=>c===t||c.replace(/[市縣]$/,"")===t);
@@ -2531,20 +2535,28 @@ const EV_DESC={"煙火・燈光秀":"煙火、水舞、耶誕燈節","市集・�
 const EV_ICON={"煙火・燈光秀":ICON["煙火・燈光秀"],"市集・夜市":ICON["市集・夜市"],"嘉年華・節慶":ICON["嘉年華・節慶"],"消防・警察體驗":ICON["消防・警察體驗"],"體驗營・營隊":ICON["體驗營・營隊"],"兒童劇・音樂會":CC_ICON["戲劇・展覽"],"展覽":ICON["博物館・美術館"],"科學體驗":ICON["科學・教育館"],"節慶燈飾":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="26" ry="4" fill="#eadfcf"/><path d="M48 10l20 26H56l16 18H24l16-18H28z" fill="#8cc58f" stroke="#3a2e28" stroke-width="2.4" stroke-linejoin="round"/><path d="M44 54h8v8h-8z" fill="#c98a5a" stroke="#3a2e28" stroke-width="2.4"/><path d="M48 2l2.5 5 5.5.8-4 3.8 1 5.4-5-2.6-5 2.6 1-5.4-4-3.8 5.5-.8z" fill="#f1b33b" stroke="#3a2e28" stroke-width="2"/><circle cx="42" cy="30" r="3" fill="#e4664a"/><circle cx="56" cy="42" r="3" fill="#8bb9e3"/><circle cx="38" cy="46" r="3" fill="#ee8fa6"/></svg>`,"市集・嘉年華":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="36" ry="4" fill="#eadfcf"/><path d="M14 30L48 8l34 22z" fill="#e4664a" stroke="#3a2e28" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 30c0 6 8 6 8 0c0 6 9 6 9 0c0 6 8 6 8 0c0 6 9 6 9 0c0 6 8 6 8 0c0 6 9 6 9 0c0 6 8 6 8 0" fill="#fff" stroke="#3a2e28" stroke-width="2.4"/><path d="M20 36v26M76 36v26M20 50h56" stroke="#3a2e28" stroke-width="2.4"/><rect x="30" y="50" width="12" height="8" fill="#f1b33b" stroke="#3a2e28" stroke-width="2"/><rect x="54" y="50" width="12" height="8" fill="#8bb9e3" stroke="#3a2e28" stroke-width="2"/></svg>`,"戶外・自然":ICON["森林・自然"],"樂園優惠":ICON["主題樂園"]};
 const CAT_ORDER=["博物館・美術館","科學・教育館","主題樂園","動物園・水族館","農場・牧場","採果・釣魚","觀光工廠","文化・鐵道園區","室內遊戲・親子館","森林・自然"];
 const CAT_DESC={"博物館・美術館":"看展、恐龍、藝術","科學・教育館":"動手玩科學","主題樂園":"遊樂設施、樂園","動物園・水族館":"看動物、看魚","農場・牧場":"餵動物、草地","採果・釣魚":"草莓、橘子、挖地瓜、釣魚蝦","觀光工廠":"參觀工廠、DIY","文化・鐵道園區":"老街、火車、園區","室內遊戲・親子館":"下雨天也能去","森林・自然":"步道、海邊、森林"};
-/* ---------- 首頁「這個週末精選」：優先你選過的縣市（沒選過就看雙北），免費優先、快結束的優先 ---------- */
+/* ---------- 首頁「這個週末精選」：可切換地區（記住選擇），選過縣市的人預設看自己的縣市，沒選過預設北北基；免費優先、快結束的優先 ---------- */
+const PICK_RG=[["北北基",["臺北市","新北市","基隆市"]],["桃竹苗",["桃園市","新竹市","新竹縣","苗栗縣"]],["中部",["臺中市","彰化縣","南投縣","雲林縣"]],["南部",["嘉義市","嘉義縣","臺南市","高雄市","屏東縣"]],["東部・離島",["宜蘭縣","花蓮縣","臺東縣","澎湖縣","金門縣","連江縣"]]];
+let pickRg=""; try{ pickRg=localStorage.getItem("bm-pickrg")||""; }catch(e){}
 function homePicks(){
   const [a,b]=weekendRange();
-  const mine=state.counties.size?[...state.counties]:["臺北市","新北市"];
-  const lab=state.counties.size?(mine.length<=2?mine.map(c=>c.replace(/[市縣]$/,"")).join("、"):"你選的縣市"):"雙北";
-  let list=liveEvents.filter(x=>overlaps(x,a,b)&&mine.includes(x.c)&&(!state.ages.size||x.a.some(k=>state.ages.has(k))));
+  const wkEv=liveEvents.filter(x=>overlaps(x,a,b)&&!/每週[一二三四五]/.test(x.n)&&(!state.ages.size||x.a.some(k=>state.ages.has(k))));
+  const opts=[];
+  if(state.counties.size){ const cs=[...state.counties]; opts.push(["我的縣市",cs,cs.length<=2?cs.map(c=>c.replace(/[市縣]$/,"")).join("、"):"你選的縣市"]); }
+  PICK_RG.forEach(([n,cs])=>opts.push([n,cs,n]));
+  const avail=opts.filter(o=>wkEv.some(x=>o[1].includes(x.c)));
+  if(!avail.length) return "";
+  let cur=avail.find(o=>o[0]===pickRg)||avail.find(o=>o[0]==="我的縣市")||avail.find(o=>o[0]==="北北基")||avail[0];
+  let list=wkEv.filter(x=>cur[1].includes(x.c));
+  const total=list.length;
   const rank=x=>(x.f==="free"?0:x.f==="deal"?1:2);
   list.sort((p,q)=>rank(p)-rank(q)||((p.E||P("2099-01-01"))-(q.E||P("2099-01-01"))));
   list=list.slice(0,6);
-  if(!list.length) return "";
   const md=d=>(d.getMonth()+1)+"/"+d.getDate();
-  return `<div class="hpick"><div class="hpick-h">🎉 這個週末・${esc(lab)}精選 <small>${md(a)}–${md(b)}</small></div>`
+  return `<div class="hpick"><div class="hpick-h">🎉 這個週末精選 <small>${md(a)}–${md(b)}</small></div>`
+    + `<div class="hpick-rg">${avail.map(o=>`<button type="button" data-pickrg="${esc(o[0])}" aria-pressed="${o===cur}">${esc(o[0])}</button>`).join("")}</div>`
     + list.map(x=>`<button type="button" class="hpick-i" data-pick="${sid(x)}"><b>${esc(x.n)}</b><span>${esc(x.c.replace(/[市縣]$/,""))}${x.d?"・"+esc(x.d):""}${x.f==="free"?' <em>免費</em>':''}</span></button>`).join("")
-    + `<button type="button" class="hpick-more" data-go="ev" data-when="weekend">看這個週末全部活動 →</button></div>`;
+    + `<button type="button" class="hpick-more" data-go="ev" data-when="weekend" data-rg="${esc(cur[0])}">看${esc(cur[2])}這個週末全部 ${total} 個活動 →</button></div>`;
 }
 function render(more){
   if(!more) state.limit=60;
@@ -3023,8 +3035,9 @@ $("cpop-ok").addEventListener("click",()=>{$("cpop").hidden=true;$("btn-county")
 $("cpop-clear").addEventListener("click",()=>{state.counties.clear();state.dist="";fillCounties();render();});
 $("sel-dist").addEventListener("change",e=>{state.dist=e.target.value;render()});
 $("grid").addEventListener("click",e=>{
+  const prg=e.target.closest("[data-pickrg]"); if(prg){ pickRg=prg.dataset.pickrg; try{localStorage.setItem("bm-pickrg",pickRg)}catch(_){} track("home","pickrg",pickRg); render(); return; }
   const pk=e.target.closest("[data-pick]"); if(pk){ const x=ALLITEMS().find(i=>sid(i)===pk.dataset.pick); track("home","pick",x?x.n:""); if(openSid(pk.dataset.pick)){ buildFilters&&buildFilters(); window.scrollTo({top:0,behavior:"smooth"}); } return; }
-  const go=e.target.closest("[data-go]"); if(go){ if(go.dataset.when) state.when=go.dataset.when; track("home",go.dataset.go,go.dataset.when||""); setTab(go.dataset.go); if(go.dataset.when) { buildFilters(); render(); } window.scrollTo({top:0,behavior:"smooth"}); return; }
+  const go=e.target.closest("[data-go]"); if(go){ if(go.dataset.when) state.when=go.dataset.when; track("home",go.dataset.go,go.dataset.when||""); setTab(go.dataset.go); if(go.dataset.rg && go.dataset.rg!=="我的縣市"){ state.q=go.dataset.rg; $("q").value=go.dataset.rg; state.evCat="*"; } if(go.dataset.when||go.dataset.rg) { buildFilters(); render(); } window.scrollTo({top:0,behavior:"smooth"}); return; }
   const c=e.target.closest(".cat"); if(c){ if(c.dataset.ev){ state.evCat=c.dataset.ev; track("cat",c.dataset.ev,"ev"); } else if(c.dataset.cs){ state.cs=c.dataset.cs; state.fx=""; track("cat",state.cc+"/"+c.dataset.cs,"co"); } else if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); toResults(); return; }
   if(e.target.id==="more"){ state.limit+=60; render(true); return; }
   const sb=e.target.closest(".segbar .seg"); if(sb){ state.fx=sb.dataset.fx; track("filter",sb.firstChild.textContent,"co_fx",{on:true}); render(); return; }
