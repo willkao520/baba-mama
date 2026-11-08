@@ -63,7 +63,7 @@ def page(path, title, desc, body, crumbs=""):
     doc = f"""<!DOCTYPE html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(title)}</title><meta name="description" content="{e(desc)}"><link rel="canonical" href="{url}">
 <meta property="og:type" content="website"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(desc)}">
-<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/og.png"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/og.png?v=3"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"><style>{CSS}</style></head><body><div class="w">
 <header><a class="home" href="/"><img src="/icons/logo-mark.png" width="40" height="40" alt="">爸~媽!!假日要去哪裡玩</a>{crumbs}</header>{body}
 <footer>資料整理自各縣市政府、場館與主辦單位公開資訊，出發前請再到官方網站確認。更新日期：{datetime.date.today().isoformat()}　<a href="/">回首頁用年齡、縣市篩選 →</a></footer>
