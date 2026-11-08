@@ -234,6 +234,11 @@ details summary{cursor:pointer;color:var(--ink)}
 .home .cat .cn{font-size:24px;margin-top:6px}
 .home .cat .cc{font-size:14px}
 .home .cat .num{display:inline-block;background:var(--ink);color:#fff;border-radius:12px;padding:1px 10px;font-size:14px;margin-top:6px}
+.hpick{grid-column:1/-1;border:2px solid var(--ink);border-radius:16px;background:#fff;padding:12px 14px;box-shadow:3px 4px 0 var(--ink)}
+.hpick-h{font-weight:700;font-size:17px;margin-bottom:6px}.hpick-h small{font-weight:400;color:var(--ink2);font-size:13px;margin-left:4px}
+.hpick-i{display:block;width:100%;text-align:left;font:inherit;background:none;border:0;border-top:1px dashed #d8cbb5;padding:8px 2px;cursor:pointer;color:inherit}
+.hpick-i b{display:block;font-size:15px;line-height:1.35}.hpick-i span{font-size:13px;color:var(--ink2)}.hpick-i em{font-style:normal;background:#e8f5e1;color:#2f6b1f;border-radius:6px;padding:0 6px;margin-left:4px}
+.hpick-more{font:inherit;font-size:14px;background:none;border:0;color:var(--ink);text-decoration:underline;cursor:pointer;padding:8px 2px 0}
 .homefav{grid-column:1/-1;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .homefav button{font:inherit;font-size:16px;border:2px solid var(--ink);border-radius:999px;background:#fff;padding:8px 18px;cursor:pointer;box-shadow:2px 3px 0 var(--ink)}
 body.at-home .panel,body.at-home .resultbar,body.at-home .actv,body.at-home .sortbar{display:none}
@@ -2348,12 +2353,35 @@ function fillDists(){
 }
 
 /* ---------- 篩選邏輯 ---------- */
+/* ---------- 搜尋解析：縣市與地區任一符合、N歲對應年齡、同義詞、略過注音 ---------- */
+const Q_ALIAS={"雙北":["臺北市","新北市"],"北北基":["臺北市","新北市","基隆市"],"北北桃":["臺北市","新北市","桃園市"],"桃竹苗":["桃園市","新竹市","新竹縣","苗栗縣"],"大臺北":["臺北市","新北市"],"竹竹":["新竹市","新竹縣"],"新竹":["新竹市","新竹縣"],"嘉義":["嘉義市","嘉義縣"]};
+const Q_REGION={"北部":"北部","北臺灣":"北部","中部":"中部","中臺灣":"中部","南部":"南部","南臺灣":"南部","東部":"東部","花東":"東部","離島":"離島","外島":"離島"};
+const Q_SYN={"抓魚":["抓魚","撈魚","摸蜆","釣魚","釣蝦"],"釣魚":["釣魚","釣蝦","摸蜆"],"摸蜆":["摸蜆","抓魚"],"溜滑梯":["溜滑梯","滑梯","滑草"],"滑梯":["滑梯","溜滑梯"],"玩水":["玩水","戲水","水樂園","親水"],"戲水":["戲水","玩水","親水"],"下雨":["室內","館"],"雨天":["室內","館"],"耶誕":["耶誕","聖誕"],"聖誕":["聖誕","耶誕"],"恐龍":["恐龍"],"採草莓":["草莓"],"消防":["消防","防災","119"],"警察":["警察","警政","警犬"],"放電":["公園","遊戲場","運動","樂園"],"親子館":["親子館","親子共學","育兒"],"圖書館":["圖書館","說故事"]};
+const Q_AGEWORD={"寶寶":["baby"],"嬰兒":["baby"],"幼兒":["baby","pre"],"幼兒園":["pre"],"幼稚園":["pre"],"國小":["low","high"],"小學":["low","high"],"小一":["low"],"小二":["low"],"小三":["low"],"小四":["high"],"小五":["high"],"小六":["high"]};
+const ageOf=n=>n<=3?"baby":n<=6?"pre":n<=9?"low":n<=12?"high":null;
+function parseQ(q){
+  const out={places:[],ages:new Set(),words:[]};
+  const raw=q.toLowerCase().replace(/台/g,"臺").replace(/[ㄅ-ㄩˇˊˋ˙]/g," ").replace(/[，,、。；;／/]+/g," ");
+  raw.split(/\s+/).filter(Boolean).forEach(t=>{
+    let m;
+    if(Q_ALIAS[t]){ const cs=Q_ALIAS[t]; out.places.push(x=>cs.includes(x.c)); return; }
+    if(Q_REGION[t]){ const r=Q_REGION[t]; out.places.push(x=>REGION[x.c]===r); return; }
+    const cty=COUNTY_ORDER.filter(c=>c===t||c.replace(/[市縣]$/,"")===t);
+    if(cty.length){ out.places.push(x=>cty.includes(x.c)); return; }
+    if((m=/^(\d{1,2})(?:[-–~～到](\d{1,2}))?\s*(?:歲|y)$/.exec(t))){ const a=+m[1],b=m[2]?+m[2]:a; for(let n=a;n<=b;n++){const k=ageOf(n); if(k) out.ages.add(k);} return; }
+    if(Q_AGEWORD[t]){ Q_AGEWORD[t].forEach(k=>out.ages.add(k)); return; }
+    if(Q_SYN[t]){ const w=Q_SYN[t].slice(); w.syn=true; out.words.push(w); } else out.words.push([t]);
+  });
+  return out;
+}
 function match(x){
   if(state.q){
-    const hay=(x.n+x.c+(x.d||"")+x.t+(x.v||"")+(x.cc||"")+(x.note||"")+FEES[x.f]+x.a.map(a=>AGE_SHORT[a]).join("")).toLowerCase();
-    const terms=state.q.toLowerCase().replace(/台/g,"臺").split(/\s+/).filter(Boolean);
-    const hay2=hay.replace(/台/g,"臺");
-    if(!terms.every(t=>hay2.includes(t))) return false;
+    const hay=(x.n+x.c+(x.d||"")+x.t+(x.v||"")+(x.cc||"")+(x.note||"")+FEES[x.f]+x.a.map(a=>AGE_SHORT[a]).join("")).toLowerCase().replace(/台/g,"臺");
+    const qp=parseQ(state.q);
+    if(qp.places.length && !qp.places.some(p=>p(x))) return false;
+    if(qp.ages.size && !x.a.some(a=>qp.ages.has(a))) return false;
+    const hayN=(x.n+(x.d||"")+(x.v||"")+(x.note||"")).toLowerCase().replace(/台/g,"臺");
+    if(!qp.words.every(w=>w.syn?w.some(t=>hayN.includes(t)):w.some(t=>hay.includes(t)))) return false;
   }
   if(state.ages.size && !x.a.some(a=>state.ages.has(a))) return false;
   if(state.types.size && !state.types.has(x.t)) return false;
@@ -2489,6 +2517,21 @@ const EV_DESC={"煙火・燈光秀":"煙火、水舞、耶誕燈節","市集・�
 const EV_ICON={"煙火・燈光秀":ICON["煙火・燈光秀"],"市集・夜市":ICON["市集・夜市"],"嘉年華・節慶":ICON["嘉年華・節慶"],"消防・警察體驗":ICON["消防・警察體驗"],"體驗營・營隊":ICON["體驗營・營隊"],"兒童劇・音樂會":CC_ICON["戲劇・展覽"],"展覽":ICON["博物館・美術館"],"科學體驗":ICON["科學・教育館"],"節慶燈飾":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="26" ry="4" fill="#eadfcf"/><path d="M48 10l20 26H56l16 18H24l16-18H28z" fill="#8cc58f" stroke="#3a2e28" stroke-width="2.4" stroke-linejoin="round"/><path d="M44 54h8v8h-8z" fill="#c98a5a" stroke="#3a2e28" stroke-width="2.4"/><path d="M48 2l2.5 5 5.5.8-4 3.8 1 5.4-5-2.6-5 2.6 1-5.4-4-3.8 5.5-.8z" fill="#f1b33b" stroke="#3a2e28" stroke-width="2"/><circle cx="42" cy="30" r="3" fill="#e4664a"/><circle cx="56" cy="42" r="3" fill="#8bb9e3"/><circle cx="38" cy="46" r="3" fill="#ee8fa6"/></svg>`,"市集・嘉年華":`<svg viewBox="0 0 96 72"><ellipse cx="48" cy="66" rx="36" ry="4" fill="#eadfcf"/><path d="M14 30L48 8l34 22z" fill="#e4664a" stroke="#3a2e28" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 30c0 6 8 6 8 0c0 6 9 6 9 0c0 6 8 6 8 0c0 6 9 6 9 0c0 6 8 6 8 0c0 6 9 6 9 0c0 6 8 6 8 0" fill="#fff" stroke="#3a2e28" stroke-width="2.4"/><path d="M20 36v26M76 36v26M20 50h56" stroke="#3a2e28" stroke-width="2.4"/><rect x="30" y="50" width="12" height="8" fill="#f1b33b" stroke="#3a2e28" stroke-width="2"/><rect x="54" y="50" width="12" height="8" fill="#8bb9e3" stroke="#3a2e28" stroke-width="2"/></svg>`,"戶外・自然":ICON["森林・自然"],"樂園優惠":ICON["主題樂園"]};
 const CAT_ORDER=["博物館・美術館","科學・教育館","主題樂園","動物園・水族館","農場・牧場","採果・釣魚","觀光工廠","文化・鐵道園區","室內遊戲・親子館","森林・自然"];
 const CAT_DESC={"博物館・美術館":"看展、恐龍、藝術","科學・教育館":"動手玩科學","主題樂園":"遊樂設施、樂園","動物園・水族館":"看動物、看魚","農場・牧場":"餵動物、草地","採果・釣魚":"草莓、橘子、挖地瓜、釣魚蝦","觀光工廠":"參觀工廠、DIY","文化・鐵道園區":"老街、火車、園區","室內遊戲・親子館":"下雨天也能去","森林・自然":"步道、海邊、森林"};
+/* ---------- 首頁「這個週末精選」：優先你選過的縣市（沒選過就看雙北），免費優先、快結束的優先 ---------- */
+function homePicks(){
+  const [a,b]=weekendRange();
+  const mine=state.counties.size?[...state.counties]:["臺北市","新北市"];
+  const lab=state.counties.size?(mine.length<=2?mine.map(c=>c.replace(/[市縣]$/,"")).join("、"):"你選的縣市"):"雙北";
+  let list=liveEvents.filter(x=>overlaps(x,a,b)&&mine.includes(x.c)&&(!state.ages.size||x.a.some(k=>state.ages.has(k))));
+  const rank=x=>(x.f==="free"?0:x.f==="deal"?1:2);
+  list.sort((p,q)=>rank(p)-rank(q)||((p.E||P("2099-01-01"))-(q.E||P("2099-01-01"))));
+  list=list.slice(0,6);
+  if(!list.length) return "";
+  const md=d=>(d.getMonth()+1)+"/"+d.getDate();
+  return `<div class="hpick"><div class="hpick-h">🎉 這個週末・${esc(lab)}精選 <small>${md(a)}–${md(b)}</small></div>`
+    + list.map(x=>`<button type="button" class="hpick-i" data-pick="${sid(x)}"><b>${esc(x.n)}</b><span>${esc(x.c.replace(/[市縣]$/,""))}${x.d?"・"+esc(x.d):""}${x.f==="free"?' <em>免費</em>':''}</span></button>`).join("")
+    + `<button type="button" class="hpick-more" data-go="ev" data-when="weekend">看這個週末全部活動 →</button></div>`;
+}
 function render(more){
   if(!more) state.limit=60;
   const g=$("grid");
@@ -2500,7 +2543,7 @@ function render(more){
              ["pk","共融公園",PARKS.length,"共融遊戲場、特色溜滑梯",ICON["共融遊戲場"]],
              ["pl","隨時可去的景點",PLACES.length,"博物館、樂園、動物園、農場",ICON["主題樂園"]],
              ["co","親子課程・報名",liveCourses.length,"要先報名：說故事、手作、體驗課",ICON["圖書館"]]];
-    g.innerHTML = `<div class="wx" id="wx" style="grid-column:1/-1">${wxHtml()}</div><div class="scn">${SCN.map(([id,l],i)=>`<button type="button" data-scn="${id}" class="${id==="rain"?"r":""}">${l}</button>`).join("")}</div>` + T.map(([k,n,c,d,ic],i)=>`<button class="cat" data-go="${k}" type="button"><span class="blob" style="background:${TAPE[i%TAPE.length]}"></span><span class="ic">${ic}</span><span class="cn">${n}</span><span class="num">${c} 個</span><span class="cc">${d}</span></button>`).join("")
+    g.innerHTML = `<div class="wx" id="wx" style="grid-column:1/-1">${wxHtml()}</div><div class="scn">${SCN.map(([id,l],i)=>`<button type="button" data-scn="${id}" class="${id==="rain"?"r":""}">${l}</button>`).join("")}</div>` + homePicks() + T.map(([k,n,c,d,ic],i)=>`<button class="cat" data-go="${k}" type="button"><span class="blob" style="background:${TAPE[i%TAPE.length]}"></span><span class="ic">${ic}</span><span class="cn">${n}</span><span class="num">${c} 個</span><span class="cc">${d}</span></button>`).join("")
       + `<div class="homefav"><button type="button" data-go="ev" data-when="weekend">📅 這個週末有 ${wk} 個活動</button><button type="button" data-go="fv">❤️ 我的收藏 ${ALLITEMS().filter(x=>favs.has(key(x))).length}</button></div>`;
     updCounts(); loadWx(); return;
   }
@@ -2934,7 +2977,7 @@ setInterval(flushDw,30000);
 addEventListener("pagehide",flushDw);
 
 let qTimer=null;
-$("q").addEventListener("input",()=>{ clearTimeout(qTimer); qTimer=setTimeout(()=>{ if(state.q) track("search",state.q,state.tab,{n:srcOf(state.tab==="fv"?"all":state.tab).filter(match).length, all:ALLITEMS().filter(match).length}); },1500); });
+$("q").addEventListener("input",()=>{ clearTimeout(qTimer); qTimer=setTimeout(()=>{ if(state.q && !/[\u3105-\u3129\u02c7\u02ca\u02cb\u02d9]/.test(state.q)) track("search",state.q,state.tab,{n:srcOf(state.tab==="fv"?"all":state.tab).filter(match).length, all:ALLITEMS().filter(match).length}); },1500); });
 $("grid").addEventListener("click",e=>{
   const card=e.target.closest(".card"); const name=card?card.querySelector("h3")?.textContent:"";
   const op=e.target.closest(".stretch[data-open]"); if(op){ e.preventDefault(); openDetail(op.dataset.open); return; }
@@ -2966,6 +3009,7 @@ $("cpop-ok").addEventListener("click",()=>{$("cpop").hidden=true;$("btn-county")
 $("cpop-clear").addEventListener("click",()=>{state.counties.clear();state.dist="";fillCounties();render();});
 $("sel-dist").addEventListener("change",e=>{state.dist=e.target.value;render()});
 $("grid").addEventListener("click",e=>{
+  const pk=e.target.closest("[data-pick]"); if(pk){ const x=ALLITEMS().find(i=>sid(i)===pk.dataset.pick); track("home","pick",x?x.n:""); if(openSid(pk.dataset.pick)){ buildFilters&&buildFilters(); window.scrollTo({top:0,behavior:"smooth"}); } return; }
   const go=e.target.closest("[data-go]"); if(go){ if(go.dataset.when) state.when=go.dataset.when; track("home",go.dataset.go,go.dataset.when||""); setTab(go.dataset.go); if(go.dataset.when) { buildFilters(); render(); } window.scrollTo({top:0,behavior:"smooth"}); return; }
   const c=e.target.closest(".cat"); if(c){ if(c.dataset.ev){ state.evCat=c.dataset.ev; track("cat",c.dataset.ev,"ev"); } else if(c.dataset.cs){ state.cs=c.dataset.cs; state.fx=""; track("cat",state.cc+"/"+c.dataset.cs,"co"); } else if(c.dataset.cc){ state.cc=c.dataset.cc; state.cs=""; state.fx=""; track("cat",c.dataset.cc,"co"); } else state.plCat=c.dataset.cat; render(); toResults(); return; }
   if(e.target.id==="more"){ state.limit+=60; render(true); return; }
