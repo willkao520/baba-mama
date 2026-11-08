@@ -74,7 +74,7 @@ async function loadStats(){
   const searches=by("search"); const lastQ=new Map(); searches.forEach(r=>{const k=r.sid+"|"+r.label; if(!lastQ.has(k)) lastQ.set(k,r)});
   const sq=[...lastQ.values()];
   const zero=cnt(sq.filter(r=>r.extra&&(r.extra.all??r.extra.n)===0),r=>r.label);
-  const tbl=(title,list,unit="次",cls="")=>{const max=list[0]?list[0][1]:1; return `<div class="card"><h3 style="margin:0 0 6px">${title}</h3>${list.length?`<table>${list.slice(0,30).map(([k,v])=>`<tr><td class="${cls}">${esc(k)}<div class="bar" style="width:${Math.max(4,v/max*100)}%"></div></td><td class="n">${v} ${unit}</td></tr>`).join("")}</table>`:'<div class="meta">還沒有資料</div>'}</div>`;};
+  const tbl=(title,list,unit="次",cls="")=>{const max=list[0]?list[0][1]:1; return `<div class="card"><h3 style="margin:0 0 6px">${title}</h3>${list.length?`<table>${list.slice(0,30).map(([k,v])=>`<tr><td class="${cls}">${esc(k)}<div class="bar" style="width:${Math.max(4,v/max*100)}%"></div></td><td class="n">${typeof unit==="function"?unit(v):v+" "+unit}</td></tr>`).join("")}</table>`:'<div class="meta">還沒有資料</div>'}</div>`;};
   const tw=ts=>new Date(new Date(ts).getTime()+8*3600e3);
   const daily=cnt(by("visit"),r=>tw(r.ts).toISOString().slice(0,10)).sort((a,b)=>a[0]<b[0]?-1:1);
   const vis=by("visit"), WD=["日","一","二","三","四","五","六"];
@@ -84,7 +84,15 @@ async function loadStats(){
   const hr=[...Array(24)].map((_,h)=>{const a=vis.filter(r=>tw(r.ts).getUTCHours()===h); return [h,a.length,uniq(a,r=>r.dev)];});
   const hrMax=Math.max(1,...hr.map(x=>x[1])); const top=[...hr].sort((a,b)=>b[1]-a[1]).filter(x=>x[1]).slice(0,3);
   const hrCard=`<div class="card"><h3 style="margin:0 0 6px">幾點來的人最多</h3><div style="display:flex;align-items:flex-end;gap:3px;height:120px;margin:8px 0 4px">${hr.map(([h,n,u])=>`<div title="${h}:00–${h}:59　${n} 次・${u} 人" style="flex:1;height:${Math.max(2,n/hrMax*100)}%;background:${n===hrMax&&n?"#e4664a":"#f1b33b"};border-radius:3px 3px 0 0"></div>`).join("")}</div><div style="display:flex;justify-content:space-between;font-size:11px;color:#7a6a60"><span>0</span><span>6</span><span>12</span><span>18</span><span>23 點</span></div><div style="margin-top:8px;font-size:14px">${top.length?"最熱門時段："+top.map(([h,n])=>`<b>${h}:00–${h+1}:00</b>（${n} 次）`).join("、"):"還沒有資料"}</div><div class="meta">台灣時間；手指停在柱子上可看次數與人數</div></div>`;
-  const TABN={co:"親子課程・報名",ev:"最近活動",pk:"共融公園",pl:"隨時可去的景點",fv:"我的收藏"};
+  const TABN={home:"首頁",co:"親子課程・報名",ev:"最近活動",pk:"共融公園",pl:"隨時可去的景點",fv:"我的收藏"};
+  const fmt=sec=>{sec=Math.round(sec); const h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60; return h?`${h} 小時 ${m} 分`:m?`${m} 分 ${s} 秒`:`${s} 秒`;};
+  const dwr=by("dwell"); const dwSum=(f)=>{const m=new Map(); dwr.forEach(r=>{const k=f(r); if(k) m.set(k,(m.get(k)||0)+((r.extra&&+r.extra.s)||0))}); return [...m].sort((a,b)=>b[1]-a[1]);};
+  const dwTotal=dwr.reduce((n,r)=>n+((r.extra&&+r.extra.s)||0),0); const dwSess=uniq(dwr,r=>r.sid);
+  const tabDw=dwSum(r=>r.item).map(([t,sec])=>{const ss=uniq(dwr.filter(r=>r.item===t),r=>r.sid); return [(TABN[t]||t)+`（平均 ${fmt(sec/Math.max(1,ss))}／次）`,sec];});
+  const catDw=dwSum(r=>r.item!=="home"&&r.item!=="pk"&&r.item!=="fv"?(TABN[r.item]||r.item)+" › "+r.label:"");
+  const catHits=cnt(by("cat"),r=>(TABN[r.item]||r.item)+" › "+r.label);
+  const seenAct=new Set(rows.filter(r=>["map","link","google"].includes(r.type)).map(r=>r.sid+"|"+r.label));
+  const noAct=cnt(by("detail").filter(r=>!seenAct.has(r.sid+"|"+r.label)),r=>r.label);
   $("list").innerHTML=`<p>期間：<select id="days">${[1,7,30,90].map(d=>`<option value="${d}" ${d===days?"selected":""}>最近 ${d} 天</option>`).join("")}</select>　<span class="meta">共 ${rows.length} 筆紀錄</span></p>
   <div class="kpi"><div>訪問次數<b>${by("visit").length}</b></div><div>不重複裝置<b>${uniq(rows,r=>r.dev)}</b></div><div>搜尋次數<b>${sq.length}</b></div><div>開地圖導航<b>${by("map").length}</b></div><div>點官網<b>${by("link").length}</b></div><div>收藏<b>${by("fav").length}</b></div><div>分享<b>${by("share").length}</b></div><div>推薦／回報<b>${by("suggest").length} / ${by("report").length}</b></div><div>點加到桌面按鈕<b>${by("install").length}</b></div><div>確認加到桌面<small>（僅Android）</small><b>${by("installed").length}</b></div><div>從桌面打開<b>${by("visit").filter(r=>r.item==="桌面App").length}</b><small>${uniq(by("visit").filter(r=>r.item==="桌面App"),r=>r.dev)} 台裝置</small></div></div>
   <div class="grid2" style="margin-top:14px">
@@ -97,6 +105,11 @@ async function loadStats(){
   ${tbl("最多人點官網",cnt(by("link"),r=>r.label))}
   ${tbl("最多人收藏",cnt(by("fav"),r=>r.label))}
   ${tbl("景點分類點擊",cnt(by("cat"),r=>r.label))}
+  <div class="card" style="grid-column:1/-1"><h3 style="margin:0 0 6px">停留時間</h3>${dwr.length?`<div class="kpi"><div>每次造訪平均<b>${fmt(dwTotal/Math.max(1,dwSess))}</b></div><div>總停留<b>${fmt(dwTotal)}</b></div><div>有計時的造訪<b>${dwSess}</b></div></div><p class="meta">只算畫面看著、2 分鐘內有操作的時間；從這項功能上線後才開始累積。</p>`:`<p class="meta">還沒有資料。網站更新後使用者開始瀏覽就會累積。</p>`}</div>
+  ${tbl("各分頁停留（總時間）",tabDw,fmt)}
+  ${tbl("停留最久的分類",catDw,fmt)}
+  ${tbl("熱門分頁 › 分類（點擊次數）",catHits)}
+  ${tbl("看了詳細卻沒點導航／官網（資訊可能不夠）",noAct)}
   ${tbl("分頁使用",cnt(by("tab"),r=>TABN[r.label]||r.label))}
   ${tbl("縣市篩選",cnt(by("filter").filter(r=>r.item==="county"&&r.extra&&r.extra.on),r=>r.label))}
   ${tbl("年齡篩選",cnt(by("filter").filter(r=>r.item==="age"&&r.extra&&r.extra.on),r=>r.label))}

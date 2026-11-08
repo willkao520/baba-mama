@@ -2923,7 +2923,16 @@ function flushA(){
   if(!AQ.length||!BE) return; const rows=AQ.splice(0);
   try{ fetch(CFG.SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/analytics",{method:"POST",keepalive:true,headers:{apikey:CFG.SUPABASE_KEY,Authorization:"Bearer "+CFG.SUPABASE_KEY,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(rows)}).catch(()=>{}); }catch(e){}
 }
-document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") flushA(); });
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden"){ if(typeof flushDw==="function") flushDw(); flushA(); } });
+/* 停留時間：只算畫面看著、且 2 分鐘內有操作的秒數，依「分頁＋分類」累計，離開或每 30 秒送出 */
+const DW={}; let lastAct=Date.now();
+["touchstart","scroll","click","keydown","pointerdown"].forEach(ev=>addEventListener(ev,()=>{lastAct=Date.now()},{passive:true,capture:true}));
+function dwLoc(){ const t=state.tab; let c=""; if(t==="ev") c=state.evCat; else if(t==="co") c=state.cc+(state.cs?"/"+state.cs:""); else if(t==="pl") c=state.plCat; return [t,c||"(全部)"]; }
+setInterval(()=>{ if(document.visibilityState!=="visible"||Date.now()-lastAct>120000) return; const [t,c]=dwLoc(), k=t+"\u0001"+c; DW[k]=(DW[k]||0)+1; },1000);
+function flushDw(){ const ks=Object.keys(DW); if(!ks.length||!BE) return; ks.forEach(k=>{ const sec=DW[k]; delete DW[k]; if(sec>0){ const [t,c]=k.split("\u0001"); track("dwell",c,t,{s:sec}); } }); flushA(); }
+setInterval(flushDw,30000);
+addEventListener("pagehide",flushDw);
+
 let qTimer=null;
 $("q").addEventListener("input",()=>{ clearTimeout(qTimer); qTimer=setTimeout(()=>{ if(state.q) track("search",state.q,state.tab,{n:srcOf(state.tab==="fv"?"all":state.tab).filter(match).length, all:ALLITEMS().filter(match).length}); },1500); });
 $("grid").addEventListener("click",e=>{
