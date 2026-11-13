@@ -143,7 +143,10 @@ textarea.fld{min-height:80px;resize:vertical}
 .card:nth-child(3n+1){transform:rotate(-.5deg)} .card:nth-child(3n+2){transform:rotate(.4deg)}
 .tape{position:absolute;top:-10px;left:50%;width:64px;height:18px;transform:translateX(-50%) rotate(-3deg);opacity:.75;border-radius:2px}
 .card h3{font-family:"Huninn",sans-serif;font-size:19px;line-height:1.3;margin:2px 34px 0 0;font-weight:400}
-.tsub{display:block;font-size:.82em;color:var(--ink2);line-height:1.35}
+.card h3 .nw,.sheet h2 .nw,.card h3 .wd,.sheet h2 .wd{display:inline-block;max-width:100%;text-indent:0}
+.card h3 .nw.brk,.sheet h2 .nw.brk{display:inline}
+.card h3,.sheet h2{word-break:keep-all;overflow-wrap:anywhere;line-break:strict}
+.tsub{display:block;font-size:.82em;color:var(--ink2);line-height:1.35;text-indent:-.45em}
 .cat .cc .nw{white-space:nowrap}
 .cat .cc.wrapped{text-align:left}
 .meta{font-size:14px;color:var(--ink2)}
@@ -2630,7 +2633,39 @@ function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;","
 function fitCc(){ requestAnimationFrame(()=>document.querySelectorAll(".cat .cc").forEach(el=>{ el.classList.remove("wrapped"); const lh=parseFloat(getComputedStyle(el).lineHeight)||18; if(el.offsetHeight>lh*1.5) el.classList.add("wrapped"); })); }
 addEventListener("resize",()=>fitCc());
 /* 標題最後的（…）換到第二行 */
-function ttl(n){ const m=String(n).match(/^(.+?)\s*([（(][^（）()]*[）)])\s*$/); return m?`${esc(m[1])}<span class="tsub">${esc(m[2])}</span>`:esc(n); }
+const SEG=(typeof Intl!=="undefined"&&Intl.Segmenter)?new Intl.Segmenter("zh-Hant",{granularity:"word"}):null;
+function wordsHTML(t){
+  if(!SEG) return esc(t);
+  const w=[]; let lead="";
+  for(const x of SEG.segment(t)){ const g=x.segment;
+    if(/^[「『（(《〈【\s]+$/.test(g)){ lead+=g; continue; }
+    if(w.length&&/^[\p{P}\p{S}]+$/u.test(g)&&!lead){ w[w.length-1]+=g; continue; }
+    if(w.length&&!lead&&/^\p{Script=Han}$/u.test(g)){ w[w.length-1]+=g; continue; }  /* 單一個字黏在前一個詞後面（溫泉季、耶誕城） */
+    w.push(lead+g); lead=""; }
+  if(lead) w.length? w[w.length-1]+=lead : w.push(lead);
+  return w.map(x=>`<span class="wd">${esc(x)}</span>`).join("<wbr>");
+}
+function ttlw(t){
+  /* 先在自然的地方斷（空白、｜之後、「之前），整段放不下才在詞與詞之間斷，「…」盡量整組 */
+  const raw=String(t).split(/(\s+|[｜|]|(?=「))/).filter(x=>x);
+  const parts=[]; raw.forEach(x=>{ if(/^[｜|]$/.test(x)&&parts.length) parts[parts.length-1]+=x; else parts.push(x); });
+  return parts.map(seg=>{
+    if(/^\s+$/.test(seg)) return " ";
+    const inner=seg.split(/(「[^」]*」)/).filter(x=>x).map(bit=>/^「.*」$/.test(bit)?`<span class="nw">${wordsHTML(bit)}</span>`:wordsHTML(bit)).join("<wbr>");
+    return `<span class="nw">${inner}</span>`;
+  }).join("<wbr>");
+}
+/* 段落放不下一行時，才允許在它裡面的詞之間換行 */
+function fitTitles(){
+  for(let pass=0;pass<3;pass++){ let ch=false;
+    document.querySelectorAll(".card h3 .nw:not(.brk),.sheet h2 .nw:not(.brk)").forEach(el=>{
+      const box=el.closest("h3,h2"); const sub=el.closest(".tsub"); const W=(sub||box).clientWidth;
+      if(W&&el.offsetWidth>=W-1){ el.classList.add("brk"); ch=true; } });
+    if(!ch) break; }
+}
+let fitT=0; new MutationObserver(()=>{ cancelAnimationFrame(fitT); fitT=requestAnimationFrame(fitTitles); }).observe(document.body,{childList:true,subtree:true});
+let fitW=innerWidth; addEventListener("resize",()=>{ if(innerWidth===fitW) return; fitW=innerWidth; document.querySelectorAll(".nw.brk").forEach(e=>e.classList.remove("brk")); fitTitles(); });
+function ttl(n){ const m=String(n).match(/^(.+?)\s*([（(][^（）()]*[）)])\s*$/); return m?`${ttlw(m[1])}<span class="tsub">${ttlw(m[2])}</span>`:ttlw(n); }
 function ageTxt(x){ return !x.a||x.a.length===4?"全年齡":x.a.map(a=>AGE_SHORT[a]).join("・"); }
 function isYearEnd(d){ return d&&d.getMonth()===11&&d.getDate()===31; }
 function dueTag(x){ if(x.kind!=="ev"||!x.E||isYearEnd(x.E)||x.E.getTime()===x.S.getTime()||x.S>today) return ""; return ` <span class="due">到 ${x.E.getMonth()+1}/${x.E.getDate()}</span>`; }
