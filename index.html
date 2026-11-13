@@ -185,8 +185,14 @@ a.where .go{color:var(--sky);font-weight:700;margin-left:6px} .lnk{display:flex;
 .dlg h3{font-family:"Huninn",sans-serif;font-weight:400;font-size:17px;margin:14px 0 4px;color:var(--tomato)}
 .dlg ol{margin:0;padding-left:22px} .dlg li{margin:3px 0}
 .dlg .warn{background:#fdeccd;border-radius:10px;padding:8px 10px;font-size:14px;margin:8px 0 0}
-.dlg .close{margin-top:14px;font:inherit;font-family:"Huninn",sans-serif;font-size:16px;border:2px solid var(--ink);background:var(--sun);border-radius:12px;padding:6px 16px;cursor:pointer}
-.key{display:inline-block;border:1.5px solid var(--ink2);border-radius:6px;padding:0 6px;font-size:13px;background:#fff}
+.dlg .close{margin-top:14px;font:inherit;color:var(--ink);font-family:"Huninn",sans-serif;font-size:16px;border:2px solid var(--ink);background:var(--sun);border-radius:12px;padding:6px 16px;cursor:pointer}
+.key{display:inline-block;border:1.5px solid var(--ink2);border-radius:6px;padding:0 6px;font-size:14px;background:#fff}
+.dlg .stp{font-size:17px;line-height:1.7;margin:12px 0 2px}
+.dlg .stp b{font-weight:700}
+.dlg .hint{font-size:14.5px;color:var(--ink2);line-height:1.6;margin:4px 0}
+.dlg .ok{background:#e2f4e8;color:#1f5a35;border-radius:10px;padding:8px 10px;font-size:15px;margin:12px 0 0}
+.dlg .big{display:block;width:100%;margin:6px 0 4px;font:inherit;font-family:"Huninn",sans-serif;font-size:18px;border:2.5px solid var(--ink);background:var(--sun);border-radius:999px;padding:10px;box-shadow:3px 4px 0 var(--ink);cursor:pointer}
+.dlg .sec{display:block;width:100%;margin:6px 0;font:inherit;font-size:16px;border:2px solid var(--ink);background:#fff;border-radius:999px;padding:7px;cursor:pointer}
 .notice{margin:26px 0 0;font-size:13.5px;color:var(--ink2);background:var(--paper2);border-radius:12px;padding:12px 14px;border:1.5px dashed var(--line)}
 .sitefoot{margin:18px 0 10px;text-align:center}
 .sitefoot .ft-t{font-size:15.5px;font-weight:700;margin:0 0 4px}
@@ -452,19 +458,38 @@ body.installed .install,body.installed .tbb.inst{display:none!important}
 </div>
 <div class="dlg-bg" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-t">
   <div class="dlg">
-    <h2 id="dlg-t">把「假日去哪玩」放到手機桌面</h2>
+    <h2 id="dlg-t">放到手機桌面，下次一點就開</h2>
     <div id="dlg-frame" class="warn" hidden>你現在是在預覽視窗裡看這個頁面。請先用手機瀏覽器（iPhone 用 Safari、Android 用 Chrome）打開網站，再照下面做。</div>
-    <div id="dlg-ios">
-      <h3>iPhone / iPad（Safari）</h3>
-      <ol><li>點畫面下方的 <span class="key">分享</span>（方框加向上箭頭）</li><li>往下滑，點 <span class="key">加入主畫面</span></li><li>點右上角 <span class="key">新增</span>，桌面就會出現圖示</li></ol>
+    <div id="dlg-app" hidden>
+      <div class="warn">你現在是在 <b id="dlg-appname">LINE</b> 裡面看，這裡沒辦法放到桌面，要先換到 <b class="dlg-br">Safari</b> 打開。</div>
+      <p class="stp"><b>第 1 步</b>　按下面這顆按鈕</p>
+      <button type="button" class="big" id="dlg-ext">用 <span class="dlg-br">Safari</span> 打開</button>
+      <p class="hint" id="dlg-copyhint">沒反應的話：按「複製網址」→ 打開 <span class="dlg-brd">Safari（藍色指南針圖示）</span> → 點最上面的網址列 → 長按，選「貼上並前往」</p>
+      <button type="button" class="sec" id="dlg-copy">複製網址</button>
+      <p class="stp"><b>第 2 步</b>　在 <span class="dlg-br">Safari</span> 打開網站後，再按一次右上角「加桌面」，照著做就好</p>
     </div>
-    <div id="dlg-and">
-      <h3>Android（Chrome）</h3>
-      <ol><li>點右上角 <span class="key">⋮</span></li><li>點 <span class="key">加到主畫面</span> 或 <span class="key">安裝應用程式</span></li><li>按 <span class="key">安裝</span></li></ol>
+    <div id="dlg-ios" hidden>
+      <p class="stp"><b>第 1 步</b>　點畫面最下面的 <span class="key">⬆ 分享</span>（一個方框，上面有往上的箭頭）</p>
+      <p class="hint">找不到？先點右下角的 <span class="key">⋯</span>，再點「分享」</p>
+      <p class="stp"><b>第 2 步</b>　往下滑，找到 <span class="key">⊞ 加入主畫面</span> 點它</p>
+      <p class="stp"><b>第 3 步</b>　點右上角 <span class="key">新增</span></p>
+      <p class="ok">完成！手機桌面會多一個「假日去哪玩」的圖示</p>
     </div>
-    <div id="dlg-pc">
-      <h3>電腦（Chrome / Edge）</h3>
-      <ol><li>網址列右邊會出現 <span class="key">安裝</span> 小圖示，點它</li><li>或從選單選「安裝這個網站為應用程式」</li></ol>
+    <div id="dlg-crios" hidden>
+      <p class="stp"><b>第 1 步</b>　點最上面網址列右邊的 <span class="key">⬆ 分享</span></p>
+      <p class="stp"><b>第 2 步</b>　往下滑，點 <span class="key">⊞ 加入主畫面</span></p>
+      <p class="stp"><b>第 3 步</b>　點右上角 <span class="key">新增</span></p>
+      <p class="hint">找不到「加入主畫面」的話，改用 Safari 打開網站再做一次。</p>
+      <p class="ok">完成！手機桌面會多一個「假日去哪玩」的圖示</p>
+    </div>
+    <div id="dlg-and" hidden>
+      <p class="stp"><b>第 1 步</b>　點右上角的 <span class="key">⋮</span>（三個點）</p>
+      <p class="stp"><b>第 2 步</b>　點 <span class="key">加到主畫面</span> 或 <span class="key">安裝應用程式</span></p>
+      <p class="stp"><b>第 3 步</b>　按 <span class="key">安裝</span> 或 <span class="key">新增</span></p>
+      <p class="ok">完成！手機桌面會多一個「假日去哪玩」的圖示</p>
+    </div>
+    <div id="dlg-pc" hidden>
+      <p class="stp">電腦（Chrome / Edge）：網址列右邊會出現 <span class="key">安裝</span> 小圖示，點它；或從選單選「安裝這個網站為應用程式」。</p>
     </div>
     <button class="close" id="dlg-close" type="button">知道了</button>
   </div>
@@ -1320,6 +1345,10 @@ const PARKS = [
  PK("南州環保共融公園","屏東縣","南州鄉","資源回收桶外星寶寶主題。",SM),
  PK("萬丹乳牛共融公園","屏東縣","萬丹鄉","乳牛主題遊戲場。",SM),
  PK("潮好玩幸福村","屏東縣","潮州鎮","溜滑梯、盪鞦韆加森林跑道。"),
+ PK("阿里港公園","屏東縣","里港鄉","河馬溜滑梯、人工草皮滑草坡、噴泉水舞可戲水；滑草板可向對面圖書館借。",ALL,"戲水"),
+ PK("瀰力親水運動公園","屏東縣","里港鄉","全區遮陽的戲水池與鯨魚噴水滑梯（09:00–21:00 感應噴水），旁邊有幼兒遊戲區。",ALL,"戲水"),
+ PK("高雄都會公園 時間之鳥共融遊戲場","高雄市","楠梓區","金雞日晷造型遊戲塔接5座溜滑梯，加攀網、彈跳床、鞦韆，旁邊有大草原和滑步車場，遊戲場開放到18:00。"),
+ PK("仁武高鐵橋下帶狀公園","高雄市","仁武區","高鐵主題遊戲場：飛車滑梯、車廂造型遊具、共融鞦韆、滑步車道（2026年新開闢）。"),
  PK("頭城運動公園","宜蘭縣","頭城鎮","宜蘭第一座共融公園，蜂巢遊具、手拉車。"),
  PK("冬山河親水公園","宜蘭縣","五結鄉","童玩節場地，平常可以騎車、玩水。",ALL,"大草地"),
  PK("太平洋共融公園","花蓮縣","花蓮市","全台最大海洋風遊樂場，有滑索軌道。"),
@@ -3344,13 +3373,37 @@ window.addEventListener("appinstalled",()=>{document.body.classList.add("install
 $("install").addEventListener("click",async()=>{
   if(deferredInstall){ deferredInstall.prompt(); try{await deferredInstall.userChoice;}catch(e){} deferredInstall=null; return; }
   const ua=navigator.userAgent; const ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&"ontouchend" in document); const and=/Android/.test(ua);
+  const app=/\bLine\//i.test(ua)?"LINE":/Instagram/i.test(ua)?"IG":/Barcelona|Threads/i.test(ua)?"Threads":/FBAN|FBAV|FB_IAB|FBIOS|Messenger/i.test(ua)?"臉書":/MicroMessenger/i.test(ua)?"微信":"";
+  const crios=ios&&/CriOS|FxiOS|EdgiOS/.test(ua);
+  ["dlg-app","dlg-ios","dlg-crios","dlg-and","dlg-pc"].forEach(id=>$(id).hidden=true);
   $("dlg-frame").hidden=!inFrame;
-  $("dlg-ios").hidden = !(ios || (!and && !ios));
-  $("dlg-and").hidden = !(and || (!and && !ios));
-  $("dlg-pc").hidden = ios || and;
+  if(app&&(ios||and)){
+    $("dlg-app").hidden=false; $("dlg-appname").textContent=app;
+    const br=ios?"Safari":"Chrome";
+    document.querySelectorAll("#dlg .dlg-br").forEach(e=>e.textContent=br);
+    document.querySelectorAll("#dlg .dlg-brd").forEach(e=>e.textContent=ios?"Safari（藍色指南針圖示）":"Chrome（紅黃綠圓形圖示）");
+    track("install_inapp",app,ios?"ios":"and");
+  } else if(ios) $(crios?"dlg-crios":"dlg-ios").hidden=false;
+  else if(and) $("dlg-and").hidden=false;
+  else { $("dlg-ios").hidden=false; $("dlg-and").hidden=false; $("dlg-pc").hidden=false; }
   $("dlg").classList.add("show");
 });
 $("dlg-close").addEventListener("click",()=>$("dlg").classList.remove("show"));
+const SITE_URL="https://baba-mama.pages.dev/";
+$("dlg-ext").addEventListener("click",()=>{
+  const ua=navigator.userAgent; const and=/Android/.test(ua);
+  track("install_ext","",/\bLine\//i.test(ua)?"LINE":"other");
+  if(/\bLine\//i.test(ua)) location.href=SITE_URL+"?openExternalBrowser=1";
+  else if(and) location.href="intent://baba-mama.pages.dev/#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url="+encodeURIComponent(SITE_URL)+";end";
+  else location.href="x-safari-"+SITE_URL;
+});
+$("dlg-copy").addEventListener("click",async e=>{
+  const b=e.currentTarget; let ok=false;
+  try{ await navigator.clipboard.writeText(SITE_URL); ok=true; }catch(_){}
+  if(!ok){ try{ const t=document.createElement("textarea"); t.value=SITE_URL; document.body.appendChild(t); t.select(); ok=document.execCommand("copy"); t.remove(); }catch(_){} }
+  b.textContent= ok?"已複製！現在去打開瀏覽器貼上":"請手動複製：baba-mama.pages.dev";
+  track("install_copy","","");
+});
 $("dlg").addEventListener("click",e=>{if(e.target.id==="dlg")$("dlg").classList.remove("show")});
 if("serviceWorker" in navigator && !inFrame && location.protocol==="https:"){
   try{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){}
