@@ -90,6 +90,26 @@ commit 訊息的查核紀錄裡，除了 22 縣市，再加一行「兒童劇／
 3. **一次搜尋多帶關鍵字**：例如「新北 12月 親子 市集 耶誕 2026」，不要一個關鍵字搜一次。市集主辦官網可用 allowed_domains 直接搜（如 168market.tw 搜尋標題就帶日期地點）。
 4. **只有單一整理網站（集時通、WeKenGo、擺個市集）的線索不收**，記在 commit 訊息「待查線索」，隔天優先用官方來源查證。
 5. 額度快用完時，先確保每個縣市都查過一輪，再回頭深挖。
+6. **讀不到的網站要在推播通知裡講清楚**：某縣市 0 筆時，通知要列出是哪些網站擋掉（網站擋自動讀取／網站本身錯誤／查無資料），不要只寫「0 筆」。注意：排程任務本來就是自動核准，讀不到不是權限設定的問題，不要叫使用者去開設定。
+
+### 已知讀得到的官方來源（2026-11-25 實測，先用 WebFetch 讀這些）
+- 168幸福市集（雙北、桃園市集場次）：用 WebSearch 加 allowed_domains ["168market.tw"]，結果標題就有「日期＋縣市＋地點」。
+- 高雄市立圖書館活動 RSS：https://www.ksml.edu.tw/NewsRss.aspx?m=3
+- 臺中市立圖書館各分館活動 RSS：https://www.library.taichung.gov.tw/ActiveRss?Parser=9%2C3%2C39%2C27
+- 高雄婦幼青少年活動中心：https://play.kcg.gov.tw/News.aspx?n=8F9366625915CFE1&sms=1D5185A50CD8B5B6
+- 高雄育兒資源（親子館月表）：https://khchildcare.kcg.gov.tw/News.aspx?n=C24EF2E0A7CF7F70&sms=0C560446442571C1
+- 臺南育兒資源網活動：https://childcare.tainan.gov.tw/ParentingAct
+- 臺東親子館公告：https://ttbaby.taitung.gov.tw/eventinfo/
+- 嘉義市圖報名列表：https://library.chiayi.gov.tw/wSite/sp?xdUrl=/wSite/ActivitySign/ActivityList.jsp&mp=1&ctNode=6271
+- 嘉義市政府活動總覽：https://www.chiayi.gov.tw/News.aspx?n=1165
+- 花蓮婦幼親創園區：https://hwccp.hl.gov.tw/CustomActiveList.aspx?n=40925&sms=28933
+- 澎湖縣圖書館公告：https://www.phlib.nat.gov.tw/wSite/lp?ctNode=5239&mp=1
+- 金門閱讀活動：https://cabkc.kinmen.gov.tw/activitysoonlist?uid=74
+- 新竹市觀光活動：https://tourism.hccg.gov.tw/events/
+- 國資圖活動平台（臺中）：https://activity.nlpi.edu.tw/
+
+### 已知讀不到的（不要浪費次數直接抓，改用 WebSearch 看標題或找新聞稿）
+Facebook、Threads、BeClass（整站錯誤）、twmarket.tw、宜蘭縣府 e-land.gov.tw、苗栗文觀局 mlc.gov.tw 與縣圖、南投文化局 nthcc.gov.tw、屏東縣府行事曆 calendar.pthg.gov.tw 與文化處、嘉義縣府與縣圖、澎湖縣府與文化局、連江縣府、花蓮縣圖。
 
 ## 每天（最近活動＋親子課程・報名）
 - `COURSES`：免費課程活動，用 `CO(名稱,場館類型,縣市,區,場館,開始,結束,小分類,年齡,場次,名額,報名方式,官網,報名連結,說明,費用)`；場館類型只用 圖書館／親子館／科學館／運動中心。刪掉已結束的，補上各縣市圖書館、親子館、科學館、運動中心接下來 60 天的免費兒童課程（BeClass、各館官網、育兒資源網）。名額寫報名頁上的限額，剩餘名額會變動，一律讓使用者點報名頁看即時數字。
